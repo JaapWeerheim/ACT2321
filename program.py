@@ -9,7 +9,7 @@ import tkinter.filedialog
 root=Tk()
 root.geometry('440x440+500+200')
 
-# setting heights and withs for every frame.
+# setting heights and widths for every frame.
 frame0=Frame(height=65,width=400)
 frame00=Frame(height=65,width=400)
 frame1=Frame(height=75,width=400)
@@ -938,82 +938,39 @@ if count>=17:
     Totalenergy_per_KJ_product=Totalenergy/((ans5.get()*(100-ans211.get())/100)*Eoc)
 
 
+
+
+    # Writing the excel sheet
     wb = xlsxwriter.Workbook(farm_name.get()+ans3.get()+'.xlsx')
     ws = wb.add_worksheet('answer')
     ws.write(0,2,'Total CO2 emitted(Kg)')
     ws.write(0,4,'Total energy used(MJ)')
-    ws.write(1,0,'Electricity ')
-    ws.write(1,2,Eco2)
-    ws.write(1,4,Eenergy)
 
-    ws.write(2,0,'Fossil fuels')
-    ws.write(2,2,Fco2)
-    ws.write(2,4,Fenergy)
+    #also labels in Dutch/other languages?
+    labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water','Pesticides','Transport', 'Package' ]
+    Co2_emitted = [Eco2,Fco2,FERco2,Sco2,Wco2, Pco2,Tco2,Pacco2]
+    energy_used = [Eenergy,Fenergy,FERenergy,Senergy,Wenergy,Penergy,Tenergy,Pacenergy]
 
-    ws.write(3,0,'Fertelizer')
-    ws.write(3,2,FERco2)
-    ws.write(3,4,FERenergy)
+    for x in range(len(labels_output)):
+        ws.write(1+x,0,labels_output[x])
+        ws.write(1+x,2,Co2_emitted[x])
+        ws.write(1+x,4,energy_used[x])
 
-    ws.write(4,0,'Substrates')
-    ws.write(4,2,Sco2)
-    ws.write(4,4,Senergy)
+    labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)', 'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)', 'Total CO2 emitted per KJ product (Kg/KJ)','Total energy used per KJ product (Kg/KJ)']
+    totals_output = [Totalco2,Totalenergy,Totalco2_per_kg_product,Totalenergy_per_kg_product,Totalco2_per_KJ_product,Totalenergy_per_KJ_product]
+    for x in range(len(labels_total)):
+        ws.write(1+x,6,labels_total[x])
+        ws.write(1+x,9,totals_output[x])
 
-    ws.write(5,0,'Water')
-    ws.write(5,2,Wco2)
-    ws.write(5,4,Wenergy)
+    labels_diff_aspects = ['Heating','Cooling', 'Electricity', 'Tillage', 'Sowing','Weeding', 'Harvest', 'Fertilizer', 'Irrigation','Pesticide','Other']
+    for x in range(len(labels_diff_aspects)):
+        ws.write(43+x,1,labels_diff_aspects[x])
+        ws.write(43+x,2,list_ans[25+x].get())
 
-    ws.write(6,0,'Pesticides')
-    ws.write(6,2,Pco2)
-    ws.write(6,4,Penergy)
 
-    ws.write(7,0,'Transport')
-    ws.write(7,2,Tco2)
-    ws.write(7,4,Tenergy)
-
-    ws.write(8,0,'Package')
-    ws.write(8,2,Pacco2)
-    ws.write(8,4,Pacenergy)
-
-    ws.write(1,6, 'Total CO2 emitted (Kg)')
-    ws.write(1,9,Totalco2)
-    ws.write(2,6, 'Total energy used(MJ)')
-    ws.write(2,9,Totalenergy)
-
-    ws.write(3,6, 'Total CO2 emitted per kg product (Kg/Kg)')
-    ws.write(3,9,Totalco2_per_kg_product)
-    ws.write(4,6, 'Total Energy used per kg product (KJ/Kg)')
-    ws.write(4,9,Totalenergy_per_kg_product)
-
-    ws.write(5,6, 'Total CO2 emitted per KJ product (Kg/KJ)')
-    ws.write(5,9,Totalco2_per_KJ_product)
-    ws.write(6,6, 'Total energy used per KJ product (Kg/KJ)')
-    ws.write(6,9,Totalenergy_per_KJ_product)
-
-    ws.write(43,1,'Heating')
-    ws.write(44,1,'Cooling')
-    ws.write(45,1,'Electricity')
-    ws.write(46,1,'Tillage')
-    ws.write(47,1,'Sowing')
-    ws.write(48,1,'Weeding')
-    ws.write(49,1,'Harvest')
-    ws.write(50,1,'Fertilize')
-    ws.write(51,1,'Irrigation')
-    ws.write(52,1,'Pesticide')
-    ws.write(53,1,'Other')
-    ws.write(43,2,ans97.get())
-    ws.write(44,2,ans98.get())
-    ws.write(45,2,ans99.get())
-    ws.write(46,2,ans910.get())
-    ws.write(47,2,ans911.get())
-    ws.write(48,2,ans912.get())
-    ws.write(49,2,ans913.get())
-    ws.write(50,2,ans914.get())
-    ws.write(51,2,ans915.get())
-    ws.write(52,2,ans916.get())
-    ws.write(53,2,ans917.get())
     ws.write(43,9,'Heating')
     ws.write(44,9,'Cooling')
-    ws.write(45,9,'Ventillation')
+    ws.write(45,9,'Ventilation')
     ws.write(46,9,'Lighting')
     ws.write(47,9,'Machinery')
     ws.write(48,9,'Storage')
@@ -1145,11 +1102,4 @@ if count>=17:
 
     wb.close()
 
-
-    ## this change was made to get the git repository running
-
-    ## JW: blabla
-
-
-      
 
