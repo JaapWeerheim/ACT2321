@@ -82,14 +82,6 @@ def pre():
         var.set('2. What crop do you produce?')
         frame8.grid_forget()
         frame5.grid(sticky=W)
-    # if count==3:
-    #     var.set('3. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
-    #     frame7.grid_forget()
-    #     frame6.grid(sticky=W)
-    # if count==4:
-    #     var.set('4. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
-    #     frame8.grid_forget()
-    #     frame7.grid(sticky=W)
     if count==3:
         var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame9.grid_forget()
@@ -175,14 +167,6 @@ def next1():
         var.set('2. What crop do you produce?')
         frame3.grid_forget()
         frame5.grid(sticky=W)
-    # if count==3:
-    #     var.set('3. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
-    #     frame5.grid_forget()
-    #     frame6.grid(sticky=W)
-    # if count==4:
-    #     var.set('4. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
-    #     frame6.grid_forget()
-    #     frame7.grid(sticky=W)
     if count==3:
         var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame5.grid_forget()
@@ -360,10 +344,22 @@ Label(frame5,text='Crop [-]').grid(row=0,column=0,padx=5,sticky=W)
 Label(frame5,text='Surface [m2]').grid(row=0,column=1,padx=5,sticky=W)
 Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W)
 
+def cal2(event):
+    for i in range(0, len(ansVeg)):
+        if ansVeg[i].get() == 0:
+            kgVeg[i].set(0)
+            surVeg[i].set(0)
+            print('test')
+
 for i in range(0,len(lis)):
     Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i+1, column=0, sticky=W, padx=5)
-    Entry(frame5, textvariable=surVeg[i]).grid(row=i+1, column=1, sticky=W, padx=5, pady=5)
-    Entry(frame5, textvariable=kgVeg[i]).grid(row=i+1, column=2, sticky=W, padx=5, pady=5)
+    EntSur = Entry(frame5, textvariable=surVeg[i])
+    EntSur.grid(row=i+1, column=1, sticky=W, padx=5, pady=5)
+    Entkg = Entry(frame5, textvariable=kgVeg[i])
+    Entkg.grid(row=i+1, column=2, sticky=W, padx=5, pady=5)
+    EntSur.bind('<FocusOut>', cal2)
+    Entkg.bind('<FocusOut>', cal2)
+
 
 
 
