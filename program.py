@@ -16,7 +16,7 @@ frame1=Frame(height=75,width=400)
 frame2=Frame(height=40,width=400)
 frame3=Frame(height=120,width=400)
 frame4=Frame(height=120,width=400)
-frame5=Frame(height=120,width=400)
+frame5=Frame(height=500,width=500)
 frame6=Frame(height=120,width=400)
 frame7=Frame(height=120,width=400)
 frame8=Frame(height=120,width=400)
@@ -80,81 +80,77 @@ def pre():
         frame3.grid(sticky=W)
     if count==2:
         var.set('2. What crop do you produce?')
-        frame4.grid_forget()
-        frame5.grid(sticky=W)
-    if count==3:
-        var.set('3. What type of farm do you have (choose the one \nclosest to the options)?')
         frame6.grid_forget()
-        frame4.grid(sticky=W)
-    if count==4:
-        var.set('4. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
-        frame7.grid_forget()
-        frame6.grid(sticky=W)
+        frame5.grid(sticky=W)
+    # if count==3:
+    #     var.set('3. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
+    #     frame7.grid_forget()
+    #     frame6.grid(sticky=W)
+    # if count==4:
+    #     var.set('4. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
+    #     frame8.grid_forget()
+    #     frame7.grid(sticky=W)
     if count==5:
-        var.set('5. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
-        frame8.grid_forget()
-        frame7.grid(sticky=W)
-    if count==6:
-        var.set('6. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+        var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame9.grid_forget()
         frame8.grid(sticky=W)
-    if count==7:
-        var.set('7. Do you produce your own renewable energy and how much \ndo you produce?')
+    if count==6:
+        var.set('6. Do you produce your own renewable energy and how much \ndo you produce?')
         frame10.grid_forget()
         frame100.grid_forget()
         frame9.grid(sticky=W)
-    if count==8:
-        var.set("8. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+    if count==7:
+        var.set("7. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
         frame100.grid(sticky=W)
-    if count==9:
-        var.set("9. Do you use any fossil fuels(excluding transportation), \nand how much do you use(if you don't know fill in zero)")
+    if count==8:
+        var.set("8. Do you use any fossil fuels(excluding transportation), \nand how much do you use(if you don't know fill in zero)")
         frame14.grid_forget()
         frame140.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
-    if count==10:
-        var.set('10. How much kilograms do you use of the following \nNPK chemicals per year?')
+    if count==9:
+        var.set('9. How much kilograms do you use of the following \nNPK chemicals per year?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame14.grid(sticky=W)
         frame140.grid(sticky=W)
-    if count==11:
-        var.set('11. Do you use substrate and how much per year? (kg)')
+    if count==10:
+        var.set('10. Do you use substrate and how much per year? (kg)')
         frame17.grid_forget()
         frame170.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
-    if count==12:
-        var.set('12. How much water do you use?')
+    if count==11:
+        var.set('11. How much water do you use?')
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
-    if count==13:
-        var.set('13. How much pesticides do you use? ')
+    if count==12:
+        var.set('12. How much pesticides do you use? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
-    if count==14:
-        var.set('14. Is the product sold to the customer packaged? ')
+    if count==13:
+        var.set('13. Is the product sold to the customer packaged? ')
         frame20.grid_forget()
         frame200.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
-    if count==15:
-        var.set('15. How much green waste do you produce? ')
+    if count==14:
+        var.set('14. How much green waste do you produce? ')
         frame22.grid_forget()
         frame220.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
-    if count==16:
-        var.set('16. How far does your product travel to the distribution center \non average? ')
+    if count==15:
+        var.set('15. How far does your product travel to the distribution center \non average? ')
         frame23.grid_forget()
         frame230.grid_forget()
         frame22.grid(sticky=W)
@@ -179,40 +175,36 @@ def next1():
         var.set('2. What crop do you produce?')
         frame3.grid_forget()
         frame5.grid(sticky=W)
-    if count==3:
-        var.set('3. What type of farm do you have (choose the one \nclosest to the options)?')
-        frame5.grid_forget()
-        frame4.grid(sticky=W)
-    if count==4:
-        var.set('4. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
-        frame4.grid_forget()
-        frame6.grid(sticky=W)
+    # if count==3:
+    #     var.set('3. How many square meters do you use for ' + ans3.get() +'?\n(all the following questions should be \nanswered based on this area)')
+    #     frame5.grid_forget()
+    #     frame6.grid(sticky=W)
+    # if count==4:
+    #     var.set('4. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
+    #     frame6.grid_forget()
+    #     frame7.grid(sticky=W)
     if count==5:
-        var.set('5. How many kilograms of ' +ans3.get()+ ' do you produce per year?')
-        frame6.grid_forget()
-        frame7.grid(sticky=W)
-    if count==6:
-        var.set('6. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+        var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame7.grid_forget()
         frame8.grid(sticky=W)
-    if count==7:
-        var.set('7. Do you produce your own renewable energy and how much \ndo you produce?')
+    if count==6:
+        var.set('6. Do you produce your own renewable energy and how much \ndo you produce?')
         frame8.grid_forget()
         frame9.grid(sticky=W)
-    if count==8:
-        var.set("8. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+    if count==7:
+        var.set("7. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
         frame9.grid_forget()
         frame10.grid(sticky=W)
         frame100.grid(sticky=W)
-    if count==9:
-        var.set("9. Do you use any fossil fuels(excluding transportation), \nand how much do you use (if you don't know fill in zero)")
+    if count==8:
+        var.set("8. Do you use any fossil fuels(excluding transportation), \nand how much do you use (if you don't know fill in zero)")
         frame10.grid_forget()
         frame100.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
-    if count==10:
-        var.set('10. How much kilograms do you use of the following \nNPK chemicals per year?')
+    if count==9:
+        var.set('9. How much kilograms do you use of the following \nNPK chemicals per year?')
         other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
         ans917.set(other)
         frame11.grid_forget()
@@ -220,49 +212,49 @@ def next1():
         frame110.grid_forget()
         frame14.grid(sticky=W)
         frame140.grid(sticky=W)
-    if count==11:
-        var.set('11. Do you use substrate and how much per year? (kg)?')
+    if count==10:
+        var.set('10. Do you use substrate and how much per year? (kg)?')
         frame14.grid_forget()
         frame140.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
-    if count==12:
-        var.set('12. How much water do you use?')
+    if count==11:
+        var.set('11. How much water do you use?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
-    if count==13:
-        var.set('13. How much pesticides do you use?')
+    if count==12:
+        var.set('12. How much pesticides do you use?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
-    if count==14:
-        var.set('14. Is the product sold to the customer packaged? ')
+    if count==13:
+        var.set('13. Is the product sold to the customer packaged? ')
         frame18.grid_forget()
         frame180.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
-    if count==15:
-        var.set('15. How much waste do you produce? ')
+    if count==14:
+        var.set('14. How much waste do you produce? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
-    if count==16:
-        var.set('16. How far does your produce travel to the distribution center \non average? ')
+    if count==15:
+        var.set('15. How far does your produce travel to the distribution center \non average? ')
         frame20.grid_forget()
         frame200.grid_forget()
         frame22.grid(sticky=W)
         frame220.grid(sticky=W)
-    if count==17:
-        var.set('17. How much of the product does not survive the transport \nstage to the store? ')
+    if count==16:
+        var.set('16. How much of the product does not survive the transport \nstage to the store? ')
         frame22.grid_forget()
         frame220.grid_forget()
         frame23.grid(sticky=W)
         frame230.grid(sticky=W)
-    if count==18:
+    if count==17:
         if ans211.get()<0 or ans211.get()>100:
             messagebox.showinfo('Notification','The range of the number should be 0-100')
             count-=1
@@ -290,9 +282,11 @@ def enter(event):
 # Creates a list with all possible crops
 wb=xlrd.open_workbook('Crops energy content.xlsx')
 lis=[]
-Blad1=wb.sheet_by_name('Blad1')
-for i in range(1,25):
-    lis.append(Blad1.col_values(2)[i])
+database=wb.sheet_by_name('Basic database')
+for i in range(1,len(database.col_values(2))):
+    if database.col_values(2)[i] == "":
+        break
+    lis.append(database.col_values(2)[i])
 
 v=IntVar()
 var=StringVar()
@@ -313,18 +307,66 @@ country['values']=('Netherlands','China','Germany')
 country.current(0)
 country.grid(padx=10)
 
-#frame3,q1
-button1=Radiobutton(frame4,text='Greenhouse',variable=v,value=1).grid(row=1,column=0,padx=10,sticky=W)
-button2=Radiobutton(frame4,text='Open field',variable=v,value=2).grid(row=2,column=0,padx=10,sticky=W)
-button3=Radiobutton(frame4,text='Vertical farm',variable=v,value=3).grid(row=3,column=0,padx=10,sticky=W)
+# #frame3,q1
+# button1=Radiobutton(frame4,text='Greenhouse',variable=v,value=1).grid(row=1,column=0,padx=10,sticky=W)
+# button2=Radiobutton(frame4,text='Open field',variable=v,value=2).grid(row=2,column=0,padx=10,sticky=W)
+# button3=Radiobutton(frame4,text='Vertical farm',variable=v,value=3).grid(row=3,column=0,padx=10,sticky=W)
 
 #If farmers grow several crops, this shouldn't be a drop-down menu anymore
 #frame4,q2
 ans3=StringVar()
-crop=ttk.Combobox(frame5,textvariable=ans3,state='readonly')
-crop['values']=lis
-crop.current(0)
-crop.grid(padx=10)
+# crop=ttk.Combobox(frame5,textvariable=ans3,state='readonly')
+# crop['values']=lis
+# crop.current(0)
+# crop.grid(padx=10)
+
+# Initialize variables to choose different crops
+ansLet = IntVar()
+ansEnd = IntVar()
+ansSpi = IntVar()
+ansBea = IntVar()
+ansPar = IntVar()
+ansKal = IntVar()
+ansBas = IntVar()
+ansRuc = IntVar()
+ansMic = IntVar()
+ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic]
+
+# Initialize variables for surface of a specific crop
+surLet = IntVar()
+surEnd = IntVar()
+surSpi = IntVar()
+surBea = IntVar()
+surPar = IntVar()
+surKal = IntVar()
+surBas = IntVar()
+surRuc = IntVar()
+surMic = IntVar()
+surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic]
+
+# Iniatialize variables for sold produce of a specific crop
+kgLet = IntVar()
+kgEnd = IntVar()
+kgSpi = IntVar()
+kgBea = IntVar()
+kgPar = IntVar()
+kgKal = IntVar()
+kgBas = IntVar()
+kgRuc = IntVar()
+kgMic = IntVar()
+kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic]
+
+Label(frame5,text='Crop [-]').grid(row=0,column=0,padx=5,sticky=W)
+Label(frame5,text='Surface [m2]').grid(row=0,column=1,padx=5,sticky=W)
+Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W)
+
+for i in range(0,len(lis)):
+    Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i+1, column=0, sticky=W, padx=5)
+    Entry(frame5, textvariable=surVeg[i]).grid(row=i+1, column=1, sticky=W, padx=5, pady=5)
+    Entry(frame5, textvariable=kgVeg[i]).grid(row=i+1, column=2, sticky=W, padx=5, pady=5)
+
+
+
 
 #frame5,q3
 ans4=IntVar()
@@ -643,7 +685,7 @@ startbutton=Button(frame0,text='Start',command=start,font=12)
 startbutton.pack(fill=X,side=BOTTOM,anchor=CENTER)
 
 # The first page you see when starting the questionare
-startlabel=Label(frame0,text='\n\n\n\nQuestionaire\n\n\n',font=12)
+startlabel=Label(frame0,text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n',font=12)
 startlabel.pack(fill=BOTH,side=BOTTOM)
   
 # Enter farm's name
@@ -707,7 +749,7 @@ root.mainloop()
 # when count >=17 , it means the questionnaire is finished, start to read database
 if count>=17:
     # Energy of crop. This shouldn't be in this if statement right?
-    Eoc=Blad1.col_values(4)[lis.index(ans3.get())+1]
+    Eoc=database.col_values(3)[lis.index(ans3.get())+1]
     non_count=str()
     # If choose 'I don't know’ option， make the value back to zero
     if ans890.get()==1:
@@ -835,8 +877,8 @@ if count>=17:
     Tvp3=sheet.cell_value(4, 29)  # extra distance travelled plane
     Tvp4=sheet.cell_value(5, 29)  # extra langdings made plane
     Tvp5=sheet.cell_value(6, 29)  # landing take of kerosene usage plane
-    Tvp6=sheet.cell_value(7, 29)  # co2 emissions 1 L of kerosene (Co2-eq/kg) plane	
-    Tvp7=sheet.cell_value(8, 29)  # radiative forcing factor plane 	
+    Tvp6=sheet.cell_value(7, 29)  # co2 emissions 1 L of kerosene (Co2-eq/kg) plane
+    Tvp7=sheet.cell_value(8, 29)  # radiative forcing factor plane
     Tvp8=sheet.cell_value(9, 29)  # possible cargo plane
     Tvp9=sheet.cell_value(10, 29) # average percent full plane
     T1=((Tvp1*(ans201.get()*Tvp3)**2+Tvp2*(ans201.get()*Tvp3)*Tvp6*Tvp7)+Tvp4*Tvp5*Tvp6)/(ans201.get()+0.001)/(Tvp8*Tvp9) #plane Co2 equivalent/(Ton*km)
@@ -859,9 +901,9 @@ if count>=17:
     Tp2=sheet.cell_value(23, 29) # regression factor plane
     Tp3=sheet.cell_value(25, 29) # extra distance travelled plane
     Tp4=sheet.cell_value(26, 29) # regression factor plane
-    Tp5=sheet.cell_value(27, 29) # litre of oil used in harbours	
-    Tp6=sheet.cell_value(28, 29) # extra stops see harbours	
-    Tp7=sheet.cell_value(29, 29) # Co2 emission 1 L of Oil (Co2-eq/kg)	
+    Tp5=sheet.cell_value(27, 29) # litre of oil used in harbours
+    Tp6=sheet.cell_value(28, 29) # extra stops see harbours
+    Tp7=sheet.cell_value(29, 29) # Co2 emission 1 L of Oil (Co2-eq/kg)
     Tp8=sheet.cell_value(30, 29) # Cargo (ton)
     Tp9=sheet.cell_value(31, 29) # average percentage full
     T5=(((Tp1*Tp8+Tp2*Tp4*ans203.get()*Tp3+(Tp5*(Tp6+1))*Tp7)/(ans203.get()+0.001)))/(Tp8*Tp9) #ship C02 equivalent/(Ton*km)
@@ -889,10 +931,10 @@ if count>=17:
     # calculation for total energy of fissile fuele use
     Fenergy=(Fo2*ans91.get())+(Fo4*ans92.get())+(Fo8*ans94.get())+(Fo10*ans95.get())
 
-    # calculation for total Co2 of fertelizers
+    # calculation for total Co2 of fertilizers
     FERco2=((Fe1*ans121.get())+(Fe3*ans122.get())+(Fe5*ans123.get())+(Fe7*ans124.get())+(Fe9*ans125.get())+(Fe11*ans126.get())+(Fe13*ans127.get())+(Fe15*ans128.get())+(Fe17*ans129.get())+(Fe19*ans130.get())+(Fe21*ans131.get())+(Fe22*ans132.get()))
 
-    # calculation for total energy of fertelizers
+    # calculation for total energy of fertilizers
     FERenergy=((Fe2*ans121.get())+(Fe4*ans122.get())+(Fe6*ans123.get())+(Fe8*ans124.get())+(Fe10*ans125.get())+(Fe12*ans126.get())+(Fe14*ans127.get())+(Fe16*ans128.get())+(Fe18*ans129.get())+(Fe20*ans130.get())+(Fe22*ans131.get())+(Fe24*ans132.get()))
 
     # calculation for total Co2 of substrates
@@ -988,12 +1030,6 @@ if count>=17:
     
     if ans890.get()==1 or ans131.get()==1 or ans147.get()==1 or ans152.get()==1 or ans166.get()==1 or ans184.get()==1 or ans204.get()==1:
         ws.write(10,1,non_count+'is not taken into account because of lacking data')
-    if v.get()==1:
-        ws.write(8,6,'Greenhouse')
-    if v.get()==2:
-        ws.write(8,6,'Open Field')
-    if v.get()==3:
-        ws.write(8,6,'Vertical Farm')
         
     chart_col= wb.add_chart({'type':'column'})
     chart_col.add_series({
