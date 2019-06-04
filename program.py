@@ -291,7 +291,6 @@ country['values']=('Netherlands','China','Germany')
 country.current(0)
 country.grid(padx=10)
 
-ans3=StringVar()
 
 # Initialize variables to choose different crops
 ansLet = IntVar()
@@ -342,7 +341,7 @@ def cal2(event):
             surVeg[i].set(0)
 
         total_area += surVeg[i].get()
-    # calculating the fraction crop over the full area
+    # Calculating the fraction crop over the full area
     fracLet = surVeg[0].get()/total_area
     fracEnd = surVeg[1].get()/total_area
     fracSpi = surVeg[2].get()/total_area
@@ -352,11 +351,19 @@ def cal2(event):
     fracBas = surVeg[6].get()/total_area
     fracRuc = surVeg[7].get()/total_area
     fracMic = surVeg[8].get()/total_area
-    frac = {'fracLet':fracLet,'fracEnd':fracEnd,'fracSpi':fracSpi,'fracBea':fracBea,'fracPar':fracPar,'fracKal':fracKal,
-                'fracBas':fracBas,'fracRuc':fracRuc,'fracMic':fracMic}
-    frac_all= {x: y for x, y in frac.items() if y != 0}
-    print(frac_all)
-    return total_area,frac_all
+
+    # Creating a dictionary, with 1 as the total fraction, and the crop fraction
+    dic_crops = {lis[0]:[1,fracLet],lis[1]:[1,fracEnd],lis[2]:[1,fracSpi],lis[3]:[1,fracBea],lis[4]:[1,fracPar],lis[5]:[1,fracKal],
+                lis[6]:[1,fracBas],lis[7]:[1,fracRuc],lis[8]:[1,fracMic]}
+
+    # Adding the amount of sold product kg/year to list.
+    for i in range(0,len(lis)):
+        dic_crops[lis[i]] += [kgVeg[i].get()]
+
+    dic_crops = {x: y for x, y in dic_crops.items() if y != [1, 0, 0]}
+    print(dic_crops)
+    print(total_area)
+    return total_area, dic_crops
 
 
 for i in range(0,len(lis)):
@@ -687,7 +694,7 @@ Button(frame00,text='Next',command=next2).pack(fill=BOTH,side=BOTTOM,anchor=CENT
 Entry(frame00,textvariable=farm_name).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
 Label(frame00,text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH,side=BOTTOM)
 #make a list contain all the variables
-list_ans=[farm_name,ans1,ans3,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
+list_ans=[farm_name,ans1,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
 path1=StringVar()
 path2=StringVar()
 
@@ -740,8 +747,13 @@ root.mainloop()
 
 # when count >=17 , it means the questionnaire is finished, start to read database
 if count>=17:
-    # Energy of crop. This shouldn't be in this if statement right?
-    Eoc=database.col_values(3)[lis.index(ans3.get())+1]
+    # Energy of crop.
+    # Eoc=database.col_values(3)[lis.index(ans3.get())+1]
+    # for i in range(0,lis):
+    #     dic_crops[lis[i]] += [database.col_values(3)[lis.index(lis[i].get())+1]]
+    # print(dic_crops)
+
+
     non_count=str()
     # If choose 'I don't know’ option， make the value back to zero
     if ans890.get()==1:
@@ -973,7 +985,6 @@ if count>=17:
     Totalco2_per_KJ_product = Totalco2_per_kg_product/Eoc
     Totalenergy_per_KJ_product = Totalenergy_per_kg_product/Eoc
 
-    dict['key']=[totalco2,pacco2]
 
 
     # Writing the excel sheet
