@@ -975,161 +975,169 @@ if count>=17:
 
     dict['key']=[totalco2,pacco2]
 
+#------------------------------------
+    wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
+    def worksheet(cropname, fraction, workbook):
+        # Writing the excel sheet
+        ws = workbook.add_worksheet(cropname)
+        ws.write(0,2,'Total CO2 emitted(Kg)')
+        ws.write(0,4,'Total energy used(MJ)')
 
-    # Writing the excel sheet
-    wb = xlsxwriter.Workbook(farm_name.get()+'.xlsx')
-    ws = wb.add_worksheet('answer')
-    ws.write(0,2,'Total CO2 emitted(Kg)')
-    ws.write(0,4,'Total energy used(MJ)')
+        #also labels in Dutch/other languages?
+        labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water','Pesticides','Transport', 'Package' ]
+        Co2_emitted = [Eco2,Fco2,FERco2,Sco2,Wco2, Pco2,Tco2,Pacco2]
+        Co2_emitted_fraction = [i*fraction for i in Co2_emitted]
+        Co2_emitted_fraction_round = [ round(elem, 2) for elem in Co2_emitted_fraction]
+        energy_used = [Eenergy,Fenergy,FERenergy,Senergy,Wenergy,Penergy,Tenergy,Pacenergy]
+        energy_used_fraction = [i*fraction for i in energy_used]
+        energy_used_fraction_round = [ round(elem, 2) for elem in energy_used_fraction]
 
-    #also labels in Dutch/other languages?
-    labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water','Pesticides','Transport', 'Package' ]
-    Co2_emitted = [Eco2,Fco2,FERco2,Sco2,Wco2, Pco2,Tco2,Pacco2]
-    energy_used = [Eenergy,Fenergy,FERenergy,Senergy,Wenergy,Penergy,Tenergy,Pacenergy]
+        for x in range(len(labels_output)):
+            ws.write(1+x,0,labels_output[x])
+            ws.write(1+x,2,Co2_emitted_fraction_round[x])
+            ws.write(1+x,4,energy_used_fraction_round[x])
 
-    for x in range(len(labels_output)):
-        ws.write(1+x,0,labels_output[x])
-        ws.write(1+x,2,Co2_emitted[x])
-        ws.write(1+x,4,energy_used[x])
+        labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)', 'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)', 'Total CO2 emitted per KJ product (Kg/KJ)','Total energy used per KJ product (KJ/KJ)']
+        totals_output = [Totalco2,Totalenergy,Totalco2_per_kg_product,Totalenergy_per_kg_product,Totalco2_per_KJ_product,Totalenergy_per_KJ_product]
+        totals_output_fraction = [i*fraction for i in totals_output]
+        totals_output_fraction_round = [ round(elem, 2) for elem in totals_output_fraction]
+        for x in range(len(labels_total)):
+            ws.write(1+x,6,labels_total[x])
+            ws.write(1+x,9,totals_output_fraction_round[x])
 
-    labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)', 'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)', 'Total CO2 emitted per KJ product (Kg/KJ)','Total energy used per KJ product (Kg/KJ)']
-    totals_output = [Totalco2,Totalenergy,Totalco2_per_kg_product,Totalenergy_per_kg_product,Totalco2_per_KJ_product,Totalenergy_per_KJ_product]
-    for x in range(len(labels_total)):
-        ws.write(1+x,6,labels_total[x])
-        ws.write(1+x,9,totals_output[x])
-
-    labels_diff_aspects = ['Heating','Cooling', 'Electricity', 'Tillage', 'Sowing','Weeding', 'Harvest', 'Fertilizer', 'Irrigation','Pesticide','Other']
-    for x in range(len(labels_diff_aspects)):
-        ws.write(43+x,1,labels_diff_aspects[x])
-        ws.write(43+x,2,list_ans[25+x].get())
+        labels_diff_aspects = ['Heating','Cooling', 'Electricity', 'Tillage', 'Sowing','Weeding', 'Harvest', 'Fertilizer', 'Irrigation','Pesticide','Other']
+        for x in range(len(labels_diff_aspects)):
+            ws.write(43+x,1,labels_diff_aspects[x])
+            ws.write(43+x,2,list_ans[22+x].get())*fraction
 
 
-    ws.write(43,9,'Heating')
-    ws.write(44,9,'Cooling')
-    ws.write(45,9,'Ventilation')
-    ws.write(46,9,'Lighting')
-    ws.write(47,9,'Machinery')
-    ws.write(48,9,'Storage')
-    ws.write(49,9,'Selling')
-    ws.write(50,9,'Other')
+        ws.write(43,9,'Heating')
+        ws.write(44,9,'Cooling')
+        ws.write(45,9,'Ventilation')
+        ws.write(46,9,'Lighting')
+        ws.write(47,9,'Machinery')
+        ws.write(48,9,'Storage')
+        ws.write(49,9,'Selling')
+        ws.write(50,9,'Other')
 
-    ws.write(43,10,ans81.get())
-    ws.write(44,10,ans82.get())
-    ws.write(45,10,ans83.get())
-    ws.write(46,10,ans84.get())
-    ws.write(47,10,ans85.get())
-    ws.write(48,10,ans86.get())
-    ws.write(49,10,ans87.get())
-    ws.write(50,10,ans88.get())
-    
-    if ans890.get()==1 or ans131.get()==1 or ans147.get()==1 or ans152.get()==1 or ans166.get()==1 or ans184.get()==1 or ans204.get()==1:
-        ws.write(10,1,non_count+'is not taken into account because of lacking data')
-        
-    chart_col= wb.add_chart({'type':'column'})
-    chart_col.add_series({
-        'name':['answer',0,2],
-        'categories' :['answer',1,0,10,0],
-        'values':['answer',1,2,10,2],
-        'line':{'color':'yellow'}
-        })
-    chart_col.set_title({'name': 'Total CO2 emitted from different sources'})
-    chart_col.set_y_axis({'name': 'Total CO2 emitted'})
-    chart_col.set_x_axis({'name':  'Different sources'})
+        ws.write(43,10,ans81.get())*fraction
+        ws.write(44,10,ans82.get())*fraction
+        ws.write(45,10,ans83.get())*fraction
+        ws.write(46,10,ans84.get())*fraction
+        ws.write(47,10,ans85.get())*fraction
+        ws.write(48,10,ans86.get())*fraction
+        ws.write(49,10,ans87.get())*fraction
+        ws.write(50,10,ans88.get())*fraction
 
-    chart_col.set_style(2)
-    ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
+        if ans890.get()==1 or ans131.get()==1 or ans147.get()==1 or ans152.get()==1 or ans166.get()==1 or ans184.get()==1 or ans204.get()==1:
+            ws.write(10,1,non_count+'is not taken into account because of lacking data')
 
-    chart_col= wb.add_chart({'type':'column'})
-    chart_col.add_series({
-        'name':['answer',0,4],
-        'categories' :['answer',1,0,10,0],
-        'values':['answer',1,4,10,4],
-        'line':{'color':'yellow'}
-        })
-    chart_col.set_title({'name': 'Total energy used from different sources'})
-    chart_col.set_y_axis({'name': 'Total energy used'})
-    chart_col.set_x_axis({'name':  'Different sources'})
+        chart_col= wb.add_chart({'type':'column'})
+        chart_col.add_series({
+            'name':[cropname,0,2],
+            'categories' :[cropname,1,0,10,0],
+            'values':[cropname,1,2,10,2],
+            'line':{cropname:'yellow'}
+            })
+        chart_col.set_title({'name': 'Total CO2 emitted from different sources'})
+        chart_col.set_y_axis({'name': 'Total CO2 emitted'})
+        chart_col.set_x_axis({'name':  'Different sources'})
 
-    chart_col.set_style(2)
-    ws.insert_chart('I13', chart_col, {'x_offset': 20, 'y_offset': 8})
+        chart_col.set_style(2)
+        ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-    chart_col=wb.add_chart({'type':'pie'})
-    chart_col.add_series({
-        'name':['answer',0,1],
-        'categories' :['answer',1,0,10,0],
-        'values':['answer',1,2,10,2],
-        'points':[{'fill':{'color':'blue'}},
-                  {'fill':{'color':'yellow'}},
-                  {'fill':{'color':'red'}},
-                  {'fill':{'color':'gray'}},
-                  {'fill':{'color':'black'}},
-                  {'fill':{'color':'purple'}},
-                  {'fill':{'color':'pink'}},
-                  ],
-        })
-    chart_col.set_title({'name': 'Total CO2 emitted from different \nsources'})
-    chart_col.set_style(2)
-    ws.insert_chart('A28', chart_col, {'x_offset': 20, 'y_offset': 8})
+        chart_col= wb.add_chart({'type':'column'})
+        chart_col.add_series({
+            'name':[cropname,0,4],
+            'categories' :[cropname,1,0,10,0],
+            'values':[cropname,1,4,10,4],
+            'line':{'color':'yellow'}
+            })
+        chart_col.set_title({'name': 'Total energy used from different sources'})
+        chart_col.set_y_axis({'name': 'Total energy used'})
+        chart_col.set_x_axis({'name':  'Different sources'})
 
-    chart_col=wb.add_chart({'type':'pie'})
-    chart_col.add_series({
-        'name':['answer',0,2],
-        'categories' :['answer',1,0,10,0],
-        'values':['answer',1,4,10,4],
-        'points':[{'fill':{'color':'blue'}},
-                  {'fill':{'color':'yellow'}},
-                  {'fill':{'color':'red'}},
-                  {'fill':{'color':'gray'}},
-                  {'fill':{'color':'black'}},
-                  {'fill':{'color':'purple'}},
-                  {'fill':{'color':'pink'}},
-                  ],
-        })
-    chart_col.set_title({'name': 'Total energy used from different sources'})
-    chart_col.set_style(2)
-    ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
+        chart_col.set_style(2)
+        ws.insert_chart('I13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-    chart_col=wb.add_chart({'type':'pie'})
-    chart_col.add_series({
-        'name':'Fossil fuels used',
-        'categories' :['answer',43,1,53,1],
-        'values':['answer',43,2,53,2],
-        'points':[{'fill':{'color':'blue'}},
-                  {'fill':{'color':'yellow'}},
-                  {'fill':{'color':'red'}},
-                  {'fill':{'color':'gray'}},
-                  {'fill':{'color':'black'}},
-                  {'fill':{'color':'purple'}},
-                  {'fill':{'color':'pink'}},
-                  {'fill':{'color':'cyan'}},
-                  {'fill':{'color':'magenta'}},
-                  {'fill':{'color':'brown'}},
-                  ],
-        })
-    chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
-    chart_col.set_style(5)
-    ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
+        chart_col=wb.add_chart({'type':'pie'})
+        chart_col.add_series({
+            'name':[cropname,0,1],
+            'categories' :[cropname,1,0,10,0],
+            'values':[cropname,1,2,10,2],
+            'points':[{'fill':{'color':'blue'}},
+                      {'fill':{'color':'yellow'}},
+                      {'fill':{'color':'red'}},
+                      {'fill':{'color':'gray'}},
+                      {'fill':{'color':'black'}},
+                      {'fill':{'color':'purple'}},
+                      {'fill':{'color':'pink'}},
+                      ],
+            })
+        chart_col.set_title({'name': 'Total CO2 emitted from different \nsources'})
+        chart_col.set_style(2)
+        ws.insert_chart('A28', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-    chart_col=wb.add_chart({'type':'pie'})
-    chart_col.add_series({
-        'name':'Electricity used',
-        'categories' :['answer',43,9,50,9],
-        'values':['answer',43,10,50,10],
-        'points':[{'fill':{'color':'blue'}},
-                  {'fill':{'color':'yellow'}},
-                  {'fill':{'color':'red'}},
-                  {'fill':{'color':'gray'}},
-                  {'fill':{'color':'black'}},
-                  {'fill':{'color':'purple'}},
-                  {'fill':{'color':'pink'}},
-                  {'fill':{'color':'cyan'}},
-                  
-                  ],
-        })
-    chart_col.set_title({'name': 'Electricity used for different aspects'})
-    chart_col.set_style(4)
-    ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
+        chart_col=wb.add_chart({'type':'pie'})
+        chart_col.add_series({
+            'name':[cropname,0,2],
+            'categories' :[cropname,1,0,10,0],
+            'values':[cropname,1,4,10,4],
+            'points':[{'fill':{'color':'blue'}},
+                      {'fill':{'color':'yellow'}},
+                      {'fill':{'color':'red'}},
+                      {'fill':{'color':'gray'}},
+                      {'fill':{'color':'black'}},
+                      {'fill':{'color':'purple'}},
+                      {'fill':{'color':'pink'}},
+                      ],
+            })
+        chart_col.set_title({'name': 'Total energy used from different sources'})
+        chart_col.set_style(2)
+        ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-    wb.close()
+        chart_col=wb.add_chart({'type':'pie'})
+        chart_col.add_series({
+            'name':'Fossil fuels used',
+            'categories' :[cropname,43,1,53,1],
+            'values':[cropname,43,2,53,2],
+            'points':[{'fill':{'color':'blue'}},
+                      {'fill':{'color':'yellow'}},
+                      {'fill':{'color':'red'}},
+                      {'fill':{'color':'gray'}},
+                      {'fill':{'color':'black'}},
+                      {'fill':{'color':'purple'}},
+                      {'fill':{'color':'pink'}},
+                      {'fill':{'color':'cyan'}},
+                      {'fill':{'color':'magenta'}},
+                      {'fill':{'color':'brown'}},
+                      ],
+            })
+        chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
+        chart_col.set_style(5)
+        ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
+
+        chart_col=wb.add_chart({'type':'pie'})
+        chart_col.add_series({
+            'name':'Electricity used',
+            'categories' :[cropname,43,9,50,9],
+            'values':[cropname,43,10,50,10],
+            'points':[{'fill':{'color':'blue'}},
+                      {'fill':{'color':'yellow'}},
+                      {'fill':{'color':'red'}},
+                      {'fill':{'color':'gray'}},
+                      {'fill':{'color':'black'}},
+                      {'fill':{'color':'purple'}},
+                      {'fill':{'color':'pink'}},
+                      {'fill':{'color':'cyan'}},
+
+                      ],
+            })
+        chart_col.set_title({'name': 'Electricity used for different aspects'})
+        chart_col.set_style(4)
+        ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
+
+        wb.close()
+        return
 
 
