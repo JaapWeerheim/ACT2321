@@ -83,66 +83,66 @@ def pre():
         frame8.grid_forget()
         frame5.grid(sticky=W)
     if count==3:
-        var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+        var.set('3. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame9.grid_forget()
         frame8.grid(sticky=W)
     if count==4:
-        var.set('6. Do you produce your own renewable energy and how much \ndo you produce?')
+        var.set('4. Do you produce your own renewable energy and how much \ndo you produce?')
         frame10.grid_forget()
         frame100.grid_forget()
         frame9.grid(sticky=W)
     if count==5:
-        var.set("7. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+        var.set("5. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
         frame100.grid(sticky=W)
     if count==6:
-        var.set("8. Do you use any fossil fuels(excluding transportation), \nand how much do you use(if you don't know fill in zero)")
+        var.set("6. Do you use any fossil fuels(excluding transportation), \nand how much do you use(if you don't know fill in zero)")
         frame14.grid_forget()
         frame140.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count==7:
-        var.set('9. How much kilograms do you use of the following \nNPK chemicals per year?')
+        var.set('7. How much kilograms do you use of the following \nNPK chemicals per year?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame14.grid(sticky=W)
         frame140.grid(sticky=W)
     if count==8:
-        var.set('10. Do you use substrate and how much per year? (kg)')
+        var.set('8. Do you use substrate and how much per year? (kg)')
         frame17.grid_forget()
         frame170.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count==9:
-        var.set('11. How much water do you use?')
+        var.set('9. How much water do you use?')
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count==10:
-        var.set('12. How much pesticides do you use? ')
+        var.set('10. How much pesticides do you use? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
     if count==11:
-        var.set('13. Is the product sold to the customer packaged? ')
+        var.set('11. Is the product sold to the customer packaged? ')
         frame20.grid_forget()
         frame200.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count==12:
-        var.set('14. How much green waste do you produce? ')
+        var.set('12. How much waste do you produce? ')
         frame22.grid_forget()
         frame220.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count==13:
-        var.set('15. How far does your product travel to the distribution center \non average? ')
+        var.set('13. How far does your product travel to the distribution center \non average? ')
         frame23.grid_forget()
         frame230.grid_forget()
         frame22.grid(sticky=W)
@@ -168,27 +168,27 @@ def next1():
         frame3.grid_forget()
         frame5.grid(sticky=W)
     if count==3:
-        var.set('5. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+        var.set('3. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
         frame5.grid_forget()
         frame8.grid(sticky=W)
     if count==4:
-        var.set('6. Do you produce your own renewable energy and how much \ndo you produce?')
+        var.set('4. Do you produce your own renewable energy and how much \ndo you produce?')
         frame8.grid_forget()
         frame9.grid(sticky=W)
     if count==5:
-        var.set("7. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+        var.set("5. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
         frame9.grid_forget()
         frame10.grid(sticky=W)
         frame100.grid(sticky=W)
     if count==6:
-        var.set("8. Do you use any fossil fuels(excluding transportation), \nand how much do you use (if you don't know fill in zero)")
+        var.set("6. Do you use any fossil fuels(excluding transportation), \nand how much do you use (if you don't know fill in zero)")
         frame10.grid_forget()
         frame100.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count==7:
-        var.set('9. How much kilograms do you use of the following \nNPK chemicals per year?')
+        var.set('7. How much kilograms do you use of the following \nNPK chemicals per year?')
         other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
         ans917.set(other)
         frame11.grid_forget()
@@ -197,43 +197,43 @@ def next1():
         frame14.grid(sticky=W)
         frame140.grid(sticky=W)
     if count==8:
-        var.set('10. Do you use substrate and how much per year? (kg)?')
+        var.set('8. Do you use substrate and how much per year? (kg)?')
         frame14.grid_forget()
         frame140.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count==9:
-        var.set('11. How much water do you use?')
+        var.set('9. How much water do you use?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count==10:
-        var.set('12. How much pesticides do you use?')
+        var.set('10. How much pesticides do you use?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
     if count==11:
-        var.set('13. Is the product sold to the customer packaged? ')
+        var.set('11. Is the product sold to the customer packaged? ')
         frame18.grid_forget()
         frame180.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count==12:
-        var.set('14. How much waste do you produce? ')
+        var.set('12. How much waste do you produce? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count==13:
-        var.set('15. How far does your produce travel to the distribution center \non average? ')
+        var.set('13. How far does your produce travel to the distribution center \non average? ')
         frame20.grid_forget()
         frame200.grid_forget()
         frame22.grid(sticky=W)
         frame220.grid(sticky=W)
     if count==14:
-        var.set('16. How much of the product does not survive the transport \nstage to the store? ')
+        var.set('14. How much of the product does not survive the transport \nstage to the store? ')
         frame22.grid_forget()
         frame220.grid_forget()
         frame23.grid(sticky=W)
@@ -291,18 +291,7 @@ country['values']=('Netherlands','China','Germany')
 country.current(0)
 country.grid(padx=10)
 
-# #frame3,q1
-# button1=Radiobutton(frame4,text='Greenhouse',variable=v,value=1).grid(row=1,column=0,padx=10,sticky=W)
-# button2=Radiobutton(frame4,text='Open field',variable=v,value=2).grid(row=2,column=0,padx=10,sticky=W)
-# button3=Radiobutton(frame4,text='Vertical farm',variable=v,value=3).grid(row=3,column=0,padx=10,sticky=W)
-
-#If farmers grow several crops, this shouldn't be a drop-down menu anymore
-#frame4,q2
 ans3=StringVar()
-# crop=ttk.Combobox(frame5,textvariable=ans3,state='readonly')
-# crop['values']=lis
-# crop.current(0)
-# crop.grid(padx=10)
 
 # Initialize variables to choose different crops
 ansLet = IntVar()
@@ -344,12 +333,31 @@ Label(frame5,text='Crop [-]').grid(row=0,column=0,padx=5,sticky=W)
 Label(frame5,text='Surface [m2]').grid(row=0,column=1,padx=5,sticky=W)
 Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W)
 
+frac_all = {}
 def cal2(event):
+    total_area = 0
     for i in range(0, len(ansVeg)):
         if ansVeg[i].get() == 0:
             kgVeg[i].set(0)
             surVeg[i].set(0)
-            print('test')
+
+        total_area += surVeg[i].get()
+    # calculating the fraction crop over the full area
+    fracLet = surVeg[0].get()/total_area
+    fracEnd = surVeg[1].get()/total_area
+    fracSpi = surVeg[2].get()/total_area
+    fracBea = surVeg[3].get()/total_area
+    fracPar = surVeg[4].get()/total_area
+    fracKal = surVeg[5].get()/total_area
+    fracBas = surVeg[6].get()/total_area
+    fracRuc = surVeg[7].get()/total_area
+    fracMic = surVeg[8].get()/total_area
+    frac = {'fracLet':fracLet,'fracEnd':fracEnd,'fracSpi':fracSpi,'fracBea':fracBea,'fracPar':fracPar,'fracKal':fracKal,
+                'fracBas':fracBas,'fracRuc':fracRuc,'fracMic':fracMic}
+    frac_all= {x: y for x, y in frac.items() if y != 0}
+    print(frac_all)
+    return total_area,frac_all
+
 
 for i in range(0,len(lis)):
     Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i+1, column=0, sticky=W, padx=5)
@@ -359,18 +367,6 @@ for i in range(0,len(lis)):
     Entkg.grid(row=i+1, column=2, sticky=W, padx=5, pady=5)
     EntSur.bind('<FocusOut>', cal2)
     Entkg.bind('<FocusOut>', cal2)
-
-
-
-
-
-#frame5,q3
-ans4=IntVar()
-Area=Entry(frame6,textvariable=ans4).grid(sticky=W,padx=20,pady=20)         #maybe add 'm3' to the frame?
-
-#frame6,q4
-ans5=IntVar()
-Kilogram=Entry(frame7,textvariable=ans5).grid(sticky=W,padx=20,pady=20)     #maybe add 'kg' to the frame?
 
 #frame7,q5
 ans61=IntVar()
@@ -691,7 +687,7 @@ Button(frame00,text='Next',command=next2).pack(fill=BOTH,side=BOTTOM,anchor=CENT
 Entry(frame00,textvariable=farm_name).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
 Label(frame00,text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH,side=BOTTOM)
 #make a list contain all the variables
-list_ans=[farm_name,ans1,ans3,v,ans4,ans5,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
+list_ans=[farm_name,ans1,ans3,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
 path1=StringVar()
 path2=StringVar()
 
@@ -915,6 +911,8 @@ if count>=17:
         Pac1=0
         Pac2=0
 
+
+
     # caculation for total C02 of electrcity usage
     Eco2=(C1*ans61.get())+(C3*ans62.get())+(C5*ans71.get())+(C7*ans73.get())+(C9*ans72.get())-(ans87.get()*C1)-(ans88.get()*C3)
 
@@ -972,14 +970,14 @@ if count>=17:
     Totalenergy_per_kg_product= Totalenergy/(ans5.get()*(100-ans211.get())/100)
 
     # calculations for the total Co2 and energy per KJ product
-    Totalco2_per_KJ_product=Totalco2/((ans5.get()*(100-ans211.get())/100)*Eoc)
-    Totalenergy_per_KJ_product=Totalenergy/((ans5.get()*(100-ans211.get())/100)*Eoc)
+    Totalco2_per_KJ_product = Totalco2_per_kg_product/Eoc
+    Totalenergy_per_KJ_product = Totalenergy_per_kg_product/Eoc
 
-
+    dict['key']=[totalco2,pacco2]
 
 
     # Writing the excel sheet
-    wb = xlsxwriter.Workbook(farm_name.get()+ans3.get()+'.xlsx')
+    wb = xlsxwriter.Workbook(farm_name.get()+'.xlsx')
     ws = wb.add_worksheet('answer')
     ws.write(0,2,'Total CO2 emitted(Kg)')
     ws.write(0,4,'Total energy used(MJ)')
