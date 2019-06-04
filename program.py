@@ -335,32 +335,32 @@ Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W
 frac_all = {}
 def cal2(event):
     total_area = 0
+    total_kg = 0
     for i in range(0, len(ansVeg)):
         if ansVeg[i].get() == 0:
             kgVeg[i].set(0)
             surVeg[i].set(0)
 
         total_area += surVeg[i].get()
+        total_kg += kgVeg[i].get()
+
     # Calculating the fraction crop over the full area
-    fracLet = surVeg[0].get()/total_area
-    fracEnd = surVeg[1].get()/total_area
-    fracSpi = surVeg[2].get()/total_area
-    fracBea = surVeg[3].get()/total_area
-    fracPar = surVeg[4].get()/total_area
-    fracKal = surVeg[5].get()/total_area
-    fracBas = surVeg[6].get()/total_area
-    fracRuc = surVeg[7].get()/total_area
-    fracMic = surVeg[8].get()/total_area
+    fracLetsur = fracEndsur = fracSpisur = fracBeasur = fracParsur = fracKalsur = fracBassur = fracRucsur = fracMicsur = 0
+    frac_sur = [fracLetsur,fracEndsur,fracSpisur,fracBeasur,fracParsur,fracKalsur,fracBassur,fracRucsur,fracMicsur]
+    fracLetkg = fracEndkg = fracSpikg = fracBeakg = fracParkg = fracKalkg = fracBaskg = fracRuckg = fracMickg = 0
+    frac_kg = [fracLetkg,fracEndkg,fracSpikg,fracBeakg,fracParkg,fracKalkg,fracBaskg,fracRuckg,fracMickg]
+    for i in range(0,len(frac_sur)):
+        frac_sur[i] = surVeg[i].get()/total_area
+        frac_kg[i] = kgVeg[i].get() / total_kg
 
-    # Creating a dictionary, with 1 as the total fraction, and the crop fraction
-    dic_crops = {lis[0]:[1,fracLet],lis[1]:[1,fracEnd],lis[2]:[1,fracSpi],lis[3]:[1,fracBea],lis[4]:[1,fracPar],lis[5]:[1,fracKal],
-                lis[6]:[1,fracBas],lis[7]:[1,fracRuc],lis[8]:[1,fracMic]}
 
-    # Adding the amount of sold product kg/year to list.
-    for i in range(0,len(lis)):
-        dic_crops[lis[i]] += [kgVeg[i].get()]
+    # Creating a dictionary of all parameters: [whole fraction,fraction surface, fraction kg,kg vegetation]
+    dic_crops = {}
+    for i in range(0,len(frac_sur)):
+          dic_crops[lis[i]] = [1,frac_sur[i],frac_kg[i],kgVeg[i].get()]
 
-    dic_crops = {x: y for x, y in dic_crops.items() if y != [1, 0, 0]}
+
+    dic_crops = {x: y for x, y in dic_crops.items() if y != [1, 0, 0, 0]}
     print(dic_crops)
     print(total_area)
     return total_area, dic_crops
