@@ -66,7 +66,7 @@ def pre():
     for i in range(len(list_ans)):#if there is no value in Entry, make it back to 0
         try:
             if i != 0 or 2 or 1:
-                list_ans[i].get()!=''
+                list_ans[i].get() != ''
         
         except TclError:
             list_ans[i].set(00)
@@ -291,7 +291,6 @@ country['values']=('Netherlands','China','Germany')
 country.current(0)
 country.grid(padx=10)
 
-ans3=StringVar()
 
 # Initialize variables to choose different crops
 ansLet = IntVar()
@@ -336,27 +335,35 @@ Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W
 frac_all = {}
 def cal2(event):
     total_area = 0
+    total_kg = 0
     for i in range(0, len(ansVeg)):
         if ansVeg[i].get() == 0:
             kgVeg[i].set(0)
             surVeg[i].set(0)
 
         total_area += surVeg[i].get()
-    # calculating the fraction crop over the full area
-    fracLet = surVeg[0].get()/total_area
-    fracEnd = surVeg[1].get()/total_area
-    fracSpi = surVeg[2].get()/total_area
-    fracBea = surVeg[3].get()/total_area
-    fracPar = surVeg[4].get()/total_area
-    fracKal = surVeg[5].get()/total_area
-    fracBas = surVeg[6].get()/total_area
-    fracRuc = surVeg[7].get()/total_area
-    fracMic = surVeg[8].get()/total_area
-    frac = {'fracLet':fracLet,'fracEnd':fracEnd,'fracSpi':fracSpi,'fracBea':fracBea,'fracPar':fracPar,'fracKal':fracKal,
-                'fracBas':fracBas,'fracRuc':fracRuc,'fracMic':fracMic}
-    frac_all= {x: y for x, y in frac.items() if y != 0}
-    print(frac_all)
-    return total_area,frac_all
+        total_kg += kgVeg[i].get()
+
+    # Calculating the fraction crop over the full area and fraction of kg
+    fracLetsur = fracEndsur = fracSpisur = fracBeasur = fracParsur = fracKalsur = fracBassur = fracRucsur = fracMicsur = 0
+    frac_sur = [fracLetsur,fracEndsur,fracSpisur,fracBeasur,fracParsur,fracKalsur,fracBassur,fracRucsur,fracMicsur]
+    fracLetkg = fracEndkg = fracSpikg = fracBeakg = fracParkg = fracKalkg = fracBaskg = fracRuckg = fracMickg = 0
+    frac_kg = [fracLetkg,fracEndkg,fracSpikg,fracBeakg,fracParkg,fracKalkg,fracBaskg,fracRuckg,fracMickg]
+    for i in range(0,len(frac_sur)):
+        frac_sur[i] = surVeg[i].get()/total_area
+        frac_kg[i] = kgVeg[i].get() / total_kg
+
+
+    # Creating a dictionary of all parameters: [whole fraction,fraction surface, fraction kg,kg vegetation]
+    dic_crops = {}
+    for i in range(0,len(frac_sur)):
+          dic_crops[lis[i]] = [1,frac_sur[i],frac_kg[i],kgVeg[i].get()]
+
+
+    dic_crops = {x: y for x, y in dic_crops.items() if y != [1, 0, 0, 0]}
+    print(dic_crops)
+    print(total_area)
+    return total_area, dic_crops
 
 
 for i in range(0,len(lis)):
@@ -687,7 +694,7 @@ Button(frame00,text='Next',command=next2).pack(fill=BOTH,side=BOTTOM,anchor=CENT
 Entry(frame00,textvariable=farm_name).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
 Label(frame00,text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH,side=BOTTOM)
 #make a list contain all the variables
-list_ans=[farm_name,ans1,ans3,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
+list_ans=[farm_name,ans1,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
 path1=StringVar()
 path2=StringVar()
 
@@ -740,6 +747,13 @@ root.mainloop()
 
 # when count >=17 , it means the questionnaire is finished, start to read database
 if count>=17:
+    # Energy of crop.
+    # Eoc=database.col_values(3)[lis.index(ans3.get())+1]
+    # for i in range(0,lis):
+    #     dic_crops[lis[i]] += [database.col_values(3)[lis.index(lis[i].get())+1]]
+    # print(dic_crops)
+
+
     non_count=str()
     # If choose 'I don't know’ option， make the value back to zero
     if ans890.get()==1:
@@ -909,228 +923,252 @@ if count>=17:
         Pac1=0
         Pac2=0
 
-# ------------------------------------
-    wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
-
-    def worksheet(cropname, kg_prod, frac_surf, frac_kg, workbook, Eoc):
-
-        # caculation for total C02 of electricity usage
-        Eco2=frac_surf*((C1*ans61.get())+(C3*ans62.get())+(C5*ans71.get())+(C7*ans73.get())+(C9*ans72.get())-(ans87.get()*C1)-(ans88.get()*C3))
-
-        # caculation for total energy of electricity usage
-        Eenergy=frac_surf*((C2*ans61.get())+(C4*ans62.get())+(C6*ans71.get())+(C8*ans73.get())+(C10*ans72.get())-(ans87.get()*C2)-(ans88.get()*C4))
-
-        # calculation for total Co2 of fossile fuels use
-        Fco2=frac_surf*((Fo1*ans91.get())+(Fo3*ans92.get())+(Fo7*ans94.get())+(Fo9*ans95.get()))
-
-        # calculation for total energy of fissile fuel use
-        Fenergy=frac_surf*((Fo2*ans91.get())+(Fo4*ans92.get())+(Fo8*ans94.get())+(Fo10*ans95.get()))
-
-        # calculation for total Co2 of fertilizers
-        FERco2=frac_surf*(((Fe1*ans121.get())+(Fe3*ans122.get())+(Fe5*ans123.get())+(Fe7*ans124.get())+(Fe9*ans125.get())+(Fe11*ans126.get())+(Fe13*ans127.get())+(Fe15*ans128.get())+(Fe17*ans129.get())+(Fe19*ans130.get())+(Fe21*ans131.get())+(Fe22*ans132.get())))
-
-        # calculation for total energy of fertilizers #frac surf
-        FERenergy=frac_surf*(((Fe2*ans121.get())+(Fe4*ans122.get())+(Fe6*ans123.get())+(Fe8*ans124.get())+(Fe10*ans125.get())+(Fe12*ans126.get())+(Fe14*ans127.get())+(Fe16*ans128.get())+(Fe18*ans129.get())+(Fe20*ans130.get())+(Fe22*ans131.get())+(Fe24*ans132.get())))
-
-        # calculation for total Co2 of substrates
-        Sco2=frac_surf*((S1*ans141.get())+(S3*ans142.get())+(S5*ans143.get())+(S7*ans144.get())+(S9*ans145.get())+(S11*ans146.get()))
-
-        # calculation for total energy of substrates
-        Senergy=frac_surf*((S2*ans141.get())+(S4*ans142.get())+(S6*ans143.get())+(S8*ans144.get())+(S10*ans145.get())+(S12*ans146.get()))
-
-        # calculation for total Co2 of water
-        Wco2= frac_surf*(W1*ans151.get())
-
-        # calculation for total energy of water
-        Wenergy = frac_surf*(W2*ans151.get())
-
-        # calculation for total Co2 of pesticides
-        Pco2 = frac_surf*((P1*ans161.get())+(P3*ans162.get())+(P5*ans163.get())+(P7*ans164.get())+(P9*ans165.get()))
-
-        # calculation for total energy of pesticides
-        Penergy = frac_surf*((P2*ans161.get())+(P4*ans162.get())++(P6*ans163.get())++(P8*ans164.get())+(P10*ans165.get()))
-
-        # calculation for total Co2 of transport
-        Tco2= frac_kg*((T1* ans201.get())+(T3*ans202.get())+(T5*ans203.get()))
-
-        # calculation for total energy of transport
-        Tenergy= frac_kg*((T2* ans201.get())+(T4*ans202.get())+(T6*ans203.get()))
-
-        # calculation for the total Co2 of packaging
-        Pacco2=(kg_prod*(100-ans211.get())/100)*Pac1
-
-        # calculation for the total energy of packaging
-        Pacenergy=(kg_prod*(100-ans211.get())/100)*Pac2
-
-        # calculations for the total Co2 and energy
-        Totalco2 = Eco2+Fco2+FERco2+ Sco2+Wco2+Pco2+Tco2+ Pacco2
-        Totalenergy = Eenergy+Fenergy+FERenergy+Senergy+Wenergy+Penergy+Tenergy+Pacenergy
-
-        # calculations for the total Co2 and energy per kg product #ans5 moet kg worden
-        Totalco2_per_kg_product= Totalco2/(kg_prod*(100-ans211.get())/100)
-        Totalenergy_per_kg_product= Totalenergy/(kg_prod*(100-ans211.get())/100)
-
-        # calculations for the total Co2 and energy per KJ product
-        Totalco2_per_KJ_product = Totalco2_per_kg_product/Eoc
-        Totalenergy_per_KJ_product = Totalenergy_per_kg_product/Eoc
-
-        # Writing the excel sheet
-        ws = workbook.add_worksheet(cropname)
-        ws.write(0,2,'Total CO2 emitted(Kg)')
-        ws.write(0,4,'Total energy used(MJ)')
-
-        #also labels in Dutch/other languages?
-        labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water','Pesticides','Transport', 'Package' ]
-        Co2_emitted = [Eco2,Fco2,FERco2,Sco2,Wco2, Pco2,Tco2,Pacco2]
-        Co2_emitted_round = [round(elem, 2) for elem in Co2_emitted]
-        energy_used = [Eenergy,Fenergy,FERenergy,Senergy,Wenergy,Penergy,Tenergy,Pacenergy]
-        energy_used_round = [round(elem, 2) for elem in energy_used]
-
-        for x in range(len(labels_output)):
-            ws.write(1+x,0,labels_output[x])
-            ws.write(1+x,2,Co2_emitted_round[x])
-            ws.write(1+x,4,energy_used_round[x])
-
-        labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)', 'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)', 'Total CO2 emitted per KJ product (Kg/KJ)','Total energy used per KJ product (KJ/KJ)']
-        totals_output = [Totalco2,Totalenergy,Totalco2_per_kg_product,Totalenergy_per_kg_product,Totalco2_per_KJ_product,Totalenergy_per_KJ_product]
-        totals_output_round = [ round(elem, 2) for elem in totals_output]
-        for x in range(len(labels_total)):
-            ws.write(1+x,6,labels_total[x])
-            ws.write(1+x,9,totals_output_round[x])
-
-        labels_diff_aspects = ['Heating','Cooling', 'Electricity', 'Tillage', 'Sowing','Weeding', 'Harvest', 'Fertilizer', 'Irrigation','Pesticide','Other']
-        for x in range(len(labels_diff_aspects)):
-            ws.write(43+x,1,labels_diff_aspects[x])
-            ws.write(43+x,2,list_ans[22+x].get())*frac_surf
+        # ------------------------------------
+        wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
 
 
-        ws.write(43,9,'Heating')
-        ws.write(44,9,'Cooling')
-        ws.write(45,9,'Ventilation')
-        ws.write(46,9,'Lighting')
-        ws.write(47,9,'Machinery')
-        ws.write(48,9,'Storage')
-        ws.write(49,9,'Selling')
-        ws.write(50,9,'Other')
+        def worksheet(cropname, kg_prod, frac_surf, frac_kg, workbook, Eoc):
 
-        ws.write(43,10,ans81.get())*frac_surf
-        ws.write(44,10,ans82.get())*frac_surf
-        ws.write(45,10,ans83.get())*frac_surf
-        ws.write(46,10,ans84.get())*frac_surf
-        ws.write(47,10,ans85.get())*frac_surf
-        ws.write(48,10,ans86.get())*frac_surf
-        ws.write(49,10,ans87.get())*frac_surf
-        ws.write(50,10,ans88.get())*frac_surf
+            # caculation for total C02 of electricity usage
+            Eco2 = frac_surf * ((C1 * ans61.get()) + (C3 * ans62.get()) + (C5 * ans71.get()) + (C7 * ans73.get()) + (
+                        C9 * ans72.get()) - (ans87.get() * C1) - (ans88.get() * C3))
 
-        if ans890.get()==1 or ans131.get()==1 or ans147.get()==1 or ans152.get()==1 or ans166.get()==1 or ans184.get()==1 or ans204.get()==1:
-            ws.write(10,1,non_count+'is not taken into account because of lacking data')
+            # caculation for total energy of electricity usage
+            Eenergy = frac_surf * ((C2 * ans61.get()) + (C4 * ans62.get()) + (C6 * ans71.get()) + (C8 * ans73.get()) + (
+                        C10 * ans72.get()) - (ans87.get() * C2) - (ans88.get() * C4))
 
-        chart_col= wb.add_chart({'type':'column'})
-        chart_col.add_series({
-            'name':[cropname,0,2],
-            'categories' :[cropname,1,0,10,0],
-            'values':[cropname,1,2,10,2],
-            'line':{cropname:'yellow'}
+            # calculation for total Co2 of fossile fuels use
+            Fco2 = frac_surf * ((Fo1 * ans91.get()) + (Fo3 * ans92.get()) + (Fo7 * ans94.get()) + (Fo9 * ans95.get()))
+
+            # calculation for total energy of fissile fuel use
+            Fenergy = frac_surf * (
+                        (Fo2 * ans91.get()) + (Fo4 * ans92.get()) + (Fo8 * ans94.get()) + (Fo10 * ans95.get()))
+
+            # calculation for total Co2 of fertilizers
+            FERco2 = frac_surf * ((
+                        (Fe1 * ans121.get()) + (Fe3 * ans122.get()) + (Fe5 * ans123.get()) + (Fe7 * ans124.get()) + (
+                            Fe9 * ans125.get()) + (Fe11 * ans126.get()) + (Fe13 * ans127.get()) + (
+                                    Fe15 * ans128.get()) + (Fe17 * ans129.get()) + (Fe19 * ans130.get()) + (
+                                    Fe21 * ans131.get()) + (Fe22 * ans132.get())))
+
+            # calculation for total energy of fertilizers #frac surf
+            FERenergy = frac_surf * ((
+                        (Fe2 * ans121.get()) + (Fe4 * ans122.get()) + (Fe6 * ans123.get()) + (Fe8 * ans124.get()) + (
+                            Fe10 * ans125.get()) + (Fe12 * ans126.get()) + (Fe14 * ans127.get()) + (
+                                    Fe16 * ans128.get()) + (Fe18 * ans129.get()) + (Fe20 * ans130.get()) + (
+                                    Fe22 * ans131.get()) + (Fe24 * ans132.get())))
+
+            # calculation for total Co2 of substrates
+            Sco2 = frac_surf * (
+                        (S1 * ans141.get()) + (S3 * ans142.get()) + (S5 * ans143.get()) + (S7 * ans144.get()) + (
+                            S9 * ans145.get()) + (S11 * ans146.get()))
+
+            # calculation for total energy of substrates
+            Senergy = frac_surf * (
+                        (S2 * ans141.get()) + (S4 * ans142.get()) + (S6 * ans143.get()) + (S8 * ans144.get()) + (
+                            S10 * ans145.get()) + (S12 * ans146.get()))
+
+            # calculation for total Co2 of water
+            Wco2 = frac_surf * (W1 * ans151.get())
+
+            # calculation for total energy of water
+            Wenergy = frac_surf * (W2 * ans151.get())
+
+            # calculation for total Co2 of pesticides
+            Pco2 = frac_surf * (
+                        (P1 * ans161.get()) + (P3 * ans162.get()) + (P5 * ans163.get()) + (P7 * ans164.get()) + (
+                            P9 * ans165.get()))
+
+            # calculation for total energy of pesticides
+            Penergy = frac_surf * (
+                        (P2 * ans161.get()) + (P4 * ans162.get()) + +(P6 * ans163.get()) + +(P8 * ans164.get()) + (
+                            P10 * ans165.get()))
+
+            # calculation for total Co2 of transport
+            Tco2 = frac_kg * ((T1 * ans201.get()) + (T3 * ans202.get()) + (T5 * ans203.get()))
+
+            # calculation for total energy of transport
+            Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) + (T6 * ans203.get()))
+
+            # calculation for the total Co2 of packaging
+            Pacco2 = (kg_prod * (100 - ans211.get()) / 100) * Pac1
+
+            # calculation for the total energy of packaging
+            Pacenergy = (kg_prod * (100 - ans211.get()) / 100) * Pac2
+
+            # calculations for the total Co2 and energy
+            Totalco2 = Eco2 + Fco2 + FERco2 + Sco2 + Wco2 + Pco2 + Tco2 + Pacco2
+            Totalenergy = Eenergy + Fenergy + FERenergy + Senergy + Wenergy + Penergy + Tenergy + Pacenergy
+
+            # calculations for the total Co2 and energy per kg product #ans5 moet kg worden
+            Totalco2_per_kg_product = Totalco2 / (kg_prod * (100 - ans211.get()) / 100)
+            Totalenergy_per_kg_product = Totalenergy / (kg_prod * (100 - ans211.get()) / 100)
+
+            # calculations for the total Co2 and energy per KJ product
+            Totalco2_per_KJ_product = Totalco2_per_kg_product / Eoc
+            Totalenergy_per_KJ_product = Totalenergy_per_kg_product / Eoc
+
+            # Writing the excel sheet
+            ws = workbook.add_worksheet(cropname)
+            ws.write(0, 2, 'Total CO2 emitted(Kg)')
+            ws.write(0, 4, 'Total energy used(MJ)')
+
+            # also labels in Dutch/other languages?
+            labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
+                             'Transport', 'Package']
+            Co2_emitted = [Eco2, Fco2, FERco2, Sco2, Wco2, Pco2, Tco2, Pacco2]
+            Co2_emitted_round = [round(elem, 2) for elem in Co2_emitted]
+            energy_used = [Eenergy, Fenergy, FERenergy, Senergy, Wenergy, Penergy, Tenergy, Pacenergy]
+            energy_used_round = [round(elem, 2) for elem in energy_used]
+
+            for x in range(len(labels_output)):
+                ws.write(1 + x, 0, labels_output[x])
+                ws.write(1 + x, 2, Co2_emitted_round[x])
+                ws.write(1 + x, 4, energy_used_round[x])
+
+            labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)',
+                            'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)',
+                            'Total CO2 emitted per KJ product (Kg/KJ)', 'Total energy used per KJ product (KJ/KJ)']
+            totals_output = [Totalco2, Totalenergy, Totalco2_per_kg_product, Totalenergy_per_kg_product,
+                             Totalco2_per_KJ_product, Totalenergy_per_KJ_product]
+            totals_output_round = [round(elem, 2) for elem in totals_output]
+            for x in range(len(labels_total)):
+                ws.write(1 + x, 6, labels_total[x])
+                ws.write(1 + x, 9, totals_output_round[x])
+
+            labels_diff_aspects = ['Heating', 'Cooling', 'Electricity', 'Tillage', 'Sowing', 'Weeding', 'Harvest',
+                                   'Fertilizer', 'Irrigation', 'Pesticide', 'Other']
+            for x in range(len(labels_diff_aspects)):
+                ws.write(43 + x, 1, labels_diff_aspects[x])
+                ws.write(43 + x, 2, list_ans[22 + x].get()) * frac_surf
+
+            ws.write(43, 9, 'Heating')
+            ws.write(44, 9, 'Cooling')
+            ws.write(45, 9, 'Ventilation')
+            ws.write(46, 9, 'Lighting')
+            ws.write(47, 9, 'Machinery')
+            ws.write(48, 9, 'Storage')
+            ws.write(49, 9, 'Selling')
+            ws.write(50, 9, 'Other')
+
+            ws.write(43, 10, ans81.get()) * frac_surf
+            ws.write(44, 10, ans82.get()) * frac_surf
+            ws.write(45, 10, ans83.get()) * frac_surf
+            ws.write(46, 10, ans84.get()) * frac_surf
+            ws.write(47, 10, ans85.get()) * frac_surf
+            ws.write(48, 10, ans86.get()) * frac_surf
+            ws.write(49, 10, ans87.get()) * frac_surf
+            ws.write(50, 10, ans88.get()) * frac_surf
+
+            if ans890.get() == 1 or ans131.get() == 1 or ans147.get() == 1 or ans152.get() == 1 or ans166.get() == 1 or ans184.get() == 1 or ans204.get() == 1:
+                ws.write(10, 1, non_count + 'is not taken into account because of lacking data')
+
+            chart_col = wb.add_chart({'type': 'column'})
+            chart_col.add_series({
+                'name': [cropname, 0, 2],
+                'categories': [cropname, 1, 0, 10, 0],
+                'values': [cropname, 1, 2, 10, 2],
+                'line': {cropname: 'yellow'}
             })
-        chart_col.set_title({'name': 'Total CO2 emitted from different sources'})
-        chart_col.set_y_axis({'name': 'Total CO2 emitted'})
-        chart_col.set_x_axis({'name':  'Different sources'})
+            chart_col.set_title({'name': 'Total CO2 emitted from different sources'})
+            chart_col.set_y_axis({'name': 'Total CO2 emitted'})
+            chart_col.set_x_axis({'name': 'Different sources'})
 
-        chart_col.set_style(2)
-        ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
+            chart_col.set_style(2)
+            ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col= wb.add_chart({'type':'column'})
-        chart_col.add_series({
-            'name':[cropname,0,4],
-            'categories' :[cropname,1,0,10,0],
-            'values':[cropname,1,4,10,4],
-            'line':{'color':'yellow'}
+            chart_col = wb.add_chart({'type': 'column'})
+            chart_col.add_series({
+                'name': [cropname, 0, 4],
+                'categories': [cropname, 1, 0, 10, 0],
+                'values': [cropname, 1, 4, 10, 4],
+                'line': {'color': 'yellow'}
             })
-        chart_col.set_title({'name': 'Total energy used from different sources'})
-        chart_col.set_y_axis({'name': 'Total energy used'})
-        chart_col.set_x_axis({'name':  'Different sources'})
+            chart_col.set_title({'name': 'Total energy used from different sources'})
+            chart_col.set_y_axis({'name': 'Total energy used'})
+            chart_col.set_x_axis({'name': 'Different sources'})
 
-        chart_col.set_style(2)
-        ws.insert_chart('I13', chart_col, {'x_offset': 20, 'y_offset': 8})
+            chart_col.set_style(2)
+            ws.insert_chart('I13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col=wb.add_chart({'type':'pie'})
-        chart_col.add_series({
-            'name':[cropname,0,1],
-            'categories' :[cropname,1,0,10,0],
-            'values':[cropname,1,2,10,2],
-            'points':[{'fill':{'color':'blue'}},
-                      {'fill':{'color':'yellow'}},
-                      {'fill':{'color':'red'}},
-                      {'fill':{'color':'gray'}},
-                      {'fill':{'color':'black'}},
-                      {'fill':{'color':'purple'}},
-                      {'fill':{'color':'pink'}},
-                      ],
+            chart_col = wb.add_chart({'type': 'pie'})
+            chart_col.add_series({
+                'name': [cropname, 0, 1],
+                'categories': [cropname, 1, 0, 10, 0],
+                'values': [cropname, 1, 2, 10, 2],
+                'points': [{'fill': {'color': 'blue'}},
+                           {'fill': {'color': 'yellow'}},
+                           {'fill': {'color': 'red'}},
+                           {'fill': {'color': 'gray'}},
+                           {'fill': {'color': 'black'}},
+                           {'fill': {'color': 'purple'}},
+                           {'fill': {'color': 'pink'}},
+                           ],
             })
-        chart_col.set_title({'name': 'Total CO2 emitted from different \nsources'})
-        chart_col.set_style(2)
-        ws.insert_chart('A28', chart_col, {'x_offset': 20, 'y_offset': 8})
+            chart_col.set_title({'name': 'Total CO2 emitted from different \nsources'})
+            chart_col.set_style(2)
+            ws.insert_chart('A28', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col=wb.add_chart({'type':'pie'})
-        chart_col.add_series({
-            'name':[cropname,0,2],
-            'categories' :[cropname,1,0,10,0],
-            'values':[cropname,1,4,10,4],
-            'points':[{'fill':{'color':'blue'}},
-                      {'fill':{'color':'yellow'}},
-                      {'fill':{'color':'red'}},
-                      {'fill':{'color':'gray'}},
-                      {'fill':{'color':'black'}},
-                      {'fill':{'color':'purple'}},
-                      {'fill':{'color':'pink'}},
-                      ],
+            chart_col = wb.add_chart({'type': 'pie'})
+            chart_col.add_series({
+                'name': [cropname, 0, 2],
+                'categories': [cropname, 1, 0, 10, 0],
+                'values': [cropname, 1, 4, 10, 4],
+                'points': [{'fill': {'color': 'blue'}},
+                           {'fill': {'color': 'yellow'}},
+                           {'fill': {'color': 'red'}},
+                           {'fill': {'color': 'gray'}},
+                           {'fill': {'color': 'black'}},
+                           {'fill': {'color': 'purple'}},
+                           {'fill': {'color': 'pink'}},
+                           ],
             })
-        chart_col.set_title({'name': 'Total energy used from different sources'})
-        chart_col.set_style(2)
-        ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
+            chart_col.set_title({'name': 'Total energy used from different sources'})
+            chart_col.set_style(2)
+            ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col=wb.add_chart({'type':'pie'})
-        chart_col.add_series({
-            'name':'Fossil fuels used',
-            'categories' :[cropname,43,1,53,1],
-            'values':[cropname,43,2,53,2],
-            'points':[{'fill':{'color':'blue'}},
-                      {'fill':{'color':'yellow'}},
-                      {'fill':{'color':'red'}},
-                      {'fill':{'color':'gray'}},
-                      {'fill':{'color':'black'}},
-                      {'fill':{'color':'purple'}},
-                      {'fill':{'color':'pink'}},
-                      {'fill':{'color':'cyan'}},
-                      {'fill':{'color':'magenta'}},
-                      {'fill':{'color':'brown'}},
-                      ],
+            chart_col = wb.add_chart({'type': 'pie'})
+            chart_col.add_series({
+                'name': 'Fossil fuels used',
+                'categories': [cropname, 43, 1, 53, 1],
+                'values': [cropname, 43, 2, 53, 2],
+                'points': [{'fill': {'color': 'blue'}},
+                           {'fill': {'color': 'yellow'}},
+                           {'fill': {'color': 'red'}},
+                           {'fill': {'color': 'gray'}},
+                           {'fill': {'color': 'black'}},
+                           {'fill': {'color': 'purple'}},
+                           {'fill': {'color': 'pink'}},
+                           {'fill': {'color': 'cyan'}},
+                           {'fill': {'color': 'magenta'}},
+                           {'fill': {'color': 'brown'}},
+                           ],
             })
-        chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
-        chart_col.set_style(5)
-        ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
+            chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
+            chart_col.set_style(5)
+            ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
-        chart_col=wb.add_chart({'type':'pie'})
-        chart_col.add_series({
-            'name':'Electricity used',
-            'categories' :[cropname,43,9,50,9],
-            'values':[cropname,43,10,50,10],
-            'points':[{'fill':{'color':'blue'}},
-                      {'fill':{'color':'yellow'}},
-                      {'fill':{'color':'red'}},
-                      {'fill':{'color':'gray'}},
-                      {'fill':{'color':'black'}},
-                      {'fill':{'color':'purple'}},
-                      {'fill':{'color':'pink'}},
-                      {'fill':{'color':'cyan'}},
+            chart_col = wb.add_chart({'type': 'pie'})
+            chart_col.add_series({
+                'name': 'Electricity used',
+                'categories': [cropname, 43, 9, 50, 9],
+                'values': [cropname, 43, 10, 50, 10],
+                'points': [{'fill': {'color': 'blue'}},
+                           {'fill': {'color': 'yellow'}},
+                           {'fill': {'color': 'red'}},
+                           {'fill': {'color': 'gray'}},
+                           {'fill': {'color': 'black'}},
+                           {'fill': {'color': 'purple'}},
+                           {'fill': {'color': 'pink'}},
+                           {'fill': {'color': 'cyan'}},
 
-                      ],
+                           ],
             })
-        chart_col.set_title({'name': 'Electricity used for different aspects'})
-        chart_col.set_style(4)
-        ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
+            chart_col.set_title({'name': 'Electricity used for different aspects'})
+            chart_col.set_style(4)
+            ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
-        wb.close()
-        return
+            wb.close()
+            return
 
-
+   
