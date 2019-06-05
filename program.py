@@ -537,6 +537,7 @@ def worksheetoutput(dictionary_name):
         ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
     wb.close()
+    # root.destroy()
     return
     # ^^ End of function worksheet output
 
@@ -739,14 +740,21 @@ def next1():
         frame23.grid_forget()
         frame230.grid_forget()
         frame_finish.grid(sticky=W)
-        Button_finish = Button(frame_finish, text=('finish'), command=worksheetoutput(dic_crops)).grid(row=0, column=2,
-                                                                                                       sticky=E)
+        shitlabel2 = Label(frame_finish, text='                                                            ').grid(row=0, column=0)
+        Button_finish = Button(frame_finish, text=('finish'), command=close_program)
+        Button_finish.grid(row=0, column=1, padx=10)
+
     return
 
 
 # Closes the program
 def quit1():
     root.destroy()
+    return
+
+def close_program():
+    worksheetoutput(dic_crops)
+    quit1()
     return
 
 
@@ -892,7 +900,7 @@ Label(frame00, text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH, side=
 # Basic frame containing previous and next labels
 button2 = Button(frame2, text=('previous'), command=pre).grid(row=0, column=0, padx=10)
 shitlabel = Label(frame2, text='                                   ').grid(row=0, column=1)
-button1 = Button(frame2, text=('next'), command=next1).grid(row=0, column=2, sticky=E)
+button1 = Button(frame2, text=('next'), command=next1).grid(row=0, column=2, sticky=E,padx=10)
 root.bind('<Return>', enter)
 
 # Define the 'file' Menu
