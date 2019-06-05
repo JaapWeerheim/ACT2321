@@ -212,20 +212,22 @@ def worksheetoutput(dictionary_name):
     # Add Eoc to dictionary
     workbook = xlrd.open_workbook('Crops energy content.xlsx')
     sheet = workbook.sheet_by_name('Basic database')
-    count = 1
+    Total_Eoc = 0
     for keys, values in dictionary_name.items():
-        if keys == sheet.cell_value(count,2):
-            dictionary_name[keys]+=[sheet.cell_value(count,3)]
-        count +=1
+        for i in range(1,len(lis)):
+            if keys == sheet.cell_value(i,2):
+                dictionary_name[keys]+=[sheet.cell_value(i,3)]
+                Total_Eoc += sheet.cell_value(i,3)
+    Average_Eoc = Total_Eoc/(len(dictionary_name)-1)
+    dictionary_name[list(dictionary_name.keys())[0]] += [Average_Eoc]
 
-    print(dictionary_name)
     wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
     for keys, values in dictionary_name.items():
         cropname = keys
         kg_prod = values[2]
         frac_surf = values[0]
         frac_kg = values[1]
-        # Eoc = values[3]
+        Eoc = values[3]
         # caculation for total C02 of electricity usage
         Eco2 = frac_surf * ((C1 * ans61.get()) + (C3 * ans62.get()) + (C5 * ans71.get()) + (C7 * ans73.get()) + (
                     C9 * ans72.get()) - (ans87.get() * C1) - (ans88.get() * C3))
@@ -302,8 +304,8 @@ def worksheetoutput(dictionary_name):
         Totalenergy_per_kg_product = Totalenergy / (kg_prod * (100 - ans211.get()) / 100)
 
         # calculations for the total Co2 and energy per KJ product
-        Totalco2_per_KJ_product = Totalco2_per_kg_product # /Eoc
-        Totalenergy_per_KJ_product = Totalenergy_per_kg_product #/ Eoc
+        Totalco2_per_KJ_product = Totalco2_per_kg_product/Eoc
+        Totalenergy_per_KJ_product = Totalenergy_per_kg_product/Eoc
 
         # Writing the excel sheet
         ws = wb.add_worksheet(cropname)
