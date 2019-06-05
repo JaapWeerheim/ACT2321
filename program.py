@@ -4,14 +4,14 @@ from tkinter import messagebox
 import xlrd
 import xlsxwriter
 import tkinter.filedialog
-#from xlutils.copy import copy
 
+# Building the Gui including all the frames
 root=Tk()
 root.title('Life cyle assesment for vertical farms')
 root.wm_iconbitmap('sfsf logo.ico')
 root.geometry('440x440+500+200')
 
-# setting heights and widths for every frame.
+# Setting heights and widths for every frame.
 frame0=Frame(height=65,width=400)
 frame00=Frame(height=65,width=400)
 frame1=Frame(height=75,width=400)
@@ -59,9 +59,10 @@ all_frames = [frame1,frame2,frame3,frame4,frame5,frame6,frame7,frame8,frame9,fra
 for frame in all_frames:
     frame.grid_propagate(0)
 
-count=0
-v=IntVar()
+# ----------------------------------------
+# Below, all functions of the program are created
 
+# Function worksheetoutput does all the calculations to perform the LCA and writes the result to an Excel sheet
 def worksheetoutput(dictionary_name):
     # Opening excel file in order to get parameters
     workbook = xlrd.open_workbook('Country database.xlsx')
@@ -78,7 +79,7 @@ def worksheetoutput(dictionary_name):
         Pac2 = 0
 
 
-    # electricity
+    # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
     # eventually create a loop for this.
     C1 = float(sheet.cell_value(1, 1))  # co2 equivalent green electricty from net
     C2 = float(sheet.cell_value(1, 2))  # energy equivalent green electricty from net
@@ -91,7 +92,7 @@ def worksheetoutput(dictionary_name):
     C9 = float(sheet.cell_value(6, 1))  # Co2 equivalent biomass electricity
     C10 = float(sheet.cell_value(6, 2))  # energy equivalent buimass electricity
 
-    # fuels
+    # Fo1- Fo12 are emission values for fossil fuels
     Fo1 = sheet.cell_value(1, 5)  # petrol Co2 equivalent/L
     Fo2 = sheet.cell_value(1, 6)  # petrol Energy equivalent/L
     Fo3 = sheet.cell_value(2, 5)  # diesel Co2 equivalent/L
@@ -103,8 +104,7 @@ def worksheetoutput(dictionary_name):
     Fo11 = sheet.cell_value(6, 6)  # hard coal Co2 equivalent/L
     F012 = sheet.cell_value(6, 6)  # hard coal Energy equivalent/L
 
-    # fertelizer
-
+    # Fe1-Fe24 are emission values for fertilizers
     Fe1 = sheet.cell_value(1, 9)  # amonium nitrate Co2 equivalent/L
     Fe2 = sheet.cell_value(1, 10)  # amonium nitrate energy equivalent/L
     Fe3 = sheet.cell_value(2, 9)  # Calcium Ammonium Nitrate Co2 equivalent/L
@@ -130,7 +130,7 @@ def worksheetoutput(dictionary_name):
     Fe23 = sheet.cell_value(12, 9)  # Mono-ammonium phosphate Co2 equivalent/L
     Fe24 = sheet.cell_value(12, 10)  # Mono-ammonium phosphate energy equivalent/L
 
-    # substrate
+    # S1-S12 are emission values for substrates
     S1 = sheet.cell_value(1, 13)  # Rockwool Co2 equivalent/
     S2 = sheet.cell_value(1, 14)  # Rockwool energy equivalent/L
     S3 = sheet.cell_value(2, 13)  # Perlite Co2 equivalent/L
@@ -144,11 +144,11 @@ def worksheetoutput(dictionary_name):
     S11 = sheet.cell_value(6, 13)  # Peat moss Co2 equivalent/L
     S12 = sheet.cell_value(6, 14)  # Peat moss energy equivalent/L
 
-    # water
+    # W1 and W2 are emission values of water
     W1 = sheet.cell_value(1, 17)  # Tapwater Co2 equivalent/L
     W2 = sheet.cell_value(1, 18)  # Tapwater energy equivalent/L
 
-    # pesticide
+    # P1-P10 are emission values of pesticides
     P1 = sheet.cell_value(1, 21)  # Atrazine water Co2 equivalent/L
     P2 = sheet.cell_value(1, 22)  # Atrazine energy equivalent/L
     P3 = sheet.cell_value(2, 21)  # Glyphosphate water Co2 equivalent/L
@@ -160,7 +160,7 @@ def worksheetoutput(dictionary_name):
     P9 = sheet.cell_value(5, 21)  # Insectiside Co2 equivalent/L
     P10 = sheet.cell_value(5, 22)  # Insectiside energy equivalent/L
 
-    # waste
+    # W1 - W6 are emission values for waste
     W1 = sheet.cell_value(1, 25)  # green waste Co2 equivalent/kg
     W2 = sheet.cell_value(1, 26)  # green waste energy equivalent/L
     W3 = sheet.cell_value(2, 25)  # other waste Co2 equivalent/kg
@@ -168,7 +168,7 @@ def worksheetoutput(dictionary_name):
     W5 = sheet.cell_value(3, 25)  # paper waste Co2 equivalent/kg
     W6 = sheet.cell_value(3, 26)  # paper waste energy equivalent/L
 
-    # Transport plane
+    # Here the emission for transport by a plane is calculated
     Tvp1 = sheet.cell_value(1, 29)  # regression factor plane
     Tvp2 = sheet.cell_value(2, 29)  # regression factor plane
     Tvp3 = sheet.cell_value(4, 29)  # extra distance travelled plane
@@ -182,7 +182,7 @@ def worksheetoutput(dictionary_name):
                 ans201.get() + 0.001) / (Tvp8 * Tvp9)  # plane Co2 equivalent/(Ton*km)
     T2 = sheet.cell_value(1, 32)  # Plane energy equivalent/(ton*Km)
 
-    # transport Truck
+    # Here the emission for transport by a truck is calculated
     Tvt1 = sheet.cell_value(12, 29)  # regression factor Truck
     Tvt2 = sheet.cell_value(13, 29)  # regression factor Truck
     Tvt3 = sheet.cell_value(14, 29)  # regression factor Truck
@@ -195,7 +195,7 @@ def worksheetoutput(dictionary_name):
                 Tvt8 * Tvt7)  # truck C02 equivalent/(Ton*km)
     T4 = sheet.cell_value(12, 32)  # Truck energy equivalent/(ton*Km)
 
-    # transport ship
+    # Here the emission for transport by a ship is calculated
     Tp1 = sheet.cell_value(22, 29)  # regression factor plane
     Tp2 = sheet.cell_value(23, 29)  # regression factor plane
     Tp3 = sheet.cell_value(25, 29)  # extra distance travelled plane
@@ -209,7 +209,7 @@ def worksheetoutput(dictionary_name):
                 Tp8 * Tp9)  # ship C02 equivalent/(Ton*km)
     T6 = sheet.cell_value(22, 32)  # Ship energy equivalent/(ton*Km)
 
-    # Add Eoc to dictionary
+    # Add Energy content to an earlier build dictionary
     workbook = xlrd.open_workbook('Crops energy content.xlsx')
     sheet = workbook.sheet_by_name('Basic database')
     count = 1
@@ -219,78 +219,117 @@ def worksheetoutput(dictionary_name):
         count +=1
 
     print(dictionary_name)
+
+    non_count=str()
+    # If choose 'I don't know’ option， set the value back to zero
+    if ans890.get()==1:
+        ans81.set(0);ans82.set(0);ans83.set(0);ans84.set(0);ans85.set(0);ans86.set(0);ans87.set(0);ans88.set(0);ans89.set(0)
+        non_count=('Specification of electricity,')
+    if ans133.get()==1:
+        ans121.set(0);ans122.set(0);ans123.set(0);ans124.set(0);ans125.set(0);ans126.set(0);ans127.set(0);ans128.set(0);ans129.set(0);ans130.set(0);ans131.set(0);ans132.set(0)
+        non_count=(non_count+'NPK chemicals,')
+    if ans147.get()==1:
+        ans141.set(0);ans142.set(0);ans143.set(0);ans144.set(0);ans145.set(0);ans146.set(0)
+        non_count=(non_count+'Substrate,')
+    if ans152.get()==1:
+        ans151.set(0)
+        non_count=(non_count+'Water,')
+    if ans166.get()==1:
+        ans161.set(0);ans162.set(0);ans163.set(0);ans164.set(0);ans165.set(0)
+        non_count=(non_count+'Pesticides,')
+    if ans184.get()==1:
+        ans181.set(0);ans182.set(0);ans183.set(0)
+        non_count=(non_count+'Waste,')
+    if ans204.get()==1:
+        ans201.set(0);ans202.set(0);ans203.set(0)
+        non_count=(non_count+'NPK chemicals,')
+    if ans212.get()==1:
+        ans211.set(0)
+        non_count=(non_count+'Waste during transportation')
+
+    #Create the output: an Excel file
     wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
+    Total_Eoc = 0
+    for keys, values in dictionary_name.items():
+        for i in range(1,len(lis)):
+            if keys == sheet.cell_value(i,2):
+                dictionary_name[keys]+=[sheet.cell_value(i,3)]
+                Total_Eoc += sheet.cell_value(i,3)
+    Average_Eoc = Total_Eoc/(len(dictionary_name)-1)
+    dictionary_name[list(dictionary_name.keys())[0]] += [Average_Eoc]
+
     for keys, values in dictionary_name.items():
         cropname = keys
         kg_prod = values[2]
         frac_surf = values[0]
         frac_kg = values[1]
-        # Eoc = values[3]
-        # caculation for total C02 of electricity usage
+        Eoc = values[3]
+
+        # Calculation for total C02 of electricity usage
         Eco2 = frac_surf * ((C1 * ans61.get()) + (C3 * ans62.get()) + (C5 * ans71.get()) + (C7 * ans73.get()) + (
                     C9 * ans72.get()) - (ans87.get() * C1) - (ans88.get() * C3))
 
-        # caculation for total energy of electricity usage
+        # Calculation for total energy of electricity usage
         Eenergy = frac_surf * ((C2 * ans61.get()) + (C4 * ans62.get()) + (C6 * ans71.get()) + (C8 * ans73.get()) + (
                     C10 * ans72.get()) - (ans87.get() * C2) - (ans88.get() * C4))
 
-        # calculation for total Co2 of fossile fuels use
+        # Calculation for total Co2 of fossil fuels use
         Fco2 = frac_surf * ((Fo1 * ans91.get()) + (Fo3 * ans92.get()) + (Fo7 * ans94.get()) + (Fo9 * ans95.get()))
 
-        # calculation for total energy of fissile fuel use
+        # Calculation for total energy of fossil fuel use
         Fenergy = frac_surf * (
                     (Fo2 * ans91.get()) + (Fo4 * ans92.get()) + (Fo8 * ans94.get()) + (Fo10 * ans95.get()))
 
-        # calculation for total Co2 of fertilizers
+        # Calculation for total Co2 of fertilizers
         FERco2 = frac_surf * ((
                     (Fe1 * ans121.get()) + (Fe3 * ans122.get()) + (Fe5 * ans123.get()) + (Fe7 * ans124.get()) + (
                         Fe9 * ans125.get()) + (Fe11 * ans126.get()) + (Fe13 * ans127.get()) + (
                                 Fe15 * ans128.get()) + (Fe17 * ans129.get()) + (Fe19 * ans130.get()) + (
                                 Fe21 * ans131.get()) + (Fe22 * ans132.get())))
 
-        # calculation for total energy of fertilizers #frac surf
+        # Calculation for total energy of fertilizers
         FERenergy = frac_surf * ((
                     (Fe2 * ans121.get()) + (Fe4 * ans122.get()) + (Fe6 * ans123.get()) + (Fe8 * ans124.get()) + (
                         Fe10 * ans125.get()) + (Fe12 * ans126.get()) + (Fe14 * ans127.get()) + (
                                 Fe16 * ans128.get()) + (Fe18 * ans129.get()) + (Fe20 * ans130.get()) + (
                                 Fe22 * ans131.get()) + (Fe24 * ans132.get())))
 
-        # calculation for total Co2 of substrates
+        # Calculation for total Co2 of substrates
         Sco2 = frac_surf * (
                     (S1 * ans141.get()) + (S3 * ans142.get()) + (S5 * ans143.get()) + (S7 * ans144.get()) + (
                         S9 * ans145.get()) + (S11 * ans146.get()))
 
-        # calculation for total energy of substrates
+        # Calculation for total energy of substrates
         Senergy = frac_surf * (
                     (S2 * ans141.get()) + (S4 * ans142.get()) + (S6 * ans143.get()) + (S8 * ans144.get()) + (
                         S10 * ans145.get()) + (S12 * ans146.get()))
 
-        # calculation for total Co2 of water
+        # Calculation for total Co2 of water
         Wco2 = frac_surf * (W1 * ans151.get())
 
-        # calculation for total energy of water
+        # Calculation for total energy of water
         Wenergy = frac_surf * (W2 * ans151.get())
 
-        # calculation for total Co2 of pesticides
+        # Calculation for total Co2 of pesticides
         Pco2 = frac_surf * (
                     (P1 * ans161.get()) + (P3 * ans162.get()) + (P5 * ans163.get()) + (P7 * ans164.get()) + (
                         P9 * ans165.get()))
 
-        # calculation for total energy of pesticides
+        # Calculation for total energy of pesticides
         Penergy = frac_surf * (
                     (P2 * ans161.get()) + (P4 * ans162.get()) + +(P6 * ans163.get()) + +(P8 * ans164.get()) + (
                         P10 * ans165.get()))
 
-        # calculation for total Co2 of transport
+        # Calculation for total Co2 of transport
         Tco2 = frac_kg * ((T1 * ans201.get()) + (T3 * ans202.get()) + (T5 * ans203.get()))
 
-        # calculation for total energy of transport
+        # Calculation for total energy of transport
         Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) + (T6 * ans203.get()))
 
-        # calculation for the total Co2 of packaging
+        # Calculation for the total Co2 of packaging
         Pacco2 = (kg_prod * (100 - ans211.get()) / 100) * Pac1
 
-        # calculation for the total energy of packaging
+        # Calculation for the total energy of packaging
         Pacenergy = (kg_prod * (100 - ans211.get()) / 100) * Pac2
 
         # calculations for the total Co2 and energy
@@ -302,10 +341,10 @@ def worksheetoutput(dictionary_name):
         Totalenergy_per_kg_product = Totalenergy / (kg_prod * (100 - ans211.get()) / 100)
 
         # calculations for the total Co2 and energy per KJ product
-        Totalco2_per_KJ_product = Totalco2_per_kg_product # /Eoc
-        Totalenergy_per_KJ_product = Totalenergy_per_kg_product #/ Eoc
+        Totalco2_per_KJ_product = Totalco2_per_kg_product/Eoc
+        Totalenergy_per_KJ_product = Totalenergy_per_kg_product/Eoc
 
-        # Writing the excel sheet
+        # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(cropname)
         ws.write(0, 2, 'Total CO2 emitted(Kg)')
         ws.write(0, 4, 'Total energy used(MJ)')
@@ -360,6 +399,7 @@ def worksheetoutput(dictionary_name):
         if ans890.get() == 1 or ans131.get() == 1 or ans147.get() == 1 or ans152.get() == 1 or ans166.get() == 1 or ans184.get() == 1 or ans204.get() == 1:
             ws.write(10, 1, non_count + 'is not taken into account because of lacking data')
 
+        # Creating bar and pie charts
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
             'name': [cropname, 0, 2],
@@ -467,12 +507,11 @@ def worksheetoutput(dictionary_name):
 
     wb.close()
     return
-
-
-
+    # ^^ End of function worksheet output
 
 # def pre() enables to go back to the previous question
-# i.e. forgetting the current frames and introducing new frames
+# i.e. forgetting the current frames and introducing new frames ??
+count=0
 def pre():
     global count
     for i in range(len(list_ans)):#if there is no value in Entry, make it back to 0
@@ -564,20 +603,20 @@ def pre():
         frame_finish.grid_forget()
         frame23.grid(sticky=W)
         frame230.grid(sticky=W)
-# def next() enables to go to the next question.
+    return
+
+# def next1() enables to go to the next question.
 # i.e. forgetting the current frames and introducing new frames
+v=IntVar()
 def next1():
     global count
     global v
-
-    for i in range(len(list_ans)):#if there is no value in Entry, make it back to 0
+    for i in range(len(list_ans)):#if there is no value in Entry, set it back to 0
         try:
             if i != 0 or 2 or 1:
                 list_ans[i].get()!=''
-                
         except TclError:
             list_ans[i].set(00)
-        
     count+=1
     if count==2:
         var.set('2. What crop do you produce?')
@@ -660,92 +699,68 @@ def next1():
         frame230.grid_forget()
         frame_finish.grid(sticky=W)
         Button_finish = Button(frame_finish, text=('finish'), command=worksheetoutput(dic_crops)).grid(row=0, column=2, sticky=E)
-
+    return
 
 # Closes the program
 def quit1():
     root.destroy()
+    return
 
 # Enables the key 'enter' to go to the next question
 def enter(event):
     if count>0:
         next1()
+    return
 
+#The command of 'Start' button at the beginning
+def start():
+    frame0.pack_forget()
+    frame00.pack(anchor=CENTER)
+    return
 
+#The command of 'Next' button after you input the farm name
+def next2():
+    global count
+    frame00.pack_forget()
+    frame1.grid()
+    frame2.grid()
+    frame3.grid()
+    count+=1
+    return
 
+# The function file_open can load previously filled in data, stored in a .txt file
+def file_open():
+    try:
+        path1 = StringVar()
 
+        path1=tkinter.filedialog.askopenfilename()
+        f=open(path1)
+        lines=f.readlines()
+        num=-1
+        for line in lines:
+            num+=1
+            if num<3:
+                list_ans[num].set(str(line.strip('\n')))
+            if num>=3:
+                list_ans[num].set(int(line.strip('\n')))
+    except:
+        pass
+    return
 
-# Creates a list with all possible crops
-wb=xlrd.open_workbook('Crops energy content.xlsx')
-lis=[]
-database=wb.sheet_by_name('Basic database')
-for i in range(1,len(database.col_values(2))):
-    if database.col_values(2)[i] == "":
-        break
-    lis.append(database.col_values(2)[i])
+# The function file_save saves data filled in in a questionnaire in a .txt file
+def file_save():
+    try:
+        path2 = StringVar()
+        path2=tkinter.filedialog.asksaveasfilename(**root.file_opt)
+        f1=open(path2,'w')
+        for i in range(len(list_ans)):
+            f1.write(str(list_ans[i].get())+'\n')
+        f1.close()
+    except:
+        pass
+    return
 
-v=IntVar()
-var=StringVar()
-var.set('1. In which country is your farm located?')
-helloLabel = Label(frame1,textvariable= var).grid(row=0,column=0,padx=10,pady=10,sticky=W)
-
-#frame1
-button2=Button(frame2,text=('previous'),command=pre).grid(row=0,column=0,padx=10)
-shitlabel=Label(frame2,text='                                   ').grid(row=0,column=1)
-button1=Button(frame2,text=('next'),command=next1).grid(row=0,column=2,sticky=E)
-root.bind('<Return>',enter)
-
-
-#frame2
-# If you are in this frame, you can't go back and change your name
-ans1=StringVar()
-country=ttk.Combobox(frame3,textvariable=ans1,state='readonly')
-country['values']=('Netherlands','China','Germany')
-country.current(0)
-country.grid(padx=10)
-
-
-# Initialize variables to choose different crops
-ansLet = IntVar()
-ansEnd = IntVar()
-ansSpi = IntVar()
-ansBea = IntVar()
-ansPar = IntVar()
-ansKal = IntVar()
-ansBas = IntVar()
-ansRuc = IntVar()
-ansMic = IntVar()
-ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic]
-
-# Initialize variables for surface of a specific crop
-surLet = IntVar()
-surEnd = IntVar()
-surSpi = IntVar()
-surBea = IntVar()
-surPar = IntVar()
-surKal = IntVar()
-surBas = IntVar()
-surRuc = IntVar()
-surMic = IntVar()
-surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic]
-
-# Iniatialize variables for sold produce of a specific crop
-kgLet = IntVar()
-kgEnd = IntVar()
-kgSpi = IntVar()
-kgBea = IntVar()
-kgPar = IntVar()
-kgKal = IntVar()
-kgBas = IntVar()
-kgRuc = IntVar()
-kgMic = IntVar()
-kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic]
-
-Label(frame5,text='Crop [-]').grid(row=0,column=0,padx=5,sticky=W)
-Label(frame5,text='Surface [m2]').grid(row=0,column=1,padx=5,sticky=W)
-Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W)
-
-frac_all = {}
+# cal2 is a function that processes answers on Q2 into a dictionary for use in function 'worksheetoutput'
 def cal2(event):
     global dic_crops
     total_area = 0
@@ -767,23 +782,144 @@ def cal2(event):
         frac_sur[i] = surVeg[i].get()/total_area
         frac_kg[i] = kgVeg[i].get() / total_kg
 
-
     # Creating a dictionary of all parameters: [fraction surface, fraction kg,kg vegetation]
     dic_crops = {}
     dic_crops['Total'] = [1,1,total_kg]
     for i in range(0,len(frac_sur)):
           dic_crops[lis[i]] = [frac_sur[i],frac_kg[i],kgVeg[i].get()]
-
-
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
     print(dic_crops)
-    print(total_area)
-
     return dic_crops
 
+# The function cal checks whether a percentage value (Q6) is between 0 and 100
+# It works but you can also ignore the notifications and go to the next question
+dd = 2
+def cal(event):
+    try:
+        if 0 <= ans916.get() <= 100 and 0 <= ans915.get() <= 100 and 0 <= ans914.get() <= 100 and 0 <= ans913.get() <= 100 and 0 <= ans912.get() <= 100 and 0 <= ans911.get() <= 100 and 0 <= ans910.get() <= 100 and 0 <= ans99.get() <= 100 and 0 <= ans98.get() <= 100 and 0 <= ans97.get() <= 100:
+            other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
+            if other >= 0:
+                ans917.set(other)
+            else:
+                messagebox.showinfo('Notification', 'The range of the number should be (0,100)')
+        else:
+            global dd
+            dd += 1
+            if dd % 3 == 0:
+                messagebox.showinfo('Notification', 'The range of the number should be (0,100)')
 
+    except TclError:
+        for i in range(len(list_ans)):  # if there is no value in Entry, make it back to 0
+            try:
+                if i != 0 or 2 or 1:
+                    list_ans[i].get() != ''
 
+            except TclError:
+                list_ans[i].set(00)
+    return
 
+# ^^ End of functions for the program. Below, the GUI of the program is further developed.
+# ------------------------------------------
+# Here the start button at the beginning is created
+startbutton=Button(frame0,text='Start',command=start,font=12)
+startbutton.pack(fill=X,side=BOTTOM,anchor=CENTER)
+
+# The first page you see when starting the questionnaire
+startlabel=Label(frame0,text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n',font=12)
+startlabel.pack(fill=BOTH,side=BOTTOM)
+
+# Enter farm's name
+frame0.pack(anchor=CENTER)
+farm_name=StringVar()
+Button(frame00,text='Next',command=next2).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
+Entry(frame00,textvariable=farm_name).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
+Label(frame00,text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH,side=BOTTOM)
+
+# Basic frame containing previous and next labels
+button2=Button(frame2,text=('previous'),command=pre).grid(row=0,column=0,padx=10)
+shitlabel=Label(frame2,text='                                   ').grid(row=0,column=1)
+button1=Button(frame2,text=('next'),command=next1).grid(row=0,column=2,sticky=E)
+root.bind('<Return>',enter)
+
+# Define the 'file' Menu
+root.file_opt = options = {}
+options['defaultextension'] = '.txt'
+options['filetypes'] = [('all files', '.*'), ('text files', '.txt')]
+options['initialfile'] = 'myfile.txt'
+options['parent'] = root
+options['title'] = 'This is a title'
+
+menu=Menu(root)
+filemenu=Menu(menu,tearoff=0)
+filemenu.add_command(label='Load',command=file_open)
+filemenu.add_command(label='Save',command=file_save)
+filemenu.add_command(label='Quit',command=root.quit)
+menu.add_cascade(label='File',menu=filemenu)
+root.config(menu=menu)
+
+# Question 1: Where is your farm located?
+# (If you are in this frame, you can't go back and change your name)
+# Q1 needs to be specified here because pre and next are not initialized yet
+v=IntVar()
+var=StringVar()
+var.set('1. In which country is your farm located?')
+helloLabel = Label(frame1,textvariable= var).grid(row=0,column=0,padx=10,pady=10,sticky=W)
+ans1=StringVar()
+country=ttk.Combobox(frame3,textvariable=ans1,state='readonly')
+country['values']=('Netherlands','China','Germany')
+country.current(0)
+country.grid(padx=10)
+
+# Here a list of all the possible crops a farmer can choose is read in. This is needed for Q2.
+wb=xlrd.open_workbook('Crops energy content.xlsx')
+lis=[]
+database=wb.sheet_by_name('Basic database')
+for i in range(1,len(database.col_values(2))):
+    if database.col_values(2)[i] == "":
+        break
+    lis.append(database.col_values(2)[i])
+
+# Initialize variables to choose different crops in Q2
+ansLet = IntVar()
+ansEnd = IntVar()
+ansSpi = IntVar()
+ansBea = IntVar()
+ansPar = IntVar()
+ansKal = IntVar()
+ansBas = IntVar()
+ansRuc = IntVar()
+ansMic = IntVar()
+ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic]
+
+# Initialize variables for surface of a specific crop in Q2
+surLet = IntVar()
+surEnd = IntVar()
+surSpi = IntVar()
+surBea = IntVar()
+surPar = IntVar()
+surKal = IntVar()
+surBas = IntVar()
+surRuc = IntVar()
+surMic = IntVar()
+surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic]
+
+# Initialize variables for sold produce of a specific crop in Q2
+kgLet = IntVar()
+kgEnd = IntVar()
+kgSpi = IntVar()
+kgBea = IntVar()
+kgPar = IntVar()
+kgKal = IntVar()
+kgBas = IntVar()
+kgRuc = IntVar()
+kgMic = IntVar()
+kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic]
+
+Label(frame5,text='Crop [-]').grid(row=0,column=0,padx=5,sticky=W)
+Label(frame5,text='Surface [m2]').grid(row=0,column=1,padx=5,sticky=W)
+Label(frame5,text='Sold products [kg/year]').grid(row=0,column=2,padx=5,sticky=W)
+
+# In this for loop, the fields for Q2 are created
 for i in range(0,len(lis)):
     Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i+1, column=0, sticky=W, padx=5)
     EntSur = Entry(frame5, textvariable=surVeg[i])
@@ -793,7 +929,7 @@ for i in range(0,len(lis)):
     EntSur.bind('<FocusOut>', cal2)
     Entkg.bind('<FocusOut>', cal2)
 
-#frame7,q5
+# Here the fields for question 3 (buying electricity) are created
 ans61=IntVar()
 ans62=IntVar()
 greenlabel=Label(frame8,text='Renewable (kWh)').grid(row=1,column=0,padx=20,sticky=W)
@@ -801,7 +937,7 @@ greenentry=Entry(frame8,width=10,textvariable=ans61).grid(row=1,column=1)
 greylabel=Label(frame8,text='Non-renewable(kWh)').grid(row=2,column=0,padx=20,sticky=W)
 greyentry=Entry(frame8,width=10,textvariable=ans62).grid(row=2,column=1)
 
-#frame8,q6
+# Here the fields for question 4 (creation of renewable energy) are created
 ans71=IntVar()
 ans72=IntVar()
 ans73=IntVar()
@@ -812,8 +948,8 @@ biomassentry=Entry(frame9,width=10, textvariable =ans72).grid(row=2,column=1)
 windlabel=Label(frame9,text='Windpower (kWh)').grid(row=3,column=0,padx=20,sticky=W)
 windentry=Entry(frame9,width=10, textvariable =ans73).grid(row=3,column=1)
 
-#frame9,q7
-ans81=IntVar()      #there should be a way to do all the ans = intvar() in a fewer lines right?
+# Here the fields for Q5 (how electricity is used) are created
+ans81=IntVar()
 ans82=IntVar()
 ans83=IntVar()
 ans84=IntVar()
@@ -843,7 +979,7 @@ Label(frame100, text='Other(kWh)').grid(row=2, column=0, sticky=W,padx=5)
 Entry(frame100,width=10,textvariable=ans89).grid(row=2,column=1)
 Checkbutton(frame100,text='I don\'t know',variable=ans890).grid(row=3,column=0,sticky=W,padx=5)
 
-#frame10,q8
+# Here the fields for Q6 (fossil fuel use) are created
 ans91 = IntVar()
 ans92 = IntVar()
 ans93 = IntVar()
@@ -873,34 +1009,7 @@ Ngasy = Entry(frame11, width=5, textvariable=ans94).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
 oily = Entry(frame11, width=5, textvariable=ans95).grid(row=1, column=3)
 
-
-dd=2
-# judge whether the value enter in is in the range (0,100)
-# It works but you can also ignore the notifications and go to the next question
-def cal(event):
-    try:
-        if 0<=ans916.get()<=100 and 0<=ans915.get()<=100 and 0<=ans914.get()<=100 and 0<=ans913.get()<=100 and 0<=ans912.get()<=100 and 0<=ans911.get()<=100 and 0<=ans910.get()<=100 and 0<=ans99.get()<=100 and 0<=ans98.get()<=100 and 0<=ans97.get()<=100: 
-            other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
-            if other>=0:
-                ans917.set(other)
-            else:
-                messagebox.showinfo('Notification','The range of the number should be (0,100)')
-        else:
-            global dd
-            dd+=1
-            if dd%3==0:
-                messagebox.showinfo('Notification','The range of the number should be (0,100)')
-            
-    except TclError:
-        for i in range(len(list_ans)):#if there is no value in Entry, make it back to 0
-            try:
-                if i != 0 or 2 or 1:
-                    list_ans[i].get()!=''
-                
-            except TclError:
-                list_ans[i].set(00)
-
-
+# Here, additional fields for Q6 (estimating the percentages of fossil fuel use) are build
 Label(frame111, text='Estimate in percentages what the fossil fuels are used for').grid(row=0, column=0, sticky=W,padx=5)
 Label(frame110, text='Heating').grid(row=1, column=0, sticky=W,padx=5)
 q = Entry(frame110, width=5, textvariable=ans97)
@@ -956,7 +1065,7 @@ Label(frame110, text='Other').grid(row=6, column=0, sticky=W,padx=5)
 Entry(frame110, width=5, textvariable=ans917).grid(row=6, column=1)
 Label(frame110, text='%').grid(row=6, column=2, sticky=W)
 
-#frame11,q9
+# Here the field for fertilizer use are created (Q7)
 ans121=IntVar()
 ans122=IntVar()
 ans123=IntVar()
@@ -996,7 +1105,7 @@ Label(frame14,text='mono-ammonium phosphate(kg)').grid(row=12,column=0,padx=5,st
 Entry(frame14,width=10, textvariable = ans132).grid(row=12,column=1)
 Checkbutton(frame140,text='I don\'t know',variable=ans133).grid(padx=5)
 
-#frame14,frame140,q10
+# Here the fields for substrate use (Q8) are created
 ans141=IntVar()
 ans142=IntVar()
 ans143=IntVar()
@@ -1018,14 +1127,14 @@ Label(frame16,text='Peat Moss Kg)').grid(row=3,column=2,padx=5,sticky=W)
 Entry(frame16,width=10, textvariable = ans146).grid(row=3,column=3)
 Checkbutton(frame160,text='No substrate is used',variable=ans147).grid(padx=5)
 
-#frame16,frame160,q11
+# Here the fields for water use (Q9) are created
 ans151=IntVar()
 ans152=IntVar()
 Label(frame17,text='Tap water(L)').grid(row=1,column=0,padx=5,sticky=W)
 Entry(frame17,width=10, textvariable =ans151 ).grid(row=1,column=1)
 Checkbutton(frame170,text='I don\'t know',variable=ans152).grid(sticky=W,padx=5)
 
-#frame17,q12
+# Here the fields for pesticide use (Q10) are created
 ans161=IntVar()
 ans162=IntVar()
 ans163=IntVar()
@@ -1044,14 +1153,14 @@ Label(frame18,text='Insectiside(kg)').grid(row=5,column=0,padx=5,sticky=W)
 Entry(frame18,width=10, textvariable = ans165).grid(row=5,column=1)
 Checkbutton(frame180,text='I don\'t know',variable=ans166).grid(sticky=W,padx=5)
 
-#frame18,q13
+# Here the fields for packaging (Q11) are created
 ans171=IntVar()
 ans172=IntVar()
 ans173=IntVar()
 Radiobutton(frame19,text='Yes, it is',variable=ans171,value=1).grid(sticky=W,padx=5)
 Radiobutton(frame19,text='No, it isn\'t',variable=ans171,value=2).grid(sticky=W,padx=5)
 
-#frame19.q14
+# Here the fields for waste production (Q12) are created
 ans181=IntVar()
 ans182=IntVar()
 ans183=IntVar()
@@ -1064,7 +1173,7 @@ Label(frame20,text='Paper(kg)').grid(row=3,column=0,padx=5,sticky=W)
 Entry(frame20,width=10, textvariable = ans183).grid(row=3,column=1)
 Checkbutton(frame200,text='I don\'t know',variable=ans184).grid(sticky=W,padx=5)
 
-#frame20,q15
+# Here the fields for transportation (Q13)are created
 ans201=IntVar()
 ans202=IntVar()
 ans203=IntVar()
@@ -1077,125 +1186,15 @@ Label(frame22,text='Ship (km)').grid(row=3,column=0,padx=40,sticky=W)
 Entry(frame22,width=10, textvariable = ans203).grid(row=3,column=1)
 Checkbutton(frame220,text='I don\'t know',variable=ans204).grid(sticky=W,padx=40)
 
-#frame22,q16
+# Here the fields for transport losses are created
 ans211=IntVar()
 ans212=IntVar()
 Entry(frame23,width=5,textvariable=ans211).grid(row=0,column=0,padx=20,pady=20)
 Label(frame23,text='%').grid(row=0,column=1,sticky=W)
 Checkbutton(frame230,text='I don\'t know',variable=ans212).grid(sticky=W,padx=40)
 
-#frame23,q17
-Button(frame24,text='Quit',font=12,command=quit1).pack(side=BOTTOM,anchor=CENTER)
-Label(frame24,text='\n\n\n\nThanks for your time,\nthe result is in the folder \nsaved as Excel named as \nthe farm name and crop name',font=12).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
-
-def start():#The command of 'Start' button at the beginning
-    frame0.pack_forget()
-    frame00.pack(anchor=CENTER)
-def next2():#The command of 'Next' button after you input the farm name
-    global count
-    frame00.pack_forget()
-    frame1.grid()
-    frame2.grid()
-    frame3.grid()
-    count+=1
-startbutton=Button(frame0,text='Start',command=start,font=12)
-startbutton.pack(fill=X,side=BOTTOM,anchor=CENTER)
-
-# The first page you see when starting the questionare
-startlabel=Label(frame0,text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n',font=12)
-startlabel.pack(fill=BOTH,side=BOTTOM)
-  
-# Enter farm's name
-frame0.pack(anchor=CENTER)
-farm_name=StringVar()
-Button(frame00,text='Next',command=next2).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
-Entry(frame00,textvariable=farm_name).pack(fill=BOTH,side=BOTTOM,anchor=CENTER)
-Label(frame00,text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH,side=BOTTOM)
-#make a list contain all the variables
+# At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
 list_ans=[farm_name,ans1,v,ans61,ans62,ans71,ans72,ans73,ans81,ans82,ans83,ans84,ans85,ans86,ans87,ans88,ans89,ans890,ans91,ans92,ans94,ans95,ans97,ans98,ans99,ans910,ans911,ans912,ans913,ans914,ans915,ans916,ans917,ans121,ans122,ans123,ans124,ans125,ans126,ans127,ans128,ans129,ans130,ans131,ans132,ans133,ans141,ans142,ans143,ans144,ans145,ans146,ans147,ans151,ans152,ans161,ans162,ans163,ans164,ans165,ans166,ans171,ans172,ans181,ans182,ans183,ans184,ans201,ans202,ans203,ans204,ans211,ans212]
-path1=StringVar()
-path2=StringVar()
 
-# Define the 'file' Menu
-root.file_opt = options = {}
-options['defaultextension'] = '.txt'  
-options['filetypes'] = [('all files', '.*'), ('text files', '.txt')]
-options['initialfile'] = 'myfile.txt'  
-options['parent'] = root  
-options['title'] = 'This is a title'
-
-
-def file_open():
-    try:
-        path1=tkinter.filedialog.askopenfilename()
-        f=open(path1)
-        lines=f.readlines()
-        num=-1
-        for line in lines:
-            num+=1
-            if num<3:
-                list_ans[num].set(str(line.strip('\n')))
-            if num>=3:
-                list_ans[num].set(int(line.strip('\n')))
-    except:
-        pass
-
-def file_save():
-    try:
-        path2=tkinter.filedialog.asksaveasfilename(**root.file_opt)
-        f1=open(path2,'w')
-        for i in range(len(list_ans)):
-            f1.write(str(list_ans[i].get())+'\n')
-        f1.close()
-    except:
-        pass
-
-
-menu=Menu(root)
-filemenu=Menu(menu,tearoff=0)
-filemenu.add_command(label='Load',command=file_open)
-filemenu.add_command(label='Save',command=file_save)
-filemenu.add_command(label='Quit',command=root.quit)
-menu.add_cascade(label='File',menu=filemenu)
-root.config(menu=menu)
-
-
+# Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
-
-
-
-# when count >=17 , it means the questionnaire is finished, start to read database
-if count>=14:
-
-    non_count=str()
-    # If choose 'I don't know’ option， make the value back to zero
-    if ans890.get()==1:
-        ans81.set(0);ans82.set(0);ans83.set(0);ans84.set(0);ans85.set(0);ans86.set(0);ans87.set(0);ans88.set(0);ans89.set(0)
-        non_count=('Specification of electricity,')
-    if ans133.get()==1:
-        ans121.set(0);ans122.set(0);ans123.set(0);ans124.set(0);ans125.set(0);ans126.set(0);ans127.set(0);ans128.set(0);ans129.set(0);ans130.set(0);ans131.set(0);ans132.set(0)
-        non_count=(non_count+'NPK chemicals,')
-    if ans147.get()==1:
-        ans141.set(0);ans142.set(0);ans143.set(0);ans144.set(0);ans145.set(0);ans146.set(0)
-        non_count=(non_count+'Substrate,')
-    if ans152.get()==1:
-        ans151.set(0)
-        non_count=(non_count+'Water,')
-    if ans166.get()==1:
-        ans161.set(0);ans162.set(0);ans163.set(0);ans164.set(0);ans165.set(0)
-        non_count=(non_count+'Pesticides,')
-    if ans184.get()==1:
-        ans181.set(0);ans182.set(0);ans183.set(0)
-        non_count=(non_count+'Waste,')
-    if ans204.get()==1:
-        ans201.set(0);ans202.set(0);ans203.set(0)
-        non_count=(non_count+'NPK chemicals,')
-    if ans212.get()==1:
-        ans211.set(0)
-        non_count=(non_count+'Waste during transportation')
-
-
-
-# ------------------------------------
-
-
