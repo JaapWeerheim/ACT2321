@@ -47,13 +47,11 @@ frame21 = Frame(height=70, width=400)
 frame210 = Frame(height=120, width=400)
 frame22 = Frame(height=90, width=400)
 frame220 = Frame(height=120, width=400)
-frame23 = Frame(height=50, width=400)
-frame230 = Frame(height=50, width=400)
 frame24 = Frame(height=75, width=400)
 frame_finish = Frame(height=75, width=400)
 all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame100, frame11,
               frame12, frame13, frame14, frame140, frame15, frame16, frame160, frame17, frame170, frame18,
-              frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame22, frame220, frame23, frame230, frame24]
+              frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame22, frame220, frame24]
 
 # Set all the frames to a certain size
 for frame in all_frames:
@@ -274,9 +272,9 @@ def worksheetoutput(dictionary_name):
         ans202.set(0);
         ans203.set(0)
         non_count = (non_count + 'NPK chemicals,')
-    if ans212.get() == 1:
-        ans211.set(0)
-        non_count = (non_count + 'Waste during transportation')
+    #if ans212.get() == 1:
+    #   ans211.set(0)
+    #   non_count = (non_count + 'Waste during transportation')
 
     # Create the output: an Excel file
     wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
@@ -358,18 +356,18 @@ def worksheetoutput(dictionary_name):
         Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) + (T6 * ans203.get()))
 
         # Calculation for the total Co2 of packaging
-        Pacco2 = (kg_prod * (100 - ans211.get()) / 100) * Pac1
+        Pacco2 = kg_prod * Pac1
 
         # Calculation for the total energy of packaging
-        Pacenergy = (kg_prod * (100 - ans211.get()) / 100) * Pac2
+        Pacenergy = kg_prod * Pac2
 
         # calculations for the total Co2 and energy
         Totalco2 = Eco2 + Fco2 + FERco2 + Sco2 + Wco2 + Pco2 + Tco2 + Pacco2
         Totalenergy = Eenergy + Fenergy + FERenergy + Senergy + Wenergy + Penergy + Tenergy + Pacenergy
 
         # calculations for the total Co2 and energy per kg product #ans5 moet kg worden
-        Totalco2_per_kg_product = Totalco2 / (kg_prod * (100 - ans211.get()) / 100)
-        Totalenergy_per_kg_product = Totalenergy / (kg_prod * (100 - ans211.get()) / 100)
+        Totalco2_per_kg_product = Totalco2 / kg_prod
+        Totalenergy_per_kg_product = Totalenergy / kg_prod
 
         # calculations for the total Co2 and energy per KJ product
         Totalco2_per_KJ_product = Totalco2_per_kg_product / Eoc
@@ -565,7 +563,7 @@ def pre():
         frame5.grid_forget()
         frame3.grid(sticky=W)
     if count == 2:
-        var.set('2. What crop do you produce?')
+        var.set('2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of each crop do you sell every year?')
         frame8.grid_forget()
         frame5.grid(sticky=W)
     if count == 3:
@@ -631,15 +629,12 @@ def pre():
         frame200.grid(sticky=W)
     if count == 13:
         var.set('13. How far does your product travel to the distribution center \non average? ')
-        frame23.grid_forget()
-        frame230.grid_forget()
+        frame_finish.grid_forget()
         frame22.grid(sticky=W)
         frame220.grid(sticky=W)
     if count == 14:
-        var.set('14. How much of the product does not survive the transport \nstage to the store? ')
-        frame_finish.grid_forget()
-        frame23.grid(sticky=W)
-        frame230.grid(sticky=W)
+        var.set('14. This is was the questionnaire, are you finished?')
+        frame_finish.grid(sticky=W)
     return
 
 
@@ -659,7 +654,7 @@ def next1():
             list_ans[i].set(00)
     count += 1
     if count == 2:
-        var.set('2. What crop do you produce?')
+        var.set('2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of each crop do you sell every year? ')
         frame3.grid_forget()
         frame5.grid(sticky=W)
     if count == 3:
@@ -730,20 +725,10 @@ def next1():
         frame22.grid(sticky=W)
         frame220.grid(sticky=W)
     if count == 14:
-        var.set('14. How much of the product does not survive the transport \nstage to the store? ')
+        var.set('14. This is was the questionnaire, are you finished?')
         frame22.grid_forget()
         frame220.grid_forget()
-        frame23.grid(sticky=W)
-        frame230.grid(sticky=W)
-    if count == 15:
-        var.set('This is was the questionnaire, are you finished?')
-        frame23.grid_forget()
-        frame230.grid_forget()
         frame_finish.grid(sticky=W)
-        shitlabel2 = Label(frame_finish, text='                                                            ').grid(row=0, column=0)
-        Button_finish = Button(frame_finish, text=('finish'), command=close_program)
-        Button_finish.grid(row=0, column=1, padx=10)
-
     return
 
 
@@ -944,7 +929,7 @@ var.set('1. In which country is your farm located?')
 helloLabel = Label(frame1, textvariable=var).grid(row=0, column=0, padx=10, pady=10, sticky=W)
 ans1 = StringVar()
 country = ttk.Combobox(frame3, textvariable=ans1, state='readonly')
-country['values'] = ('Netherlands', 'China', 'Germany')
+country['values'] = ('Europe', 'Asia', 'North America', 'Others')
 country.current(0)
 country.grid(padx=10)
 
@@ -1267,12 +1252,11 @@ Label(frame22, text='Ship (km)').grid(row=3, column=0, padx=40, sticky=W)
 Entry(frame22, width=10, textvariable=ans203).grid(row=3, column=1)
 Checkbutton(frame220, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
 
-# Here the fields for transport losses are created
-ans211 = IntVar()
-ans212 = IntVar()
-Entry(frame23, width=5, textvariable=ans211).grid(row=0, column=0, padx=20, pady=20)
-Label(frame23, text='%').grid(row=0, column=1, sticky=W)
-Checkbutton(frame230, text='I don\'t know', variable=ans212).grid(sticky=W, padx=40)
+# Here fields for finishing the questionnaire are created
+shitlabel2 = Label(frame_finish, text='                                                            ').grid(row=0, column=0)
+Button_finish = Button(frame_finish, text=('finish'), command=close_program)
+Button_finish.grid(row=0, column=1, padx=10)
+
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
 list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans81, ans82, ans83, ans84, ans85, ans86, ans87,
@@ -1280,7 +1264,7 @@ list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans81, ans82,
             ans914, ans915, ans916, ans917, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans129,
             ans130, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
             ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans181, ans182, ans183, ans184, ans201,
-            ans202, ans203, ans204, ans211, ans212]
+            ans202, ans203, ans204]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
