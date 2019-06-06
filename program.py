@@ -879,6 +879,22 @@ def cal(event):
                 list_ans[i].set(00)
     return
 
+def rid_of_zeros_sur(event):
+    for i in range(0, len(ansVeg)):
+        if ansVeg[i].get() == 1 and surVeg[i].get() <= 0:
+            surVeg[i].set('')
+        if ansVeg[i].get() == 0 and surVeg[i].get() >= 0:
+            surVeg[i].set(0)
+    return
+
+def rid_of_zeros_kg(event):
+    for i in range(0, len(ansVeg)):
+        if ansVeg[i].get() == 1 and kgVeg[i].get() <= 0:
+            kgVeg[i].set('')
+        if ansVeg[i].get() == 0 and kgVeg[i].get() > 0:
+            kgVeg[i].set(0)
+    return
+
 
 # ^^ End of functions for the program. Below, the GUI of the program is further developed.
 # ------------------------------------------
@@ -990,6 +1006,8 @@ for i in range(0, len(lis)):
     Entkg.grid(row=i + 1, column=2, sticky=W, padx=5, pady=5)
     EntSur.bind('<FocusOut>', cal2)
     Entkg.bind('<FocusOut>', cal2)
+    EntSur.bind("<Button-1>", rid_of_zeros_sur)
+    Entkg.bind("<Button-1>", rid_of_zeros_kg)
 
 # Here the fields for question 3 (buying electricity) are created
 ans61 = IntVar()
