@@ -71,146 +71,29 @@ def worksheetoutput(dictionary_name):
         Pac1 = 0
         Pac2 = 0
 
-    # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
-    # eventually create a loop for this.
-    C1 = float(sheet.cell_value(1, 1))  # co2 equivalent green electricty from net
-    C2 = float(sheet.cell_value(1, 2))  # energy equivalent green electricty from net
-    C3 = float(sheet.cell_value(2, 1))  # co2 equivalent gray electricity from net
-    C4 = float(sheet.cell_value(2, 2))  # energy equivalent gray electricity from net
-    C5 = float(sheet.cell_value(4, 1))  # Co2 equivalent solar electricity
-    C6 = float(sheet.cell_value(4, 2))  # energy equivalent solar electricity
-    C7 = float(sheet.cell_value(5, 1))  # Co2 equivalent wind electricity
-    C8 = float(sheet.cell_value(5, 2))  # energy equivalent wind electricity
-    C9 = float(sheet.cell_value(6, 1))  # Co2 equivalent biomass electricity
-    C10 = float(sheet.cell_value(6, 2))  # energy equivalent buimass electricity
+        # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
+        # eventually create a loop for this.
+        dicp = {}
+        workbook = xlrd.open_workbook('Database_full.xlsx')
+        sheet = workbook.sheet_by_name('CO2eq (kg)')
 
-    # Fo1- Fo12 are emission values for fossil fuels
-    Fo1 = sheet.cell_value(1, 5)  # petrol Co2 equivalent/L
-    Fo2 = sheet.cell_value(1, 6)  # petrol Energy equivalent/L
-    Fo3 = sheet.cell_value(2, 5)  # diesel Co2 equivalent/L
-    Fo4 = sheet.cell_value(2, 6)  # diesel Energy equivalent/L
-    Fo7 = sheet.cell_value(4, 5)  # natural gas Co2 equivalent/L
-    Fo8 = sheet.cell_value(4, 6)  # natural gas Energy equivalent/L
-    Fo9 = sheet.cell_value(5, 5)  # oil Co2 equivalent/L
-    Fo10 = sheet.cell_value(5, 6)  # oil Energy equivalent/L
-    Fo11 = sheet.cell_value(6, 6)  # hard coal Co2 equivalent/L
-    F012 = sheet.cell_value(6, 6)  # hard coal Energy equivalent/L
+        for tabs in workbook.sheet_names():
+            if tabs == 'Crop parameters':
+                sheet = workbook.sheet_by_name(tabs)
+                count = 1
+                for keys, values in dictionary_name.items():
+                    if keys == sheet.cell_value(count, 0):
+                        dictionary_name[keys] += [sheet.cell_value(count, 4)]
+                    count += 1
 
-    # Fe1-Fe24 are emission values for fertilizers
-    Fe1 = sheet.cell_value(1, 9)  # amonium nitrate Co2 equivalent/L
-    Fe2 = sheet.cell_value(1, 10)  # amonium nitrate energy equivalent/L
-    Fe3 = sheet.cell_value(2, 9)  # Calcium Ammonium Nitrate Co2 equivalent/L
-    Fe4 = sheet.cell_value(2, 10)  # Calcium Ammonium Nitrate energy equivalent/L
-    Fe5 = sheet.cell_value(3, 9)  # Ammonium Sulphate Co2 equivalent/L
-    Fe6 = sheet.cell_value(3, 10)  # Ammonium Sulphate energy equivalent/L
-    Fe7 = sheet.cell_value(4, 9)  # Triple Superphosphate Co2 equivalent/L
-    Fe8 = sheet.cell_value(4, 10)  # Triple Superphosphate energy equivalent/L
-    Fe9 = sheet.cell_value(5, 9)  # Single super phosphate Co2 equivalent/L
-    Fe10 = sheet.cell_value(5, 10)  # Single super phosphate energy equivalent/L
-    Fe11 = sheet.cell_value(6, 9)  # Ammonia Co2 equivalent/L
-    Fe12 = sheet.cell_value(6, 10)  # Ammonia energy equivalent/L
-    Fe13 = sheet.cell_value(7, 9)  # limestone Co2 equivalent/L
-    Fe14 = sheet.cell_value(7, 10)  # limestone energy equivalent/L
-    Fe15 = sheet.cell_value(8, 9)  # NPK 15-15-15 Co2 equivalent/L
-    Fe16 = sheet.cell_value(8, 10)  # NPK 15-15-15 energy equivalent/L
-    Fe17 = sheet.cell_value(9, 9)  # Urea Co2 equivalent/L
-    Fe18 = sheet.cell_value(9, 10)  # Urea energy equivalent/L
-    Fe19 = sheet.cell_value(10, 9)  # cow manure Co2 equivalent/L
-    Fe20 = sheet.cell_value(10, 10)  # cow manure energy equivalent/L
-    Fe21 = sheet.cell_value(11, 9)  # phosphoric acid Co2 equivalent/L
-    Fe22 = sheet.cell_value(11, 10)  # phosphoric acid energy equivalent/L
-    Fe23 = sheet.cell_value(12, 9)  # Mono-ammonium phosphate Co2 equivalent/L
-    Fe24 = sheet.cell_value(12, 10)  # Mono-ammonium phosphate energy equivalent/L
-
-    # S1-S12 are emission values for substrates
-    S1 = sheet.cell_value(1, 13)  # Rockwool Co2 equivalent/
-    S2 = sheet.cell_value(1, 14)  # Rockwool energy equivalent/L
-    S3 = sheet.cell_value(2, 13)  # Perlite Co2 equivalent/L
-    S4 = sheet.cell_value(2, 14)  # Perlite energy equivalent/L
-    S5 = sheet.cell_value(3, 13)  # Coco Fiber (coir pith) Co2 equivalent/L
-    S6 = sheet.cell_value(3, 14)  # Coco Fiber (coir pith) energy equivalent/L
-    S7 = sheet.cell_value(4, 13)  # Hemp fiber Co2 equivalent/L
-    S8 = sheet.cell_value(4, 14)  # Hemp fiber energy equivalent/L
-    S9 = sheet.cell_value(5, 13)  # Peat Co2 equivalent/L
-    S10 = sheet.cell_value(5, 14)  # Peat energy equivalent/L
-    S11 = sheet.cell_value(6, 13)  # Peat moss Co2 equivalent/L
-    S12 = sheet.cell_value(6, 14)  # Peat moss energy equivalent/L
-
-    # W1 and W2 are emission values of water
-    W1 = sheet.cell_value(1, 17)  # Tapwater Co2 equivalent/L
-    W2 = sheet.cell_value(1, 18)  # Tapwater energy equivalent/L
-
-    # P1-P10 are emission values of pesticides
-    P1 = sheet.cell_value(1, 21)  # Atrazine water Co2 equivalent/L
-    P2 = sheet.cell_value(1, 22)  # Atrazine energy equivalent/L
-    P3 = sheet.cell_value(2, 21)  # Glyphosphate water Co2 equivalent/L
-    P4 = sheet.cell_value(2, 22)  # Glyphosphate energy equivalent/L
-    P5 = sheet.cell_value(3, 21)  # Metolachlor Co2 equivalent/L
-    P6 = sheet.cell_value(3, 22)  # Metolachlor energy equivalent/L
-    P7 = sheet.cell_value(4, 21)  # Herbicide Co2 equivalent/L
-    P8 = sheet.cell_value(4, 22)  # Herbicide energy equivalent/L
-    P9 = sheet.cell_value(5, 21)  # Insectiside Co2 equivalent/L
-    P10 = sheet.cell_value(5, 22)  # Insectiside energy equivalent/L
-
-    # W1 - W6 are emission values for waste
-    W1 = sheet.cell_value(1, 25)  # green waste Co2 equivalent/kg
-    W2 = sheet.cell_value(1, 26)  # green waste energy equivalent/L
-    W3 = sheet.cell_value(2, 25)  # other waste Co2 equivalent/kg
-    W4 = sheet.cell_value(2, 26)  # other waste energy equivalent/L
-    W5 = sheet.cell_value(3, 25)  # paper waste Co2 equivalent/kg
-    W6 = sheet.cell_value(3, 26)  # paper waste energy equivalent/L
-
-    # Here the emission for transport by a plane is calculated
-    Tvp1 = sheet.cell_value(1, 29)  # regression factor plane
-    Tvp2 = sheet.cell_value(2, 29)  # regression factor plane
-    Tvp3 = sheet.cell_value(4, 29)  # extra distance travelled plane
-    Tvp4 = sheet.cell_value(5, 29)  # extra langdings made plane
-    Tvp5 = sheet.cell_value(6, 29)  # landing take of kerosene usage plane
-    Tvp6 = sheet.cell_value(7, 29)  # co2 emissions 1 L of kerosene (Co2-eq/kg) plane
-    Tvp7 = sheet.cell_value(8, 29)  # radiative forcing factor plane
-    Tvp8 = sheet.cell_value(9, 29)  # possible cargo plane
-    Tvp9 = sheet.cell_value(10, 29)  # average percent full plane
-    T1 = ((Tvp1 * (ans201.get() * Tvp3) ** 2 + Tvp2 * (ans201.get() * Tvp3) * Tvp6 * Tvp7) + Tvp4 * Tvp5 * Tvp6) / (
-            ans201.get() + 0.001) / (Tvp8 * Tvp9)  # plane Co2 equivalent/(Ton*km)
-    T2 = sheet.cell_value(1, 32)  # Plane energy equivalent/(ton*Km)
-
-    # Here the emission for transport by a truck is calculated
-    Tvt1 = sheet.cell_value(12, 29)  # regression factor Truck
-    Tvt2 = sheet.cell_value(13, 29)  # regression factor Truck
-    Tvt3 = sheet.cell_value(14, 29)  # regression factor Truck
-    Tvt4 = sheet.cell_value(16, 29)  # extra distance travelled Truck
-    Tvt5 = sheet.cell_value(17, 29)  # regression factor Truck
-    Tvt6 = sheet.cell_value(18, 29)  # Co2 emission 1 L of diesel (Co2-eq/kg) Truck
-    Tvt7 = sheet.cell_value(19, 29)  # max cargo (ton) Truck
-    Tvt8 = sheet.cell_value(20, 29)  # average percent full Truck
-    T3 = ((Tvt1 * Tvt7 + Tvt2 * Tvt3 * ans202.get() * Tvt4) * Tvt5 * Tvt6) / (ans202.get() + 0.001) / (
-            Tvt8 * Tvt7)  # truck C02 equivalent/(Ton*km)
-    T4 = sheet.cell_value(12, 32)  # Truck energy equivalent/(ton*Km)
-
-    # Here the emission for transport by a ship is calculated
-    Tp1 = sheet.cell_value(22, 29)  # regression factor plane
-    Tp2 = sheet.cell_value(23, 29)  # regression factor plane
-    Tp3 = sheet.cell_value(25, 29)  # extra distance travelled plane
-    Tp4 = sheet.cell_value(26, 29)  # regression factor plane
-    Tp5 = sheet.cell_value(27, 29)  # litre of oil used in harbours
-    Tp6 = sheet.cell_value(28, 29)  # extra stops see harbours
-    Tp7 = sheet.cell_value(29, 29)  # Co2 emission 1 L of Oil (Co2-eq/kg)
-    Tp8 = sheet.cell_value(30, 29)  # Cargo (ton)
-    Tp9 = sheet.cell_value(31, 29)  # average percentage full
-    T5 = (((Tp1 * Tp8 + Tp2 * Tp4 * ans203.get() * Tp3 + (Tp5 * (Tp6 + 1)) * Tp7) / (ans203.get() + 0.001))) / (
-            Tp8 * Tp9)  # ship C02 equivalent/(Ton*km)
-    T6 = sheet.cell_value(22, 32)  # Ship energy equivalent/(ton*Km)
-
-    # Add Energy content to an earlier build dictionary
-    workbook = xlrd.open_workbook('Crops energy content.xlsx')
-    sheet = workbook.sheet_by_name('Basic database')
-    count = 1
-    for keys, values in dictionary_name.items():
-        if keys == sheet.cell_value(count, 2):
-            dictionary_name[keys] += [sheet.cell_value(count, 3)]
-        count += 1
-
-    print(dictionary_name)
+            else:
+                sheet = workbook.sheet_by_name(tabs)
+                for i in range(1, 54):
+                    if sheet.cell_value(i, 2) != '' and sheet.cell_value(i, 3) != '':
+                        country = 4  # 4 is Netherlands
+                        if sheet.cell_value(i, country) == '':
+                            country = 3  # 3 is average
+                        dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
 
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
@@ -251,7 +134,6 @@ def worksheetoutput(dictionary_name):
     if ans204.get() == 1:
         ans201.set(0);
         ans202.set(0);
-        ans203.set(0)
         non_count = (non_count + 'NPK chemicals,')
 
 
@@ -327,10 +209,10 @@ def worksheetoutput(dictionary_name):
                 P10 * ans165.get()))
 
         # Calculation for total Co2 of transport
-        Tco2 = frac_kg * ((T1 * ans201.get()) + (T3 * ans202.get()) + (T5 * ans203.get()))
+        Tco2 = frac_kg * ((T1 * ans201.get()) + (T3 * ans202.get()) )
 
         # Calculation for total energy of transport
-        Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) + (T6 * ans203.get()))
+        Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) )
 
         # Calculation for the total Co2 of packaging
         Pacco2 = kg_prod * Pac1
@@ -1065,34 +947,18 @@ ans173 = IntVar()
 Radiobutton(frame19, text='Yes, it is', variable=ans171, value=1).grid(sticky=W, padx=5)
 Radiobutton(frame19, text='No, it isn\'t', variable=ans171, value=2).grid(sticky=W, padx=5)
 
-# Here the fields for waste production (Q12) are created
-# ans181 = IntVar()
-# ans182 = IntVar()
-# ans183 = IntVar()
-# ans184 = IntVar()
-# Label(frame20, text='Green waste(kg)').grid(row=1, column=0, padx=5, sticky=W)
-# Entry(frame20, width=10, textvariable=ans181).grid(row=1, column=1)
-# Label(frame20, text='Gray waste(kg)').grid(row=2, column=0, padx=5, sticky=W)
-# Entry(frame20, width=10, textvariable=ans182).grid(row=2, column=1)
-# Label(frame20, text='Paper(kg)').grid(row=3, column=0, padx=5, sticky=W)
-# Entry(frame20, width=10, textvariable=ans183).grid(row=3, column=1)
-# Checkbutton(frame200, text='I don\'t know', variable=ans184).grid(sticky=W, padx=5)
-
 # Here the fields for transportation (Q13)are created
 ans201 = IntVar()
 ans202 = IntVar()
 ans203 = IntVar()
 ans204 = IntVar()
-Label(frame20, text='Plane (km)').grid(row=1, column=0, padx=40, sticky=W)
+Label(frame20, text='Van (ship calc)').grid(row=1, column=0, padx=40, sticky=W)
 Entry(frame20, width=10, textvariable=ans201).grid(row=1, column=1)
-Label(frame20, text='Truck (km)').grid(row=2, column=0, padx=40, sticky=W)
+Label(frame20, text='Truck').grid(row=2, column=0, padx=40, sticky=W)
 Entry(frame20, width=10, textvariable=ans202).grid(row=2, column=1)
-Label(frame20, text='Ship (km)').grid(row=3, column=0, padx=40, sticky=W)
-Entry(frame20, width=10, textvariable=ans203).grid(row=3, column=1)
 Checkbutton(frame200, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
-# shitlabel2 = Label(frame_finish, text='    ').grid(row=0, column=0)
 Button_finish = Button(frame_finish, text=('Finish!'), command=close_program, padx = 10)
 Button_finish.grid(row=1, column=1, padx=10, sticky = E)
 
@@ -1101,7 +967,7 @@ Button_finish.grid(row=1, column=1, padx=10, sticky = E)
 list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans87,
             ans88, ans890, ans91, ans92, ans94, ans95, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
             ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans201,
-            ans202, ans203, ans204]
+            ans202, ans204]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
