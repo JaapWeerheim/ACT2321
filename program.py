@@ -30,7 +30,6 @@ frame111 = Frame(height=40, width=400)
 frame12 = Frame(height=120, width=400)
 frame13 = Frame(height=120, width=400)
 frame14 = Frame(height=290, width=400)
-frame140 = Frame(height=120, width=400)
 frame15 = Frame(height=120, width=400)
 frame16 = Frame(height=90, width=400)
 frame160 = Frame(height=120, width=400)
@@ -46,12 +45,12 @@ frame21 = Frame(height=70, width=400)
 frame210 = Frame(height=120, width=400)
 frame_finish = Frame(height=75, width=400)
 all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11,
-              frame12, frame13, frame14, frame140, frame15, frame16, frame160, frame17, frame170, frame18,
+              frame12, frame13, frame14, frame15, frame16, frame160, frame17, frame170, frame18,
               frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame_finish]
 
 # Set all the frames to a certain size
 for frame in all_frames:
-     frame.grid_propagate(0)
+    frame.grid_propagate(0)
 
 # ----------------------------------------
 # Below, all functions of the program are created
@@ -228,8 +227,6 @@ def worksheetoutput(dictionary_name):
         ans126.set(0);
         ans127.set(0);
         ans128.set(0);
-        ans129.set(0);
-        ans130.set(0);
         ans131.set(0);
         ans132.set(0)
         non_count = (non_count + 'NPK chemicals,')
@@ -295,15 +292,13 @@ def worksheetoutput(dictionary_name):
         FERco2 = frac_surf * ((
                 (Fe1 * ans121.get()) + (Fe3 * ans122.get()) + (Fe5 * ans123.get()) + (Fe7 * ans124.get()) + (
                 Fe9 * ans125.get()) + (Fe11 * ans126.get()) + (Fe13 * ans127.get()) + (
-                        Fe15 * ans128.get()) + (Fe17 * ans129.get()) + (Fe19 * ans130.get()) + (
-                        Fe21 * ans131.get()) + (Fe22 * ans132.get())))
+                        Fe15 * ans128.get()) + (Fe21 * ans131.get()) + (Fe22 * ans132.get())))
 
         # Calculation for total energy of fertilizers
         FERenergy = frac_surf * ((
                 (Fe2 * ans121.get()) + (Fe4 * ans122.get()) + (Fe6 * ans123.get()) + (Fe8 * ans124.get()) + (
                 Fe10 * ans125.get()) + (Fe12 * ans126.get()) + (Fe14 * ans127.get()) + (
-                        Fe16 * ans128.get()) + (Fe18 * ans129.get()) + (Fe20 * ans130.get()) + (
-                        Fe22 * ans131.get()) + (Fe24 * ans132.get())))
+                        Fe16 * ans128.get()) + (Fe22 * ans131.get()) + (Fe24 * ans132.get())))
 
         # Calculation for total Co2 of substrates
         Sco2 = frac_surf * (
@@ -559,27 +554,24 @@ def pre():
         frame10.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity do you sell? (renewable and/or non-renewable) ")
+        var.set("5. How much electricity do you sell? \n (renewable and/or non-renewable) ")
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
-        var.set(
-            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use(if you don't know, fill in zero's)")
+        var.set("6. Do you use any fossil fuels (excluding transportation), \nand how much do you use(if you don't know, fill in zero's)")
         frame14.grid_forget()
-        frame140.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How many NPK chemicals (kg or L) do you use per year? ')
+        var.set('7. How many NPK chemicals (kg) do you use per year? ')
         frame16.grid_forget()
         frame160.grid_forget()
         frame14.grid(sticky=W)
-        frame140.grid(sticky=W)
     if count == 8:
-        var.set('8. Do you use substrate and how much per year? (kg)')
+        var.set('8. Do you use substrate (kg) and how much per year?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame16.grid(sticky=W)
@@ -615,7 +607,7 @@ def pre():
 
 # def next1() enables to go to the next question.
 # i.e. forgetting the current frames and introducing new frames
-v = IntVar()
+# v = IntVar()
 
 
 def next1():
@@ -642,7 +634,7 @@ def next1():
         frame8.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity do you sell? (renewable and/or non-renewable) ")
+        var.set("5. How much electricity do you sell? \n(renewable and/or non-renewable) ")
         frame9.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
@@ -653,18 +645,14 @@ def next1():
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How many NPK chemicals (kg or L) do you use per year? ')
-        other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
-        ans917.set(other)
+        var.set('7. How many NPK chemicals (kg) do you use per year? ')
         frame11.grid_forget()
         frame111.grid_forget()
         frame110.grid_forget()
         frame14.grid(sticky=W)
-        frame140.grid(sticky=W)
     if count == 8:
-        var.set('8. Do you use substrate and how much per year? (kg)?')
+        var.set('8. Do you use substrate (kg) and how much per year?')
         frame14.grid_forget()
-        frame140.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
@@ -721,6 +709,7 @@ def enter(event):
 def start():
     frame0.pack_forget()
     frame00.pack(anchor=CENTER)
+
     return
 
 
@@ -732,6 +721,11 @@ def next2():
     frame2.grid()
     frame3.grid()
     count += 1
+    # The code below is necessary in the last frame to instruct the user where he can find the results of the analysis.
+    print_finish = 'If you click on the finish button, the questionnaire will close. \n Results of the analysis can then be found in '
+    print_farm_name = farm_name.get() + '.xlsx.'
+    print_label = print_finish + print_farm_name
+    Label(frame_finish, text=print_label).grid(row=1, column=0, sticky = W)
     return
 
 
@@ -801,36 +795,6 @@ def cal2(event):
     print(dic_crops)
     return dic_crops
 
-
-# The function cal checks whether a percentage value (Q6) is between 0 and 100
-# It works but you can also ignore the notifications and go to the next question
-dd = 2
-
-
-def cal(event):
-    try:
-        if 0 <= ans916.get() <= 100 and 0 <= ans915.get() <= 100 and 0 <= ans914.get() <= 100 and 0 <= ans913.get() <= 100 and 0 <= ans912.get() <= 100 and 0 <= ans911.get() <= 100 and 0 <= ans910.get() <= 100 and 0 <= ans99.get() <= 100 and 0 <= ans98.get() <= 100 and 0 <= ans97.get() <= 100:
-            other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
-            if other >= 0:
-                ans917.set(other)
-            else:
-                messagebox.showinfo('Notification', 'The range of the number should be (0,100)')
-        else:
-            global dd
-            dd += 1
-            if dd % 3 == 0:
-                messagebox.showinfo('Notification', 'The range of the number should be (0,100)')
-
-    except TclError:
-        for i in range(len(list_ans)):  # if there is no value in Entry, make it back to 0
-            try:
-                if i != 0 or 2 or 1:
-                    list_ans[i].get() != ''
-
-            except TclError:
-                list_ans[i].set(00)
-    return
-
 def rid_of_zeros_sur(event):
     for i in range(0, len(ansVeg)):
         if ansVeg[i].get() == 1 and surVeg[i].get() <= 0:
@@ -868,10 +832,13 @@ Entry(frame00, textvariable=farm_name).pack(fill=BOTH, side=BOTTOM, anchor=CENTE
 Label(frame00, text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH, side=BOTTOM)
 
 # Basic frame containing previous and next labels
-button2 = Button(frame2, text=('previous'), command=pre).grid(row=0, column=0, padx=10)
+button2 = Button(frame2, text=('Previous'), command=pre,padx=10)
+button2.grid(row=0, column = 0, padx=10, sticky=W)
 shitlabel = Label(frame2, text='                                   ').grid(row=0, column=1)
-button1 = Button(frame2, text=('next'), command=next1).grid(row=0, column=2, sticky=E,padx=10)
+button1 = Button(frame2, text=('  Next  '), command=next1, padx=10)
+button1.grid(row=0, column=2, sticky=E, padx=10)
 root.bind('<Return>', enter)
+
 
 # Define the 'file' Menu
 root.file_opt = options = {}
@@ -999,85 +966,15 @@ ans93 = IntVar()
 ans94 = IntVar()
 ans95 = IntVar()
 ans96 = IntVar()
-ans97 = IntVar()
-ans98 = IntVar()
-ans99 = IntVar()
-ans910 = IntVar()
-ans911 = IntVar()
-ans912 = IntVar()
-ans913 = IntVar()
-ans914 = IntVar()
-ans915 = IntVar()
-ans916 = IntVar()
-ans917 = IntVar()
-# 'other' is also calculated in line 216 and 424...
-other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
-ans917.set(other)
 petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky=W)
 petroly = Entry(frame11, width=5, textvariable=ans91).grid(row=0, column=1)
 diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
 diesely = Entry(frame11, width=5, textvariable=ans92).grid(row=1, column=1)
-Ngasl = Label(frame11, text='Natural gas (L)').grid(row=0, column=2, padx=10, sticky=W)
+Ngasl = Label(frame11, text='Natural gas (L)').grid(row=0, column=2, padx=10, sticky=W) #Going to be in M3
 Ngasy = Entry(frame11, width=5, textvariable=ans94).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
 oily = Entry(frame11, width=5, textvariable=ans95).grid(row=1, column=3)
 
-# Here, additional fields for Q6 (estimating the percentages of fossil fuel use) are build
-Label(frame111, text='Estimate in percentages what the fossil fuels are used for').grid(row=0, column=0, sticky=W,
-                                                                                        padx=5)
-Label(frame110, text='Heating').grid(row=1, column=0, sticky=W, padx=5)
-q = Entry(frame110, width=5, textvariable=ans97)
-q.grid(row=1, column=1)
-Label(frame110, text='%').grid(row=1, column=2, sticky=W)
-q.bind('<FocusOut>', cal)
-Label(frame110, text='Cooling').grid(row=2, column=0, sticky=W, padx=5)
-w = Entry(frame110, width=5, textvariable=ans98)
-w.grid(row=2, column=1)
-Label(frame110, text='%').grid(row=2, column=2, sticky=W)
-w.bind('<FocusOut>', cal)
-Label(frame110, text='Electricity').grid(row=3, column=0, sticky=W, padx=5)
-e = Entry(frame110, width=5, textvariable=ans99)
-e.grid(row=3, column=1)
-Label(frame110, text='%').grid(row=3, column=2, sticky=W)
-e.bind('<FocusOut>', cal)
-Label(frame110, text='Tillage').grid(row=4, column=0, sticky=W, padx=5)
-a = Entry(frame110, width=5, textvariable=ans910)
-a.grid(row=4, column=1)
-Label(frame110, text='%').grid(row=4, column=2, sticky=W)
-a.bind('<FocusOut>', cal)
-Label(frame110, text='Sowing').grid(row=5, column=0, sticky=W, padx=5)
-s = Entry(frame110, width=5, textvariable=ans911)
-s.grid(row=5, column=1)
-Label(frame110, text='%').grid(row=5, column=2, sticky=W)
-s.bind('<FocusOut>', cal)
-Label(frame110, text='Weeding').grid(row=5, column=3, sticky=W, padx=20)
-d = Entry(frame110, width=5, textvariable=ans912)
-d.grid(row=5, column=4)
-Label(frame110, text='%').grid(row=5, column=5, sticky=W)
-d.bind('<FocusOut>', cal)
-Label(frame110, text='Harvest').grid(row=1, column=3, sticky=W, padx=20)
-z = Entry(frame110, width=5, textvariable=ans913)
-z.grid(row=1, column=4)
-Label(frame110, text='%').grid(row=1, column=5, sticky=W)
-z.bind('<FocusOut>', cal)
-Label(frame110, text='Fertilize').grid(row=2, column=3, sticky=W, padx=20)
-x = Entry(frame110, width=5, textvariable=ans914)
-x.grid(row=2, column=4)
-Label(frame110, text='%').grid(row=2, column=5, sticky=W)
-x.bind('<FocusOut>', cal)
-Label(frame110, text='Irrigation').grid(row=3, column=3, sticky=W, padx=20)
-c = Entry(frame110, width=5, textvariable=ans915)
-c.grid(row=3, column=4)
-Label(frame110, text='%').grid(row=3, column=5, sticky=W)
-c.bind('<FocusOut>', cal)
-Label(frame110, text='Pesticide').grid(row=4, column=3, sticky=W, padx=20)
-r = Entry(frame110, width=5, textvariable=ans916)
-r.grid(row=4, column=4)
-Label(frame110, text='%').grid(row=4, column=5, sticky=W)
-r.bind('<FocusOut>', cal)
-Label(frame110, text='Other').grid(row=6, column=0, sticky=W, padx=5)
-Entry(frame110, width=5, textvariable=ans917).grid(row=6, column=1)
-Label(frame110, text='%').grid(row=6, column=2, sticky=W)
 
 # Here the field for fertilizer use are created (Q7)
 ans121 = IntVar()
@@ -1088,36 +985,30 @@ ans125 = IntVar()
 ans126 = IntVar()
 ans127 = IntVar()
 ans128 = IntVar()
-ans129 = IntVar()
-ans130 = IntVar()
 ans131 = IntVar()
 ans132 = IntVar()
 ans133 = IntVar()
-Label(frame14, text='Ammoniumnitrate (kg)').grid(row=1, column=0, padx=5, sticky=W)
+Label(frame14, text='Ammoniumnitrate').grid(row=1, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans121).grid(row=1, column=1)
-Label(frame14, text='Calciumammoniumnitrate (kg)').grid(row=2, column=0, padx=5, sticky=W)
+Label(frame14, text='Calciumammoniumnitrate').grid(row=2, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans122).grid(row=2, column=1)
-Label(frame14, text='Ammoniumsulphate (kg)').grid(row=3, column=0, padx=5, sticky=W)
+Label(frame14, text='Ammoniumsulphate').grid(row=3, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans123).grid(row=3, column=1)
-Label(frame14, text='Triplesuperphosphate (kg)').grid(row=4, column=0, padx=5, sticky=W)
+Label(frame14, text='Triplesuperphosphate').grid(row=4, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans124).grid(row=4, column=1)
-Label(frame14, text='Single super phosphate (kg)').grid(row=5, column=0, padx=5, sticky=W)
+Label(frame14, text='Single super phosphate').grid(row=5, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans125).grid(row=5, column=1)
-Label(frame14, text='Ammonia(kg)').grid(row=6, column=0, padx=5, sticky=W)
+Label(frame14, text='Ammonia').grid(row=6, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans126).grid(row=6, column=1)
-Label(frame14, text='limestone (kg)').grid(row=7, column=0, padx=5, sticky=W)
+Label(frame14, text='Limestone').grid(row=7, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans127).grid(row=7, column=1)
-Label(frame14, text='NPK 15-15-15(kg)').grid(row=8, column=0, padx=5, sticky=W)
+Label(frame14, text='NPK 15-15-15').grid(row=8, column=0, padx=5, sticky=W)
 Entry(frame14, width=10, textvariable=ans128).grid(row=8, column=1)
-Label(frame14, text='Urea(kg)').grid(row=9, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans129).grid(row=9, column=1)
-Label(frame14, text='Manure(kg)').grid(row=10, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans130).grid(row=10, column=1)
-Label(frame14, text='Phosphoric acid(kg)').grid(row=11, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans131).grid(row=11, column=1)
-Label(frame14, text='mono-ammonium phosphate(kg)').grid(row=12, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans132).grid(row=12, column=1)
-Checkbutton(frame140, text='I don\'t know', variable=ans133).grid(padx=5)
+Label(frame14, text='Phosphoric acid').grid(row=9, column=0, padx=5, sticky=W)
+Entry(frame14, width=10, textvariable=ans131).grid(row=9, column=1)
+Label(frame14, text='Mono-ammonium phosphate').grid(row=10, column=0, padx=5, sticky=W)
+Entry(frame14, width=10, textvariable=ans132).grid(row=10, column=1)
+Checkbutton(frame14, text='I don\'t know', variable=ans133).grid(row = 11, column = 0, padx=5, sticky=W)
 
 # Here the fields for substrate use (Q8) are created
 ans141 = IntVar()
@@ -1201,16 +1092,14 @@ Entry(frame20, width=10, textvariable=ans203).grid(row=3, column=1)
 Checkbutton(frame200, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
-shitlabel2 = Label(frame_finish, text='                                                            ').grid(row=0, column=0)
-Button_finish = Button(frame_finish, text=('finish'), command=close_program)
-Button_finish.grid(row=0, column=1, padx=10)
+# shitlabel2 = Label(frame_finish, text='    ').grid(row=0, column=0)
+Button_finish = Button(frame_finish, text=('Finish!'), command=close_program, padx = 10)
+Button_finish.grid(row=1, column=1, padx=10, sticky = E)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
 list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans87,
-            ans88, ans890, ans91, ans92, ans94, ans95, ans97, ans98, ans99, ans910, ans911, ans912, ans913,
-            ans914, ans915, ans916, ans917, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans129,
-            ans130, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
+            ans88, ans890, ans91, ans92, ans94, ans95, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
             ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans201,
             ans202, ans203, ans204]
 
