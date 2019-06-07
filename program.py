@@ -58,42 +58,44 @@ for frame in all_frames:
 # Function worksheetoutput does all the calculations to perform the LCA and writes the result to an Excel sheet
 def worksheetoutput(dictionary_name):
     # Opening excel file in order to get parameters
-    workbook = xlrd.open_workbook('Country database.xlsx')
-    sheet = workbook.sheet_by_name(ans1.get())
+    workbook = xlrd.open_workbook('Database_full.xlsx')
+    # sheet = workbook.sheet_by_name(ans1.get())
 
     # Package.
     # 1 = yes, it is packaged on the farm
     # 2 = No, it is not packaged.
-    if ans171.get() == 1:
-        Pac1 = float(sheet.cell_value(1, 39))  # Packaging Co2 equivalent/kg
-        Pac2 = float(sheet.cell_value(1, 40))  # Packaging energy equivalent/kg
-    else:
-        Pac1 = 0
-        Pac2 = 0
+    # Moet nog gedaan worden
+    # if ans171.get() == 1:
+    #     Pac1 = float(sheet.cell_value(1, 39))  # Packaging Co2 equivalent/kg
+    #     Pac2 = float(sheet.cell_value(1, 40))  # Packaging energy equivalent/kg
+    # else:
+    #     Pac1 = 0
+    #     Pac2 = 0
+    Pac1 = 0
+    Pac2 = 0
+    # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
+    # eventually create a loop for this.
+    dicp = {}
 
-        # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
-        # eventually create a loop for this.
-        dicp = {}
-        workbook = xlrd.open_workbook('Database_full.xlsx')
-        sheet = workbook.sheet_by_name('CO2eq (kg)')
+    sheet = workbook.sheet_by_name('CO2eq (kg)')
 
-        for tabs in workbook.sheet_names():
-            if tabs == 'Crop parameters':
-                sheet = workbook.sheet_by_name(tabs)
-                count = 1
-                for keys, values in dictionary_name.items():
-                    if keys == sheet.cell_value(count, 0):
-                        dictionary_name[keys] += [sheet.cell_value(count, 4)]
-                    count += 1
+    for tabs in workbook.sheet_names():
+        if tabs == 'Crop parameters':
+            sheet = workbook.sheet_by_name(tabs)
+            count = 1
+            for keys, values in dictionary_name.items():
+                if keys == sheet.cell_value(count, 0):
+                    dictionary_name[keys] += [sheet.cell_value(count, 4)]
+                count += 1
 
-            else:
-                sheet = workbook.sheet_by_name(tabs)
-                for i in range(1, 54):
-                    if sheet.cell_value(i, 2) != '' and sheet.cell_value(i, 3) != '':
-                        country = 4  # 4 is Netherlands
-                        if sheet.cell_value(i, country) == '':
-                            country = 3  # 3 is average
-                        dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
+        else:
+            sheet = workbook.sheet_by_name(tabs)
+            for i in range(1, 54):
+                if sheet.cell_value(i, 2) != '' and sheet.cell_value(i, 3) != '':
+                    country = 4  # 4 is Netherlands
+                    if sheet.cell_value(i, country) == '':
+                        country = 3  # 3 is average
+                    dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
 
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
@@ -156,63 +158,63 @@ def worksheetoutput(dictionary_name):
         Eoc = values[3]
 
         # Calculation for total C02 of electricity usage
-        Eco2 = frac_surf * ((C1 * ans61.get()) + (C3 * ans62.get()) + (C5 * ans71.get()) + (C7 * ans73.get()) + (
-                C9 * ans72.get()) - (ans87.get() * C1) - (ans88.get() * C3))
+        Eco2 = frac_surf * ((dicp['C1'] * ans61.get()) + (dicp['C3'] * ans62.get()) + (dicp['C5'] * ans71.get()) + (dicp['C7'] * ans73.get()) + (
+                dicp['C9'] * ans72.get()) - (ans87.get() * dicp['C1']) - (ans88.get() * dicp['C3']))
 
         # Calculation for total energy of electricity usage
-        Eenergy = frac_surf * ((C2 * ans61.get()) + (C4 * ans62.get()) + (C6 * ans71.get()) + (C8 * ans73.get()) + (
-                C10 * ans72.get()) - (ans87.get() * C2) - (ans88.get() * C4))
+        Eenergy = frac_surf * ((dicp['C2'] * ans61.get()) + (dicp['C4'] * ans62.get()) + (dicp['C6'] * ans71.get()) + (dicp['C8'] * ans73.get()) + (
+                dicp['C10'] * ans72.get()) - (ans87.get() * dicp['C2']) - (ans88.get() * dicp['C4']))
 
         # Calculation for total Co2 of fossil fuels use
-        Fco2 = frac_surf * ((Fo1 * ans91.get()) + (Fo3 * ans92.get()) + (Fo7 * ans94.get()) + (Fo9 * ans95.get()))
+        Fco2 = frac_surf * ((dicp['Fo1'] * ans91.get()) + (dicp['Fo3'] * ans92.get()) + (dicp['Fo7'] * ans94.get()) + (dicp['Fo9'] * ans95.get()))
 
         # Calculation for total energy of fossil fuel use
         Fenergy = frac_surf * (
-                (Fo2 * ans91.get()) + (Fo4 * ans92.get()) + (Fo8 * ans94.get()) + (Fo10 * ans95.get()))
+                (dicp['Fo2'] * ans91.get()) + (dicp['Fo4'] * ans92.get()) + (dicp['Fo8'] * ans94.get()) + (dicp['Fo10'] * ans95.get()))
 
         # Calculation for total Co2 of fertilizers
         FERco2 = frac_surf * ((
-                (Fe1 * ans121.get()) + (Fe3 * ans122.get()) + (Fe5 * ans123.get()) + (Fe7 * ans124.get()) + (
-                Fe9 * ans125.get()) + (Fe11 * ans126.get()) + (Fe13 * ans127.get()) + (
-                        Fe15 * ans128.get()) + (Fe21 * ans131.get()) + (Fe22 * ans132.get())))
+                (dicp['Fe1'] * ans121.get()) + (dicp['Fe3'] * ans122.get()) + (dicp['Fe5'] * ans123.get()) + (dicp['Fe7'] * ans124.get()) + (
+                dicp['Fe9'] * ans125.get()) + (dicp['Fe11'] * ans126.get()) + (dicp['Fe13'] * ans127.get()) + (
+                        dicp['Fe15'] * ans128.get()) + (dicp['Fe21'] * ans131.get()) + (dicp['Fe22'] * ans132.get())))
 
         # Calculation for total energy of fertilizers
         FERenergy = frac_surf * ((
-                (Fe2 * ans121.get()) + (Fe4 * ans122.get()) + (Fe6 * ans123.get()) + (Fe8 * ans124.get()) + (
-                Fe10 * ans125.get()) + (Fe12 * ans126.get()) + (Fe14 * ans127.get()) + (
-                        Fe16 * ans128.get()) + (Fe22 * ans131.get()) + (Fe24 * ans132.get())))
+                (dicp['Fe2'] * ans121.get()) + (dicp['Fe4'] * ans122.get()) + (dicp['Fe6'] * ans123.get()) + (dicp['Fe8'] * ans124.get()) + (
+                dicp['Fe10'] * ans125.get()) + (dicp['Fe12'] * ans126.get()) + (dicp['Fe14'] * ans127.get()) + (
+                        dicp['Fe16'] * ans128.get()) + (dicp['Fe22'] * ans131.get()) + (dicp['Fe24'] * ans132.get())))
 
         # Calculation for total Co2 of substrates
         Sco2 = frac_surf * (
-                (S1 * ans141.get()) + (S3 * ans142.get()) + (S5 * ans143.get()) + (S7 * ans144.get()) + (
-                S9 * ans145.get()) + (S11 * ans146.get()))
+                (dicp['S1'] * ans141.get()) + (dicp['S3'] * ans142.get()) + (dicp['S5'] * ans143.get()) + (dicp['S7'] * ans144.get()) + (
+                dicp['S9'] * ans145.get()) + (dicp['S11'] * ans146.get()))
 
         # Calculation for total energy of substrates
         Senergy = frac_surf * (
-                (S2 * ans141.get()) + (S4 * ans142.get()) + (S6 * ans143.get()) + (S8 * ans144.get()) + (
-                S10 * ans145.get()) + (S12 * ans146.get()))
+                (dicp['S2'] * ans141.get()) + (dicp['S4'] * ans142.get()) + (dicp['S6'] * ans143.get()) + (dicp['S8'] * ans144.get()) + (
+                dicp['S10'] * ans145.get()) + (dicp['S12'] * ans146.get()))
 
         # Calculation for total Co2 of water
-        Wco2 = frac_surf * (W1 * ans151.get())
+        Wco2 = frac_surf * (dicp['Wa1'] * ans151.get())
 
         # Calculation for total energy of water
-        Wenergy = frac_surf * (W2 * ans151.get())
+        Wenergy = frac_surf * (dicp['Wa2'] * ans151.get())
 
         # Calculation for total Co2 of pesticides
         Pco2 = frac_surf * (
-                (P1 * ans161.get()) + (P3 * ans162.get()) + (P5 * ans163.get()) + (P7 * ans164.get()) + (
-                P9 * ans165.get()))
+                (dicp['P1'] * ans161.get()) + (dicp['P3'] * ans162.get()) + (dicp['P5'] * ans163.get()) + (dicp['P7'] * ans164.get()) + (
+                dicp['P9'] * ans165.get()))
 
         # Calculation for total energy of pesticides
         Penergy = frac_surf * (
-                (P2 * ans161.get()) + (P4 * ans162.get()) + +(P6 * ans163.get()) + +(P8 * ans164.get()) + (
-                P10 * ans165.get()))
+                (dicp['P2'] * ans161.get()) + (dicp['P4'] * ans162.get()) + +(dicp['P6'] * ans163.get()) + +(dicp['P8'] * ans164.get()) + (
+                dicp['P10'] * ans165.get()))
 
         # Calculation for total Co2 of transport
-        Tco2 = frac_kg * ((T1 * ans201.get()) + (T3 * ans202.get()) )
+        Tco2 = frac_kg * ((dicp['T1'] * ans201.get()) + (dicp['T3'] * ans202.get()) )
 
         # Calculation for total energy of transport
-        Tenergy = frac_kg * ((T2 * ans201.get()) + (T4 * ans202.get()) )
+        Tenergy = frac_kg * ((dicp['T2'] * ans201.get()) + (dicp['T4'] * ans202.get()) )
 
         # Calculation for the total Co2 of packaging
         Pacco2 = kg_prod * Pac1
