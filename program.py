@@ -7,7 +7,7 @@ import tkinter.filedialog
 
 # Building the Gui including all the frames
 root = Tk()
-root.title('Life cyle assesment for vertical farms')
+root.title('VertiCal')
 root.wm_iconbitmap('sfsf logo.ico')
 root.geometry('440x440+500+200')
 
@@ -24,7 +24,6 @@ frame7 = Frame(height=120, width=400)
 frame8 = Frame(height=120, width=400)
 frame9 = Frame(height=120, width=400)
 frame10 = Frame(height=90, width=400)
-frame100 = Frame(height=140, width=400)
 frame11 = Frame(height=70, width=400)
 frame110 = Frame(height=140, width=400)
 frame111 = Frame(height=40, width=400)
@@ -45,17 +44,14 @@ frame20 = Frame(height=90, width=400)
 frame200 = Frame(height=120, width=400)
 frame21 = Frame(height=70, width=400)
 frame210 = Frame(height=120, width=400)
-frame22 = Frame(height=90, width=400)
-frame220 = Frame(height=120, width=400)
-frame24 = Frame(height=75, width=400)
 frame_finish = Frame(height=75, width=400)
-all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame100, frame11,
+all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11,
               frame12, frame13, frame14, frame140, frame15, frame16, frame160, frame17, frame170, frame18,
-              frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame22, frame220, frame24]
+              frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame_finish]
 
 # Set all the frames to a certain size
 for frame in all_frames:
-    frame.grid_propagate(0)
+     frame.grid_propagate(0)
 
 # ----------------------------------------
 # Below, all functions of the program are created
@@ -220,15 +216,8 @@ def worksheetoutput(dictionary_name):
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
     if ans890.get() == 1:
-        ans81.set(0);
-        ans82.set(0);
-        ans83.set(0);
-        ans84.set(0);
-        ans85.set(0);
-        ans86.set(0);
         ans87.set(0);
         ans88.set(0);
-        ans89.set(0)
         non_count = ('Specification of electricity,')
     if ans133.get() == 1:
         ans121.set(0);
@@ -262,19 +251,12 @@ def worksheetoutput(dictionary_name):
         ans164.set(0);
         ans165.set(0)
         non_count = (non_count + 'Pesticides,')
-    if ans184.get() == 1:
-        ans181.set(0);
-        ans182.set(0);
-        ans183.set(0)
-        non_count = (non_count + 'Waste,')
     if ans204.get() == 1:
         ans201.set(0);
         ans202.set(0);
         ans203.set(0)
         non_count = (non_count + 'NPK chemicals,')
-    #if ans212.get() == 1:
-    #   ans211.set(0)
-    #   non_count = (non_count + 'Waste during transportation')
+
 
     # Create the output: an Excel file
     wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
@@ -401,31 +383,32 @@ def worksheetoutput(dictionary_name):
             ws.write(1 + x, 6, labels_total[x])
             ws.write(1 + x, 9, totals_output_round[x])
 
-        labels_diff_aspects = ['Heating', 'Cooling', 'Electricity', 'Tillage', 'Sowing', 'Weeding', 'Harvest',
-                               'Fertilizer', 'Irrigation', 'Pesticide', 'Other']
-        for x in range(len(labels_diff_aspects)):
-            ws.write(43 + x, 1, labels_diff_aspects[x])
-            ws.write(43 + x, 2, list_ans[22 + x].get()) * frac_surf
+        # labels_diff_aspects = ['Heating', 'Cooling', 'Electricity', 'Tillage', 'Sowing', 'Weeding', 'Harvest',
+        #                        'Fertilizer', 'Irrigation', 'Pesticide', 'Other']
+        # for x in range(len(labels_diff_aspects)):
+        #     ws.write(43 + x, 1, labels_diff_aspects[x])
+        #     ws.write(43 + x, 2, list_ans[22 + x].get()) * frac_surf
 
-        ws.write(43, 9, 'Heating')
-        ws.write(44, 9, 'Cooling')
-        ws.write(45, 9, 'Ventilation')
-        ws.write(46, 9, 'Lighting')
-        ws.write(47, 9, 'Machinery')
-        ws.write(48, 9, 'Storage')
-        ws.write(49, 9, 'Selling')
-        ws.write(50, 9, 'Other')
+        # # These values are currently written to a super random place in the script, it needs to be reconsidered
+        # # ws.write(43, 9, 'Heating')
+        # # ws.write(44, 9, 'Cooling')
+        # # ws.write(45, 9, 'Ventilation')
+        # # ws.write(46, 9, 'Lighting')
+        # # ws.write(47, 9, 'Machinery')
+        # # ws.write(48, 9, 'Storage')
+        # ws.write(49, 9, 'Selling renewables')
+        # ws.write(50, 9, 'Selling non-renewables')
 
-        ws.write(43, 10, ans81.get()) * frac_surf
-        ws.write(44, 10, ans82.get()) * frac_surf
-        ws.write(45, 10, ans83.get()) * frac_surf
-        ws.write(46, 10, ans84.get()) * frac_surf
-        ws.write(47, 10, ans85.get()) * frac_surf
-        ws.write(48, 10, ans86.get()) * frac_surf
-        ws.write(49, 10, ans87.get()) * frac_surf
-        ws.write(50, 10, ans88.get()) * frac_surf
+        # # ws.write(43, 10, ans81.get()) * frac_surf
+        # # ws.write(44, 10, ans82.get()) * frac_surf
+        # # ws.write(45, 10, ans83.get()) * frac_surf
+        # # ws.write(46, 10, ans84.get()) * frac_surf
+        # # ws.write(47, 10, ans85.get()) * frac_surf
+        # # ws.write(48, 10, ans86.get()) * frac_surf
+        # ws.write(49, 10, ans87.get()) * frac_surf
+        # ws.write(50, 10, ans88.get()) * frac_surf
 
-        if ans890.get() == 1 or ans131.get() == 1 or ans147.get() == 1 or ans152.get() == 1 or ans166.get() == 1 or ans184.get() == 1 or ans204.get() == 1:
+        if ans890.get() == 1 or ans131.get() == 1 or ans147.get() == 1 or ans152.get() == 1 or ans166.get() == 1 or ans204.get() == 1:
             ws.write(10, 1, non_count + 'is not taken into account because of lacking data')
 
         # Creating bar and pie charts
@@ -493,46 +476,46 @@ def worksheetoutput(dictionary_name):
         chart_col.set_style(2)
         ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col = wb.add_chart({'type': 'pie'})
-        chart_col.add_series({
-            'name': 'Fossil fuels used',
-            'categories': [cropname, 43, 1, 53, 1],
-            'values': [cropname, 43, 2, 53, 2],
-            'points': [{'fill': {'color': 'blue'}},
-                       {'fill': {'color': 'yellow'}},
-                       {'fill': {'color': 'red'}},
-                       {'fill': {'color': 'gray'}},
-                       {'fill': {'color': 'black'}},
-                       {'fill': {'color': 'purple'}},
-                       {'fill': {'color': 'pink'}},
-                       {'fill': {'color': 'cyan'}},
-                       {'fill': {'color': 'magenta'}},
-                       {'fill': {'color': 'brown'}},
-                       ],
-        })
-        chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
-        chart_col.set_style(5)
-        ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
+        # chart_col = wb.add_chart({'type': 'pie'})
+        # chart_col.add_series({
+        #     'name': 'Fossil fuels used',
+        #     'categories': [cropname, 43, 1, 53, 1],
+        #     'values': [cropname, 43, 2, 53, 2],
+        #     'points': [{'fill': {'color': 'blue'}},
+        #                {'fill': {'color': 'yellow'}},
+        #                {'fill': {'color': 'red'}},
+        #                {'fill': {'color': 'gray'}},
+        #                {'fill': {'color': 'black'}},
+        #                {'fill': {'color': 'purple'}},
+        #                {'fill': {'color': 'pink'}},
+        #                {'fill': {'color': 'cyan'}},
+        #                {'fill': {'color': 'magenta'}},
+        #                {'fill': {'color': 'brown'}},
+        #                ],
+        # })
+        # chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
+        # chart_col.set_style(5)
+        # ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
-        chart_col = wb.add_chart({'type': 'pie'})
-        chart_col.add_series({
-            'name': 'Electricity used',
-            'categories': [cropname, 43, 9, 50, 9],
-            'values': [cropname, 43, 10, 50, 10],
-            'points': [{'fill': {'color': 'blue'}},
-                       {'fill': {'color': 'yellow'}},
-                       {'fill': {'color': 'red'}},
-                       {'fill': {'color': 'gray'}},
-                       {'fill': {'color': 'black'}},
-                       {'fill': {'color': 'purple'}},
-                       {'fill': {'color': 'pink'}},
-                       {'fill': {'color': 'cyan'}},
-
-                       ],
-        })
-        chart_col.set_title({'name': 'Electricity used for different aspects'})
-        chart_col.set_style(4)
-        ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
+        # chart_col = wb.add_chart({'type': 'pie'})
+        # chart_col.add_series({
+        #     'name': 'Electricity used',
+        #     'categories': [cropname, 43, 9, 50, 9],
+        #     'values': [cropname, 43, 10, 50, 10],
+        #     'points': [{'fill': {'color': 'blue'}},
+        #                {'fill': {'color': 'yellow'}},
+        #                {'fill': {'color': 'red'}},
+        #                {'fill': {'color': 'gray'}},
+        #                {'fill': {'color': 'black'}},
+        #                {'fill': {'color': 'purple'}},
+        #                {'fill': {'color': 'pink'}},
+        #                {'fill': {'color': 'cyan'}},
+        #
+        #                ],
+        # })
+        # chart_col.set_title({'name': 'Electricity used for different aspects'})
+        # chart_col.set_style(4)
+        # ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
     wb.close()
     # root.destroy()
@@ -574,25 +557,23 @@ def pre():
     if count == 4:
         var.set('4. Do you produce your own renewable energy and how much \ndo you produce?')
         frame10.grid_forget()
-        frame100.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+        var.set("5. How much electricity do you sell? (renewable and/or non-renewable) ")
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
-        frame100.grid(sticky=W)
     if count == 6:
         var.set(
-            "6. Do you use any fossil fuels(excluding transportation), \nand how much do you use(if you don't know fill in zero)")
+            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use(if you don't know, fill in zero's)")
         frame14.grid_forget()
         frame140.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How much kilograms do you use of the following \nNPK chemicals per year?')
+        var.set('7. How many NPK chemicals (kg or L) do you use per year? ')
         frame16.grid_forget()
         frame160.grid_forget()
         frame14.grid(sticky=W)
@@ -604,13 +585,13 @@ def pre():
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water do you use?')
+        var.set('9. How much water do you buy?') #Check whether this is in litres or in m3
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides do you use? ')
+        var.set('10. How much pesticides (Kg or L) do you use? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
@@ -622,18 +603,12 @@ def pre():
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How much waste do you produce? ')
-        frame22.grid_forget()
-        frame220.grid_forget()
+        var.set('12. How far does your product travel to the distribution center \non average?')
+        frame_finish.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count == 13:
-        var.set('13. How far does your product travel to the distribution center \non average? ')
-        frame_finish.grid_forget()
-        frame22.grid(sticky=W)
-        frame220.grid(sticky=W)
-    if count == 14:
-        var.set('14. This is was the questionnaire, are you finished?')
+        var.set('13. This is was the questionnaire, are you finished?')
         frame_finish.grid(sticky=W)
     return
 
@@ -667,20 +642,18 @@ def next1():
         frame8.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. Can you specify what and how much the electricity is spend on? \nif you can't fill in zeros")
+        var.set("5. How much electricity do you sell? (renewable and/or non-renewable) ")
         frame9.grid_forget()
         frame10.grid(sticky=W)
-        frame100.grid(sticky=W)
     if count == 6:
         var.set(
-            "6. Do you use any fossil fuels(excluding transportation), \nand how much do you use (if you don't know fill in zero)")
+            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use (if you don't know, fill in zero's)")
         frame10.grid_forget()
-        frame100.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How much kilograms do you use of the following \nNPK chemicals per year?')
+        var.set('7. How many NPK chemicals (kg or L) do you use per year? ')
         other = 100 - ans916.get() - ans915.get() - ans914.get() - ans913.get() - ans912.get() - ans911.get() - ans910.get() - ans99.get() - ans98.get() - ans97.get()
         ans917.set(other)
         frame11.grid_forget()
@@ -695,13 +668,13 @@ def next1():
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water do you use?')
+        var.set('9. How much water do you buy?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides do you use?')
+        var.set('10. How much pesticides (Kg or L) do you use?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
@@ -713,21 +686,15 @@ def next1():
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How much waste do you produce? ')
+        var.set('12. How far does your produce travel to the distribution center \non average?')
         frame19.grid_forget()
         frame190.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count == 13:
-        var.set('13. How far does your produce travel to the distribution center \non average? ')
+        var.set('13. This is was the questionnaire, are you finished? ')
         frame20.grid_forget()
         frame200.grid_forget()
-        frame22.grid(sticky=W)
-        frame220.grid(sticky=W)
-    if count == 14:
-        var.set('14. This is was the questionnaire, are you finished?')
-        frame22.grid_forget()
-        frame220.grid_forget()
         frame_finish.grid(sticky=W)
     return
 
@@ -890,6 +857,8 @@ startbutton.pack(fill=X, side=BOTTOM, anchor=CENTER)
 # The first page you see when starting the questionnaire
 startlabel = Label(frame0, text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n', font=12)
 startlabel.pack(fill=BOTH, side=BOTTOM)
+my_image = PhotoImage(file = "avf logo.png") # your image
+Label(frame0, image = my_image).pack(side=BOTTOM)
 
 # Enter farm's name
 frame0.pack(anchor=CENTER)
@@ -929,7 +898,7 @@ var.set('1. In which country is your farm located?')
 helloLabel = Label(frame1, textvariable=var).grid(row=0, column=0, padx=10, pady=10, sticky=W)
 ans1 = StringVar()
 country = ttk.Combobox(frame3, textvariable=ans1, state='readonly')
-country['values'] = ('Europe', 'Asia', 'North America', 'Others')
+country['values'] = ('Netherlands', "Germany", "Switzerland", "United States", 'Japan')
 country.current(0)
 country.grid(padx=10)
 
@@ -1014,35 +983,14 @@ windlabel = Label(frame9, text='Windpower (kWh)').grid(row=3, column=0, padx=20,
 windentry = Entry(frame9, width=10, textvariable=ans73).grid(row=3, column=1)
 
 # Here the fields for Q5 (how electricity is used) are created
-ans81 = IntVar()
-ans82 = IntVar()
-ans83 = IntVar()
-ans84 = IntVar()
-ans85 = IntVar()
-ans86 = IntVar()
 ans87 = IntVar()
 ans88 = IntVar()
-ans89 = IntVar()
 ans890 = IntVar()
-heatingl = Label(frame10, text='Heating (kWh)').grid(row=1, column=0, padx=5, sticky=W)
-heatingy = Entry(frame10, width=10, textvariable=ans81).grid(row=1, column=1)
-coolingl = Label(frame10, text='Cooling (kWh)').grid(row=2, column=0, padx=5, sticky=W)
-coolingy = Entry(frame10, width=10, textvariable=ans82).grid(row=2, column=1)
-ventillationl = Label(frame10, text='Ventillation (kWh)').grid(row=3, column=0, padx=5, sticky=W)
-ventillationy = Entry(frame10, width=10, textvariable=ans83).grid(row=3, column=1)
-lightingl = Label(frame10, text='Lighting (kWh)').grid(row=1, column=2, padx=5, sticky=W)
-lightingy = Entry(frame10, width=10, textvariable=ans84).grid(row=1, column=3)
-machineryl = Label(frame10, text='Machinery (kWh)').grid(row=2, column=2, padx=5, sticky=W)
-machineryy = Entry(frame10, width=10, textvariable=ans85).grid(row=2, column=3)
-storagel = Label(frame10, text='Storage (kWh)').grid(row=3, column=2, padx=5, sticky=W)
-storagey = Entry(frame10, width=10, textvariable=ans86).grid(row=3, column=3)
-Label(frame100, text='Selling renewable(kWh)').grid(row=0, column=0, sticky=W, padx=5)
-Entry(frame100, width=10, textvariable=ans87).grid(row=0, column=1)
-Label(frame100, text='Selling non-renewable(kWh)').grid(row=1, column=0, sticky=W, padx=5)
-Entry(frame100, width=10, textvariable=ans88).grid(row=1, column=1)
-Label(frame100, text='Other(kWh)').grid(row=2, column=0, sticky=W, padx=5)
-Entry(frame100, width=10, textvariable=ans89).grid(row=2, column=1)
-Checkbutton(frame100, text='I don\'t know', variable=ans890).grid(row=3, column=0, sticky=W, padx=5)
+Label(frame10, text='Selling renewable(kWh)').grid(row=0, column=0, sticky=W, padx=5)
+Entry(frame10, width=10, textvariable=ans87).grid(row=0, column=1)
+Label(frame10, text='Selling non-renewable(kWh)').grid(row=1, column=0, sticky=W, padx=5)
+Entry(frame10, width=10, textvariable=ans88).grid(row=1, column=1)
+Checkbutton(frame10, text='I don\'t know', variable=ans890).grid(row=3, column=0, sticky=W, padx=5)
 
 # Here the fields for Q6 (fossil fuel use) are created
 ans91 = IntVar()
@@ -1227,30 +1175,30 @@ Radiobutton(frame19, text='Yes, it is', variable=ans171, value=1).grid(sticky=W,
 Radiobutton(frame19, text='No, it isn\'t', variable=ans171, value=2).grid(sticky=W, padx=5)
 
 # Here the fields for waste production (Q12) are created
-ans181 = IntVar()
-ans182 = IntVar()
-ans183 = IntVar()
-ans184 = IntVar()
-Label(frame20, text='Green waste(kg)').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame20, width=10, textvariable=ans181).grid(row=1, column=1)
-Label(frame20, text='Gray waste(kg)').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame20, width=10, textvariable=ans182).grid(row=2, column=1)
-Label(frame20, text='Paper(kg)').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame20, width=10, textvariable=ans183).grid(row=3, column=1)
-Checkbutton(frame200, text='I don\'t know', variable=ans184).grid(sticky=W, padx=5)
+# ans181 = IntVar()
+# ans182 = IntVar()
+# ans183 = IntVar()
+# ans184 = IntVar()
+# Label(frame20, text='Green waste(kg)').grid(row=1, column=0, padx=5, sticky=W)
+# Entry(frame20, width=10, textvariable=ans181).grid(row=1, column=1)
+# Label(frame20, text='Gray waste(kg)').grid(row=2, column=0, padx=5, sticky=W)
+# Entry(frame20, width=10, textvariable=ans182).grid(row=2, column=1)
+# Label(frame20, text='Paper(kg)').grid(row=3, column=0, padx=5, sticky=W)
+# Entry(frame20, width=10, textvariable=ans183).grid(row=3, column=1)
+# Checkbutton(frame200, text='I don\'t know', variable=ans184).grid(sticky=W, padx=5)
 
 # Here the fields for transportation (Q13)are created
 ans201 = IntVar()
 ans202 = IntVar()
 ans203 = IntVar()
 ans204 = IntVar()
-Label(frame22, text='Plane (km)').grid(row=1, column=0, padx=40, sticky=W)
-Entry(frame22, width=10, textvariable=ans201).grid(row=1, column=1)
-Label(frame22, text='Truck (km)').grid(row=2, column=0, padx=40, sticky=W)
-Entry(frame22, width=10, textvariable=ans202).grid(row=2, column=1)
-Label(frame22, text='Ship (km)').grid(row=3, column=0, padx=40, sticky=W)
-Entry(frame22, width=10, textvariable=ans203).grid(row=3, column=1)
-Checkbutton(frame220, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
+Label(frame20, text='Plane (km)').grid(row=1, column=0, padx=40, sticky=W)
+Entry(frame20, width=10, textvariable=ans201).grid(row=1, column=1)
+Label(frame20, text='Truck (km)').grid(row=2, column=0, padx=40, sticky=W)
+Entry(frame20, width=10, textvariable=ans202).grid(row=2, column=1)
+Label(frame20, text='Ship (km)').grid(row=3, column=0, padx=40, sticky=W)
+Entry(frame20, width=10, textvariable=ans203).grid(row=3, column=1)
+Checkbutton(frame200, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
 shitlabel2 = Label(frame_finish, text='                                                            ').grid(row=0, column=0)
@@ -1259,11 +1207,11 @@ Button_finish.grid(row=0, column=1, padx=10)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
-list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans81, ans82, ans83, ans84, ans85, ans86, ans87,
-            ans88, ans89, ans890, ans91, ans92, ans94, ans95, ans97, ans98, ans99, ans910, ans911, ans912, ans913,
+list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans87,
+            ans88, ans890, ans91, ans92, ans94, ans95, ans97, ans98, ans99, ans910, ans911, ans912, ans913,
             ans914, ans915, ans916, ans917, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans129,
             ans130, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
-            ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans181, ans182, ans183, ans184, ans201,
+            ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans201,
             ans202, ans203, ans204]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
