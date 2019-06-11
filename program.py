@@ -213,10 +213,10 @@ def worksheetoutput(dictionary_name):
                 dicp['P10'] * ans165.get()))
 
         # Calculation for total Co2 of transport
-        Tco2 = frac_kg * ((dicp['T1'] * ans201.get()) + (dicp['T3'] * ans202.get()) )
+        Tco2 = frac_kg * ((dicp['T3'] * ans201.get()) + (dicp['T1'] * ans202.get()) )
 
         # Calculation for total energy of transport
-        Tenergy = frac_kg * ((dicp['T2'] * ans201.get()) + (dicp['T4'] * ans202.get()) )
+        Tenergy = frac_kg * ((dicp['T4'] * ans201.get()) + (dicp['T2'] * ans202.get()) )
 
         # Calculation for the total Co2 of packaging
         Pacco2 = kg_prod * Pac1
@@ -463,13 +463,13 @@ def pre():
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water do you buy?') #Check whether this is in litres or in m3
+        var.set('9. How much water (L) do you buy?') #Check whether this is in litres or in m3
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (Kg) do you use? ')
+        var.set('10. How much pesticides (kg) do you use? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
@@ -542,13 +542,13 @@ def next1():
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water do you buy?')
+        var.set('9. How much water (L) do you buy?')
         frame16.grid_forget()
         frame160.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (Kg) do you use?')
+        var.set('10. How much pesticides (kg) do you use?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
@@ -681,7 +681,6 @@ def cal2(event):
     for i in range(0, len(frac_sur)):
         dic_crops[lis[i]] = [frac_sur[i], frac_kg[i], kgVeg[i].get()]
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
-    print(dic_crops)
     return dic_crops
 
 def rid_of_zeros_sur(event):
@@ -814,9 +813,9 @@ Label(frame5, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, stic
 for i in range(0, len(lis)):
     Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W, padx=5)
     EntSur = Entry(frame5, textvariable=surVeg[i])
-    EntSur.grid(row=i + 1, column=1, sticky=W, padx=5, pady=5)
+    EntSur.grid(row=i + 1, column=1, sticky=W, padx=5)
     Entkg = Entry(frame5, textvariable=kgVeg[i])
-    Entkg.grid(row=i + 1, column=2, sticky=W, padx=5, pady=5)
+    Entkg.grid(row=i + 1, column=2, sticky=W, padx=5)
     EntSur.bind('<FocusOut>', cal2)
     Entkg.bind('<FocusOut>', cal2)
     EntSur.bind("<Button-1>", rid_of_zeros_sur)
@@ -862,7 +861,7 @@ petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky
 petroly = Entry(frame11, width=5, textvariable=ans91).grid(row=0, column=1)
 diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
 diesely = Entry(frame11, width=5, textvariable=ans92).grid(row=1, column=1)
-Ngasl = Label(frame11, text='Natural gas (M3)').grid(row=0, column=2, padx=10, sticky=W) #Going to be in M3
+Ngasl = Label(frame11, text='Natural gas (M3)').grid(row=0, column=2, padx=10, sticky=W)
 Ngasy = Entry(frame11, width=5, textvariable=ans94).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
 oily = Entry(frame11, width=5, textvariable=ans95).grid(row=1, column=3)
@@ -927,7 +926,7 @@ Checkbutton(frame160, text='No substrate is used', variable=ans147).grid(padx=5)
 # Here the fields for water use (Q9) are created
 ans151 = IntVar()
 ans152 = IntVar()
-Label(frame17, text='Tap water(L)').grid(row=1, column=0, padx=5, sticky=W)
+Label(frame17, text='Tap water').grid(row=1, column=0, padx=5, sticky=W)
 Entry(frame17, width=10, textvariable=ans151).grid(row=1, column=1)
 Checkbutton(frame170, text='I don\'t know', variable=ans152).grid(sticky=W, padx=5)
 
@@ -962,7 +961,7 @@ ans201 = IntVar()
 ans202 = IntVar()
 ans203 = IntVar()
 ans204 = IntVar()
-Label(frame20, text='Van (ship calc)').grid(row=1, column=0, padx=40, sticky=W)
+Label(frame20, text='Van').grid(row=1, column=0, padx=40, sticky=W)
 Entry(frame20, width=10, textvariable=ans201).grid(row=1, column=1)
 Label(frame20, text='Truck').grid(row=2, column=0, padx=40, sticky=W)
 Entry(frame20, width=10, textvariable=ans202).grid(row=2, column=1)
