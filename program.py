@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import messagebox
 import xlrd
 import xlsxwriter
 import tkinter.filedialog
@@ -59,26 +58,7 @@ for frame in all_frames:
 def worksheetoutput(dictionary_name):
     # Opening excel file in order to get parameters
     workbook = xlrd.open_workbook('Database_full.xlsx')
-    # sheet = workbook.sheet_by_name(ans1.get())
-
-    # Package.
-    # 1 = yes, it is packaged on the farm
-    # 2 = No, it is not packaged.
-    # Moet nog gedaan worden
-    # if ans171.get() == 1:
-    #     Pac1 = float(sheet.cell_value(1, 39))  # Packaging Co2 equivalent/kg
-    #     Pac2 = float(sheet.cell_value(1, 40))  # Packaging energy equivalent/kg
-    # else:
-    #     Pac1 = 0
-    #     Pac2 = 0
-    Pac1 = 0
-    Pac2 = 0
-    # C1 - C10 are emission values for electricity, retrieved from an Excel sheet
-    # eventually create a loop for this.
     dicp = {}
-
-    # sheet = workbook.sheet_by_name('CO2eq (kg)')
-
     for tabs in workbook.sheet_names():
         if tabs == 'Crop parameters':
             sheet = workbook.sheet_by_name(tabs)
@@ -96,46 +76,49 @@ def worksheetoutput(dictionary_name):
                     if sheet.cell_value(i, country) == '':
                         country = 3  # 3 is average
                     dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
+                    if ans_packaging.get() == 0:
+                        dicp['Pac1'] = 0
+                        dicp['Pac2'] = 0
 
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
-    if ans890.get() == 1:
-        ans87.set(0);
-        ans88.set(0);
+    if ans_check_sell_energy.get() == 1:
+        ans_sel_renew.set(0);
+        ans_sel_non_renew.set(0);
         non_count = ('Specification of electricity,')
-    if ans133.get() == 1:
-        ans121.set(0);
-        ans122.set(0);
-        ans123.set(0);
-        ans124.set(0);
-        ans125.set(0);
-        ans126.set(0);
-        ans127.set(0);
-        ans128.set(0);
-        ans131.set(0);
-        ans132.set(0)
+    if ans_dont_know_fertilizer.get() == 1:
+        ans_ammonium_nitrate_use.set(0);
+        ans_calcium_ammonium_nitrate_use.set(0);
+        ans_ammonium_sulphate_use.set(0);
+        ans_triple_super_phosphate_use.set(0);
+        ans_single_super_phosphate_use.set(0);
+        ans_ammonia_use.set(0);
+        ans_limestone_use.set(0);
+        ans_NPK_151515_use.set(0);
+        ans_phosphoric_acid_use.set(0);
+        ans_mono_ammonium_phosphate_use.set(0)
         non_count = (non_count + 'NPK chemicals,')
-    if ans147.get() == 1:
-        ans141.set(0);
-        ans142.set(0);
-        ans143.set(0);
-        ans144.set(0);
-        ans145.set(0);
-        ans146.set(0)
+    if ans_no_substrate_use.get() == 1:
+        ans_rockwool_use.set(0);
+        ans_perlite_use.set(0);
+        ans_cocofiber_use.set(0);
+        ans_hempfiber_use.set(0);
+        ans_peat_use.set(0);
+        ans_peatmoss_use.set(0)
         non_count = (non_count + 'Substrate,')
-    if ans152.get() == 1:
-        ans151.set(0)
+    if ans_dont_know_tap_water_use.get() == 1:
+        ans_tap_water_use.set(0)
         non_count = (non_count + 'Water,')
-    if ans166.get() == 1:
-        ans161.set(0);
-        ans162.set(0);
-        ans163.set(0);
-        ans164.set(0);
-        ans165.set(0)
+    if ans_dont_know_pesticide_use.get() == 1:
+        ans_atrazine_use.set(0);
+        ans_glyphosphate_use.set(0);
+        ans_metolachlor_use.set(0);
+        ans_herbicide_use.set(0);
+        ans_insecticide_use.set(0)
         non_count = (non_count + 'Pesticides,')
-    if ans204.get() == 1:
-        ans201.set(0);
-        ans202.set(0);
+    if ans_dont_know_transport.get() == 1:
+        ans_van_use.set(0);
+        ans_truck_use.set(0);
         non_count = (non_count + 'NPK chemicals,')
 
 
@@ -145,7 +128,7 @@ def worksheetoutput(dictionary_name):
     sheet = workbook.sheet_by_name('Crop parameters')
     Total_Eoc = 0
     for keys, values in dictionary_name.items():
-        for i in range(1, len(lis)+1):
+        for i in range(1, len(list_crop_species) + 1):
             if keys == sheet.cell_value(i, 0):
                 dictionary_name[keys] += [sheet.cell_value(i, 1)]
                 Total_Eoc += sheet.cell_value(i, 1)
@@ -160,69 +143,69 @@ def worksheetoutput(dictionary_name):
         Eoc = values[3]
 
         # Calculation for total C02 of electricity usage
-        Eco2 = frac_surf * ((dicp['C1'] * ans61.get()) + (dicp['C3'] * ans62.get()) + (dicp['C5'] * ans71.get()) + (dicp['C7'] * ans73.get()) + (
-                dicp['C9'] * ans72.get()) - (ans87.get() * dicp['C1']) - (ans88.get() * dicp['C3']))
+        Eco2 = frac_surf * ((dicp['C1'] * ans_buy_renew.get()) + (dicp['C3'] * ans_buy_nonrenew.get()) + (dicp['C5'] * ans_prod_solar.get()) + (dicp['C7'] * ans_prod_wind.get()) + (
+                dicp['C9'] * ans_prod_biomass.get()) - (ans_sel_renew.get() * dicp['C1']) - (ans_sel_non_renew.get() * dicp['C3']))
 
         # Calculation for total energy of electricity usage
-        Eenergy = frac_surf * ((dicp['C2'] * ans61.get()) + (dicp['C4'] * ans62.get()) + (dicp['C6'] * ans71.get()) + (dicp['C8'] * ans73.get()) + (
-                dicp['C10'] * ans72.get()) - (ans87.get() * dicp['C2']) - (ans88.get() * dicp['C4']))
+        Eenergy = frac_surf * ((dicp['C2'] * ans_buy_renew.get()) + (dicp['C4'] * ans_buy_nonrenew.get()) + (dicp['C6'] * ans_prod_solar.get()) + (dicp['C8'] * ans_prod_wind.get()) + (
+                dicp['C10'] * ans_prod_biomass.get()) - (ans_sel_renew.get() * dicp['C2']) - (ans_sel_non_renew.get() * dicp['C4']))
 
         # Calculation for total Co2 of fossil fuels use
-        Fco2 = frac_surf * ((dicp['Fo1'] * ans91.get()) + (dicp['Fo3'] * ans92.get()) + (dicp['Fo7'] * ans94.get()) + (dicp['Fo9'] * ans95.get()))
+        Fco2 = frac_surf * ((dicp['Fo1'] * ans_petrol_use.get()) + (dicp['Fo3'] * ans_diesel_use.get()) + (dicp['Fo7'] * ans_natural_gas_use.get()) + (dicp['Fo9'] * ans_oil_use.get()))
 
         # Calculation for total energy of fossil fuel use
         Fenergy = frac_surf * (
-                (dicp['Fo2'] * ans91.get()) + (dicp['Fo4'] * ans92.get()) + (dicp['Fo8'] * ans94.get()) + (dicp['Fo10'] * ans95.get()))
+                (dicp['Fo2'] * ans_petrol_use.get()) + (dicp['Fo4'] * ans_diesel_use.get()) + (dicp['Fo8'] * ans_natural_gas_use.get()) + (dicp['Fo10'] * ans_oil_use.get()))
 
         # Calculation for total Co2 of fertilizers
         FERco2 = frac_surf * ((
-                (dicp['Fe1'] * ans121.get()) + (dicp['Fe3'] * ans122.get()) + (dicp['Fe5'] * ans123.get()) + (dicp['Fe7'] * ans124.get()) + (
-                dicp['Fe9'] * ans125.get()) + (dicp['Fe11'] * ans126.get()) + (dicp['Fe13'] * ans127.get()) + (
-                        dicp['Fe15'] * ans128.get()) + (dicp['Fe21'] * ans131.get()) + (dicp['Fe22'] * ans132.get())))
+                (dicp['Fe1'] * ans_ammonium_nitrate_use.get()) + (dicp['Fe3'] * ans_calcium_ammonium_nitrate_use.get()) + (dicp['Fe5'] * ans_ammonium_sulphate_use.get()) + (dicp['Fe7'] * ans_triple_super_phosphate_use.get()) + (
+                dicp['Fe9'] * ans_single_super_phosphate_use.get()) + (dicp['Fe11'] * ans_ammonia_use.get()) + (dicp['Fe13'] * ans_limestone_use.get()) + (
+                        dicp['Fe15'] * ans_NPK_151515_use.get()) + (dicp['Fe21'] * ans_phosphoric_acid_use.get()) + (dicp['Fe22'] * ans_mono_ammonium_phosphate_use.get())))
 
         # Calculation for total energy of fertilizers
         FERenergy = frac_surf * ((
-                (dicp['Fe2'] * ans121.get()) + (dicp['Fe4'] * ans122.get()) + (dicp['Fe6'] * ans123.get()) + (dicp['Fe8'] * ans124.get()) + (
-                dicp['Fe10'] * ans125.get()) + (dicp['Fe12'] * ans126.get()) + (dicp['Fe14'] * ans127.get()) + (
-                        dicp['Fe16'] * ans128.get()) + (dicp['Fe22'] * ans131.get()) + (dicp['Fe24'] * ans132.get())))
+                (dicp['Fe2'] * ans_ammonium_nitrate_use.get()) + (dicp['Fe4'] * ans_calcium_ammonium_nitrate_use.get()) + (dicp['Fe6'] * ans_ammonium_sulphate_use.get()) + (dicp['Fe8'] * ans_triple_super_phosphate_use.get()) + (
+                dicp['Fe10'] * ans_single_super_phosphate_use.get()) + (dicp['Fe12'] * ans_ammonia_use.get()) + (dicp['Fe14'] * ans_limestone_use.get()) + (
+                        dicp['Fe16'] * ans_NPK_151515_use.get()) + (dicp['Fe22'] * ans_phosphoric_acid_use.get()) + (dicp['Fe24'] * ans_mono_ammonium_phosphate_use.get())))
 
         # Calculation for total Co2 of substrates
         Sco2 = frac_surf * (
-                (dicp['S1'] * ans141.get()) + (dicp['S3'] * ans142.get()) + (dicp['S5'] * ans143.get()) + (dicp['S7'] * ans144.get()) + (
-                dicp['S9'] * ans145.get()) + (dicp['S11'] * ans146.get()))
+                (dicp['S1'] * ans_rockwool_use.get()) + (dicp['S3'] * ans_perlite_use.get()) + (dicp['S5'] * ans_cocofiber_use.get()) + (dicp['S7'] * ans_hempfiber_use.get()) + (
+                dicp['S9'] * ans_peat_use.get()) + (dicp['S11'] * ans_peatmoss_use.get()))
 
         # Calculation for total energy of substrates
         Senergy = frac_surf * (
-                (dicp['S2'] * ans141.get()) + (dicp['S4'] * ans142.get()) + (dicp['S6'] * ans143.get()) + (dicp['S8'] * ans144.get()) + (
-                dicp['S10'] * ans145.get()) + (dicp['S12'] * ans146.get()))
+                (dicp['S2'] * ans_rockwool_use.get()) + (dicp['S4'] * ans_perlite_use.get()) + (dicp['S6'] * ans_cocofiber_use.get()) + (dicp['S8'] * ans_hempfiber_use.get()) + (
+                dicp['S10'] * ans_peat_use.get()) + (dicp['S12'] * ans_peatmoss_use.get()))
 
         # Calculation for total Co2 of water
-        Wco2 = frac_surf * (dicp['Wa1'] * ans151.get())
+        Wco2 = frac_surf * (dicp['Wa1'] * ans_tap_water_use.get())
 
         # Calculation for total energy of water
-        Wenergy = frac_surf * (dicp['Wa2'] * ans151.get())
+        Wenergy = frac_surf * (dicp['Wa2'] * ans_tap_water_use.get())
 
         # Calculation for total Co2 of pesticides
         Pco2 = frac_surf * (
-                (dicp['P1'] * ans161.get()) + (dicp['P3'] * ans162.get()) + (dicp['P5'] * ans163.get()) + (dicp['P7'] * ans164.get()) + (
-                dicp['P9'] * ans165.get()))
+                (dicp['P1'] * ans_atrazine_use.get()) + (dicp['P3'] * ans_glyphosphate_use.get()) + (dicp['P5'] * ans_metolachlor_use.get()) + (dicp['P7'] * ans_herbicide_use.get()) + (
+                dicp['P9'] * ans_insecticide_use.get()))
 
         # Calculation for total energy of pesticides
         Penergy = frac_surf * (
-                (dicp['P2'] * ans161.get()) + (dicp['P4'] * ans162.get()) + +(dicp['P6'] * ans163.get()) + +(dicp['P8'] * ans164.get()) + (
-                dicp['P10'] * ans165.get()))
+                (dicp['P2'] * ans_atrazine_use.get()) + (dicp['P4'] * ans_glyphosphate_use.get()) + +(dicp['P6'] * ans_metolachlor_use.get()) + +(dicp['P8'] * ans_herbicide_use.get()) + (
+                dicp['P10'] * ans_insecticide_use.get()))
 
         # Calculation for total Co2 of transport
-        Tco2 = frac_kg * ((dicp['T3'] * ans201.get()) + (dicp['T1'] * ans202.get()) )
+        Tco2 = frac_kg * ((dicp['T3'] * ans_van_use.get()) + (dicp['T1'] * ans_truck_use.get()))
 
         # Calculation for total energy of transport
-        Tenergy = frac_kg * ((dicp['T4'] * ans201.get()) + (dicp['T2'] * ans202.get()) )
+        Tenergy = frac_kg * ((dicp['T4'] * ans_van_use.get()) + (dicp['T2'] * ans_truck_use.get()))
 
         # Calculation for the total Co2 of packaging
-        Pacco2 = kg_prod * Pac1
+        Pacco2 = kg_prod * dicp['Pac1']
 
         # Calculation for the total energy of packaging
-        Pacenergy = kg_prod * Pac2
+        Pacenergy = kg_prod * dicp['Pac2']
 
         # calculations for the total Co2 and energy
         Totalco2 = Eco2 + Fco2 + FERco2 + Sco2 + Wco2 + Pco2 + Tco2 + Pacco2
@@ -289,7 +272,7 @@ def worksheetoutput(dictionary_name):
         # ws.write(49, 10, ans87.get()) * frac_surf
         # ws.write(50, 10, ans88.get()) * frac_surf
 
-        if ans890.get() == 1 or ans131.get() == 1 or ans147.get() == 1 or ans152.get() == 1 or ans166.get() == 1 or ans204.get() == 1:
+        if ans_check_sell_energy.get() == 1 or ans_phosphoric_acid_use.get() == 1 or ans_no_substrate_use.get() == 1 or ans_dont_know_tap_water_use.get() == 1 or ans_dont_know_pesticide_use.get() == 1 or ans_dont_know_transport.get() == 1:
             ws.write(10, 1, non_count + 'is not taken into account because of lacking data')
 
         # Creating bar and pie charts
@@ -463,7 +446,7 @@ def pre():
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water (L) do you buy?') #Check whether this is in litres or in m3
+        var.set('9. How much water (L) do you buy?')
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
@@ -679,7 +662,7 @@ def cal2(event):
     dic_crops = {}
     dic_crops['Total'] = [1, 1, total_kg]
     for i in range(0, len(frac_sur)):
-        dic_crops[lis[i]] = [frac_sur[i], frac_kg[i], kgVeg[i].get()]
+        dic_crops[list_crop_species[i]] = [frac_sur[i], frac_kg[i], kgVeg[i].get()]
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
     return dic_crops
 
@@ -751,20 +734,20 @@ v = IntVar()
 var = StringVar()
 var.set('1. In which country is your farm located?')
 helloLabel = Label(frame1, textvariable=var).grid(row=0, column=0, padx=10, pady=10, sticky=W)
-ans1 = StringVar()
-country = ttk.Combobox(frame3, textvariable=ans1, state='readonly')
-country['values'] = ('Netherlands', "Germany", "Switzerland", "United States", 'Japan')
+ans_country = StringVar()
+country = ttk.Combobox(frame3, textvariable=ans_country, state='readonly')
+country['values'] = ('Netherlands', "Germany", "Switzerland", "Norway", "United States", 'Japan')
 country.current(0)
 country.grid(padx=10)
 
 # Here a list of all the possible crops a farmer can choose is read in. This is needed for Q2.
 wb = xlrd.open_workbook('Database_full.xlsx')
-lis = []
+list_crop_species = []
 database = wb.sheet_by_name('Crop parameters')
 for i in range(1, len(database.col_values(0))):
     if database.col_values(0)[i] == "":
         break
-    lis.append(database.col_values(0)[i])
+    list_crop_species.append(database.col_values(0)[i])
 
 # Initialize variables to choose different crops in Q2
 ansLet = IntVar()
@@ -810,8 +793,8 @@ Label(frame5, text='Surface [m2]').grid(row=0, column=1, padx=5, sticky=W)
 Label(frame5, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
-for i in range(0, len(lis)):
-    Checkbutton(frame5, text=lis[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W, padx=5)
+for i in range(0, len(list_crop_species)):
+    Checkbutton(frame5, text=list_crop_species[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W, padx=5)
     EntSur = Entry(frame5, textvariable=surVeg[i])
     EntSur.grid(row=i + 1, column=1, sticky=W, padx=5)
     Entkg = Entry(frame5, textvariable=kgVeg[i])
@@ -822,150 +805,145 @@ for i in range(0, len(lis)):
     Entkg.bind("<Button-1>", rid_of_zeros_kg)
 
 # Here the fields for question 3 (buying electricity) are created
-ans61 = IntVar()
-ans62 = IntVar()
+ans_buy_renew = IntVar()
+ans_buy_nonrenew = IntVar()
 greenlabel = Label(frame8, text='Renewable').grid(row=1, column=0, padx=20, sticky=W)
-greenentry = Entry(frame8, width=10, textvariable=ans61).grid(row=1, column=1)
+greenentry = Entry(frame8, width=10, textvariable=ans_buy_renew).grid(row=1, column=1)
 greylabel = Label(frame8, text='Non-renewable').grid(row=2, column=0, padx=20, sticky=W)
-greyentry = Entry(frame8, width=10, textvariable=ans62).grid(row=2, column=1)
+greyentry = Entry(frame8, width=10, textvariable=ans_buy_nonrenew).grid(row=2, column=1)
 
 # Here the fields for question 4 (creation of renewable energy) are created
-ans71 = IntVar()
-ans72 = IntVar()
-ans73 = IntVar()
+ans_prod_solar = IntVar()
+ans_prod_biomass = IntVar()
+ans_prod_wind = IntVar()
 solarlabel = Label(frame9, text='Solar energy').grid(row=1, column=0, padx=20, sticky=W)
-solarentry = Entry(frame9, width=10, textvariable=ans71).grid(row=1, column=1)
+solarentry = Entry(frame9, width=10, textvariable=ans_prod_solar).grid(row=1, column=1)
 biomasslabel = Label(frame9, text='Biomass').grid(row=2, column=0, padx=20, sticky=W)
-biomassentry = Entry(frame9, width=10, textvariable=ans72).grid(row=2, column=1)
+biomassentry = Entry(frame9, width=10, textvariable=ans_prod_biomass).grid(row=2, column=1)
 windlabel = Label(frame9, text='Windpower').grid(row=3, column=0, padx=20, sticky=W)
-windentry = Entry(frame9, width=10, textvariable=ans73).grid(row=3, column=1)
+windentry = Entry(frame9, width=10, textvariable=ans_prod_wind).grid(row=3, column=1)
 
 # Here the fields for Q5 (how electricity is used) are created
-ans87 = IntVar()
-ans88 = IntVar()
-ans890 = IntVar()
+ans_sel_renew = IntVar()
+ans_sel_non_renew = IntVar()
+ans_check_sell_energy = IntVar()
 Label(frame10, text='Selling renewable').grid(row=0, column=0, sticky=W, padx=5)
-Entry(frame10, width=10, textvariable=ans87).grid(row=0, column=1)
+Entry(frame10, width=10, textvariable=ans_sel_renew).grid(row=0, column=1)
 Label(frame10, text='Selling non-renewable').grid(row=1, column=0, sticky=W, padx=5)
-Entry(frame10, width=10, textvariable=ans88).grid(row=1, column=1)
-Checkbutton(frame10, text='I don\'t know', variable=ans890).grid(row=3, column=0, sticky=W, padx=5)
+Entry(frame10, width=10, textvariable=ans_sel_non_renew).grid(row=1, column=1)
+Checkbutton(frame10, text='I don\'t know', variable=ans_check_sell_energy).grid(row=3, column=0, sticky=W, padx=5)
 
 # Here the fields for Q6 (fossil fuel use) are created
-ans91 = IntVar()
-ans92 = IntVar()
-ans93 = IntVar()
-ans94 = IntVar()
-ans95 = IntVar()
-ans96 = IntVar()
+ans_petrol_use = IntVar()
+ans_diesel_use = IntVar()
+ans_natural_gas_use = IntVar()
+ans_oil_use = IntVar()
 petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky=W)
-petroly = Entry(frame11, width=5, textvariable=ans91).grid(row=0, column=1)
+petroly = Entry(frame11, width=5, textvariable=ans_petrol_use).grid(row=0, column=1)
 diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
-diesely = Entry(frame11, width=5, textvariable=ans92).grid(row=1, column=1)
+diesely = Entry(frame11, width=5, textvariable=ans_diesel_use).grid(row=1, column=1)
 Ngasl = Label(frame11, text='Natural gas (M3)').grid(row=0, column=2, padx=10, sticky=W)
-Ngasy = Entry(frame11, width=5, textvariable=ans94).grid(row=0, column=3)
+Ngasy = Entry(frame11, width=5, textvariable=ans_natural_gas_use).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
-oily = Entry(frame11, width=5, textvariable=ans95).grid(row=1, column=3)
+oily = Entry(frame11, width=5, textvariable=ans_oil_use).grid(row=1, column=3)
 
 
 # Here the field for fertilizer use are created (Q7)
-ans121 = IntVar()
-ans122 = IntVar()
-ans123 = IntVar()
-ans124 = IntVar()
-ans125 = IntVar()
-ans126 = IntVar()
-ans127 = IntVar()
-ans128 = IntVar()
-ans131 = IntVar()
-ans132 = IntVar()
-ans133 = IntVar()
+ans_ammonium_nitrate_use = IntVar()
+ans_calcium_ammonium_nitrate_use = IntVar()
+ans_ammonium_sulphate_use = IntVar()
+ans_triple_super_phosphate_use = IntVar()
+ans_single_super_phosphate_use = IntVar()
+ans_ammonia_use = IntVar()
+ans_limestone_use = IntVar()
+ans_NPK_151515_use = IntVar()
+ans_phosphoric_acid_use = IntVar()
+ans_mono_ammonium_phosphate_use = IntVar()
+ans_dont_know_fertilizer = IntVar()
 Label(frame14, text='Ammoniumnitrate').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans121).grid(row=1, column=1)
+Entry(frame14, width=10, textvariable=ans_ammonium_nitrate_use).grid(row=1, column=1)
 Label(frame14, text='Calciumammoniumnitrate').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans122).grid(row=2, column=1)
+Entry(frame14, width=10, textvariable=ans_calcium_ammonium_nitrate_use).grid(row=2, column=1)
 Label(frame14, text='Ammoniumsulphate').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans123).grid(row=3, column=1)
+Entry(frame14, width=10, textvariable=ans_ammonium_sulphate_use).grid(row=3, column=1)
 Label(frame14, text='Triplesuperphosphate').grid(row=4, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans124).grid(row=4, column=1)
+Entry(frame14, width=10, textvariable=ans_triple_super_phosphate_use).grid(row=4, column=1)
 Label(frame14, text='Single super phosphate').grid(row=5, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans125).grid(row=5, column=1)
+Entry(frame14, width=10, textvariable=ans_single_super_phosphate_use).grid(row=5, column=1)
 Label(frame14, text='Ammonia').grid(row=6, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans126).grid(row=6, column=1)
+Entry(frame14, width=10, textvariable=ans_ammonia_use).grid(row=6, column=1)
 Label(frame14, text='Limestone').grid(row=7, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans127).grid(row=7, column=1)
+Entry(frame14, width=10, textvariable=ans_limestone_use).grid(row=7, column=1)
 Label(frame14, text='NPK 15-15-15').grid(row=8, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans128).grid(row=8, column=1)
+Entry(frame14, width=10, textvariable=ans_NPK_151515_use).grid(row=8, column=1)
 Label(frame14, text='Phosphoric acid').grid(row=9, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans131).grid(row=9, column=1)
+Entry(frame14, width=10, textvariable=ans_phosphoric_acid_use).grid(row=9, column=1)
 Label(frame14, text='Mono-ammonium phosphate').grid(row=10, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans132).grid(row=10, column=1)
-Checkbutton(frame14, text='I don\'t know', variable=ans133).grid(row = 11, column = 0, padx=5, sticky=W)
+Entry(frame14, width=10, textvariable=ans_mono_ammonium_phosphate_use).grid(row=10, column=1)
+Checkbutton(frame14, text='I don\'t know', variable=ans_dont_know_fertilizer).grid(row = 11, column = 0, padx=5, sticky=W)
 
 # Here the fields for substrate use (Q8) are created
-ans141 = IntVar()
-ans142 = IntVar()
-ans143 = IntVar()
-ans144 = IntVar()
-ans145 = IntVar()
-ans146 = IntVar()
-ans147 = IntVar()
+ans_rockwool_use = IntVar()
+ans_perlite_use = IntVar()
+ans_cocofiber_use = IntVar()
+ans_hempfiber_use = IntVar()
+ans_peat_use = IntVar()
+ans_peatmoss_use = IntVar()
+ans_no_substrate_use = IntVar()
 Label(frame16, text='Rockwool').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans141).grid(row=1, column=1)
+Entry(frame16, width=10, textvariable=ans_rockwool_use).grid(row=1, column=1)
 Label(frame16, text='Perlite').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans142).grid(row=2, column=1)
+Entry(frame16, width=10, textvariable=ans_perlite_use).grid(row=2, column=1)
 Label(frame16, text='Cocofiber').grid(row=1, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans143).grid(row=1, column=3)
+Entry(frame16, width=10, textvariable=ans_cocofiber_use).grid(row=1, column=3)
 Label(frame16, text='Hemp fiber').grid(row=2, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans144).grid(row=2, column=3)
+Entry(frame16, width=10, textvariable=ans_hempfiber_use).grid(row=2, column=3)
 Label(frame16, text='Peat').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans145).grid(row=3, column=1)
+Entry(frame16, width=10, textvariable=ans_peat_use).grid(row=3, column=1)
 Label(frame16, text='Peat Moss').grid(row=3, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans146).grid(row=3, column=3)
-Checkbutton(frame160, text='No substrate is used', variable=ans147).grid(padx=5)
+Entry(frame16, width=10, textvariable=ans_peatmoss_use).grid(row=3, column=3)
+Checkbutton(frame160, text='No substrate is used', variable=ans_no_substrate_use).grid(padx=5)
 
 # Here the fields for water use (Q9) are created
-ans151 = IntVar()
-ans152 = IntVar()
+ans_tap_water_use = IntVar()
+ans_dont_know_tap_water_use = IntVar()
 Label(frame17, text='Tap water').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame17, width=10, textvariable=ans151).grid(row=1, column=1)
-Checkbutton(frame170, text='I don\'t know', variable=ans152).grid(sticky=W, padx=5)
+Entry(frame17, width=10, textvariable=ans_tap_water_use).grid(row=1, column=1)
+Checkbutton(frame170, text='I don\'t know', variable=ans_dont_know_tap_water_use).grid(sticky=W, padx=5)
 
 # Here the fields for pesticide use (Q10) are created
-ans161 = IntVar()
-ans162 = IntVar()
-ans163 = IntVar()
-ans164 = IntVar()
-ans165 = IntVar()
-ans166 = IntVar()
+ans_atrazine_use = IntVar()
+ans_glyphosphate_use = IntVar()
+ans_metolachlor_use = IntVar()
+ans_herbicide_use = IntVar()
+ans_insecticide_use = IntVar()
+ans_dont_know_pesticide_use = IntVar()
 Label(frame18, text='Atrazine').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans161).grid(row=1, column=1)
+Entry(frame18, width=10, textvariable=ans_atrazine_use).grid(row=1, column=1)
 Label(frame18, text='Glyphosphate').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans162).grid(row=2, column=1)
+Entry(frame18, width=10, textvariable=ans_glyphosphate_use).grid(row=2, column=1)
 Label(frame18, text='Metolachlor').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans163).grid(row=3, column=1)
+Entry(frame18, width=10, textvariable=ans_metolachlor_use).grid(row=3, column=1)
 Label(frame18, text='Herbicide').grid(row=4, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans164).grid(row=4, column=1)
+Entry(frame18, width=10, textvariable=ans_herbicide_use).grid(row=4, column=1)
 Label(frame18, text='Insectiside').grid(row=5, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans165).grid(row=5, column=1)
-Checkbutton(frame180, text='I don\'t know', variable=ans166).grid(sticky=W, padx=5)
+Entry(frame18, width=10, textvariable=ans_insecticide_use).grid(row=5, column=1)
+Checkbutton(frame180, text='I don\'t know', variable=ans_dont_know_pesticide_use).grid(sticky=W, padx=5)
 
 # Here the fields for packaging (Q11) are created
-ans171 = IntVar()
-ans172 = IntVar()
-ans173 = IntVar()
-Radiobutton(frame19, text='Yes, it is', variable=ans171, value=1).grid(sticky=W, padx=5)
-Radiobutton(frame19, text='No, it isn\'t', variable=ans171, value=2).grid(sticky=W, padx=5)
+ans_packaging = IntVar()
+Radiobutton(frame19, text='Yes, it is', variable=ans_packaging, value=1).grid(sticky=W, padx=5)
+Radiobutton(frame19, text='No, it isn\'t', variable=ans_packaging, value=0).grid(sticky=W, padx=5)
 
 # Here the fields for transportation (Q13)are created
-ans201 = IntVar()
-ans202 = IntVar()
-ans203 = IntVar()
-ans204 = IntVar()
+ans_van_use = IntVar()
+ans_truck_use = IntVar()
+ans_dont_know_transport = IntVar()
 Label(frame20, text='Van').grid(row=1, column=0, padx=40, sticky=W)
-Entry(frame20, width=10, textvariable=ans201).grid(row=1, column=1)
+Entry(frame20, width=10, textvariable=ans_van_use).grid(row=1, column=1)
 Label(frame20, text='Truck').grid(row=2, column=0, padx=40, sticky=W)
-Entry(frame20, width=10, textvariable=ans202).grid(row=2, column=1)
-Checkbutton(frame200, text='I don\'t know', variable=ans204).grid(sticky=W, padx=40)
+Entry(frame20, width=10, textvariable=ans_truck_use).grid(row=2, column=1)
+Checkbutton(frame200, text='I don\'t know', variable=ans_dont_know_transport).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
 Button_finish = Button(frame_finish, text=('Finish!'), command=close_program, padx = 10)
@@ -973,10 +951,10 @@ Button_finish.grid(row=1, column=1, padx=10, sticky = E)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
-list_ans = [farm_name, ans1, v, ans61, ans62, ans71, ans72, ans73, ans87,
-            ans88, ans890, ans91, ans92, ans94, ans95, ans121, ans122, ans123, ans124, ans125, ans126, ans127, ans128, ans131, ans132, ans133, ans141, ans142, ans143, ans144, ans145, ans146, ans147, ans151, ans152,
-            ans161, ans162, ans163, ans164, ans165, ans166, ans171, ans172, ans201,
-            ans202, ans204]
+list_ans = [farm_name, ans_country, v, ans_buy_renew, ans_buy_nonrenew, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_sel_renew,
+            ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use, ans_natural_gas_use, ans_oil_use, ans_ammonium_nitrate_use, ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use, ans_triple_super_phosphate_use, ans_single_super_phosphate_use, ans_ammonia_use, ans_limestone_use, ans_NPK_151515_use, ans_phosphoric_acid_use, ans_mono_ammonium_phosphate_use, ans_dont_know_fertilizer, ans_rockwool_use, ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use, ans_no_substrate_use, ans_tap_water_use, ans_dont_know_tap_water_use,
+            ans_atrazine_use, ans_glyphosphate_use, ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_dont_know_pesticide_use, ans_packaging, ans_van_use,
+            ans_truck_use, ans_dont_know_transport]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
