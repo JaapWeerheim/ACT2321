@@ -18,7 +18,7 @@ frame1 = Frame(height=75, width=400)
 frame2 = Frame(height=40, width=400)
 frame3 = Frame(height=120, width=400)
 frame4 = Frame(height=120, width=400)
-frame5 = Frame(height=500, width=500)
+frame5 = Frame(height=8000, width=500)
 frame6 = Frame(height=120, width=400)
 frame7 = Frame(height=120, width=400)
 frame8 = Frame(height=120, width=400)
@@ -432,21 +432,21 @@ def pre():
         frame5.grid(sticky=W)
     if count == 3:
         var.set(
-            '3. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+            '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?')
         frame9.grid_forget()
         frame8.grid(sticky=W)
     if count == 4:
-        var.set('4. Do you produce your own renewable energy and how much \ndo you produce?')
+        var.set('4. Do you produce your own renewable energy and how much (kWh) \ndo you produce?')
         frame10.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity do you sell? \n (renewable and/or non-renewable) ")
+        var.set("5. How much electricity (kWh) do you sell?")
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
-        var.set("6. Do you use any fossil fuels (excluding transportation), \nand how much do you use(if you don't know, fill in zero's)")
+        var.set("6. Do you use any fossil fuels (excluding transportation), \nand how much do you use?")
         frame14.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
@@ -469,7 +469,7 @@ def pre():
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (Kg or L) do you use? ')
+        var.set('10. How much pesticides (Kg) do you use? ')
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
@@ -481,7 +481,7 @@ def pre():
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How far does your product travel to the distribution center \non average?')
+        var.set('12. How far (km) does your product travel to the distribution center \non average?')
         frame_finish.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
@@ -512,20 +512,20 @@ def next1():
         frame5.grid(sticky=W)
     if count == 3:
         var.set(
-            '3. How much renewable and non-renewable electricity \ndo you buy per year? \n (own production not included)')
+            '3. How much renewable and non-renewable electricity (kWh)\ndo you buy per year?')
         frame5.grid_forget()
         frame8.grid(sticky=W)
     if count == 4:
-        var.set('4. Do you produce your own renewable energy and how much \ndo you produce?')
+        var.set('4. Do you produce your own renewable energy and how much (kWh) \ndo you produce?')
         frame8.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity do you sell? \n(renewable and/or non-renewable) ")
+        var.set("5. How much electricity (kWh) do you sell?")
         frame9.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
         var.set(
-            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use (if you don't know, fill in zero's)")
+            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use?")
         frame10.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
@@ -548,7 +548,7 @@ def next1():
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (Kg or L) do you use?')
+        var.set('10. How much pesticides (Kg) do you use?')
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
@@ -560,7 +560,7 @@ def next1():
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How far does your produce travel to the distribution center \non average?')
+        var.set('12. How far (km) does your produce travel to the distribution center \non average?')
         frame19.grid_forget()
         frame190.grid_forget()
         frame20.grid(sticky=W)
@@ -608,11 +608,14 @@ def next2():
     frame3.grid()
     count += 1
     # The code below is necessary in the last frame to instruct the user where he can find the results of the analysis.
-    print_finish = 'If you click on the finish button, the questionnaire will close. \n Results of the analysis can then be found in '
+    print_finish = 'If you click on the finish button, the questionnaire will close.'
+    print_finish_2 = 'Results of the analysis can then be found in: '
     print_farm_name = farm_name.get() + '.xlsx.'
-    print_label = print_finish + print_farm_name
-    Label(frame_finish, text=print_label).grid(row=1, column=0, sticky = W)
+    Label(frame_finish, text=print_finish).grid(row=1, column=0, sticky=W)
+    Label(frame_finish, text=print_finish_2).grid(row=2, column=0, sticky=W)
+    Label(frame_finish, text=print_farm_name).grid(row=3, column=0, sticky=W)
     return
+
 
 
 # The function file_open can load previously filled in data, stored in a .txt file
@@ -822,29 +825,29 @@ for i in range(0, len(lis)):
 # Here the fields for question 3 (buying electricity) are created
 ans61 = IntVar()
 ans62 = IntVar()
-greenlabel = Label(frame8, text='Renewable (kWh)').grid(row=1, column=0, padx=20, sticky=W)
+greenlabel = Label(frame8, text='Renewable').grid(row=1, column=0, padx=20, sticky=W)
 greenentry = Entry(frame8, width=10, textvariable=ans61).grid(row=1, column=1)
-greylabel = Label(frame8, text='Non-renewable(kWh)').grid(row=2, column=0, padx=20, sticky=W)
+greylabel = Label(frame8, text='Non-renewable').grid(row=2, column=0, padx=20, sticky=W)
 greyentry = Entry(frame8, width=10, textvariable=ans62).grid(row=2, column=1)
 
 # Here the fields for question 4 (creation of renewable energy) are created
 ans71 = IntVar()
 ans72 = IntVar()
 ans73 = IntVar()
-solarlabel = Label(frame9, text='Solar energy (kWh)').grid(row=1, column=0, padx=20, sticky=W)
+solarlabel = Label(frame9, text='Solar energy').grid(row=1, column=0, padx=20, sticky=W)
 solarentry = Entry(frame9, width=10, textvariable=ans71).grid(row=1, column=1)
-biomasslabel = Label(frame9, text='Biomass (kWh)').grid(row=2, column=0, padx=20, sticky=W)
+biomasslabel = Label(frame9, text='Biomass').grid(row=2, column=0, padx=20, sticky=W)
 biomassentry = Entry(frame9, width=10, textvariable=ans72).grid(row=2, column=1)
-windlabel = Label(frame9, text='Windpower (kWh)').grid(row=3, column=0, padx=20, sticky=W)
+windlabel = Label(frame9, text='Windpower').grid(row=3, column=0, padx=20, sticky=W)
 windentry = Entry(frame9, width=10, textvariable=ans73).grid(row=3, column=1)
 
 # Here the fields for Q5 (how electricity is used) are created
 ans87 = IntVar()
 ans88 = IntVar()
 ans890 = IntVar()
-Label(frame10, text='Selling renewable(kWh)').grid(row=0, column=0, sticky=W, padx=5)
+Label(frame10, text='Selling renewable').grid(row=0, column=0, sticky=W, padx=5)
 Entry(frame10, width=10, textvariable=ans87).grid(row=0, column=1)
-Label(frame10, text='Selling non-renewable(kWh)').grid(row=1, column=0, sticky=W, padx=5)
+Label(frame10, text='Selling non-renewable').grid(row=1, column=0, sticky=W, padx=5)
 Entry(frame10, width=10, textvariable=ans88).grid(row=1, column=1)
 Checkbutton(frame10, text='I don\'t know', variable=ans890).grid(row=3, column=0, sticky=W, padx=5)
 
@@ -859,7 +862,7 @@ petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky
 petroly = Entry(frame11, width=5, textvariable=ans91).grid(row=0, column=1)
 diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
 diesely = Entry(frame11, width=5, textvariable=ans92).grid(row=1, column=1)
-Ngasl = Label(frame11, text='Natural gas (L)').grid(row=0, column=2, padx=10, sticky=W) #Going to be in M3
+Ngasl = Label(frame11, text='Natural gas (M3)').grid(row=0, column=2, padx=10, sticky=W) #Going to be in M3
 Ngasy = Entry(frame11, width=5, textvariable=ans94).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
 oily = Entry(frame11, width=5, textvariable=ans95).grid(row=1, column=3)
@@ -907,17 +910,17 @@ ans144 = IntVar()
 ans145 = IntVar()
 ans146 = IntVar()
 ans147 = IntVar()
-Label(frame16, text='Rockwool(kg)').grid(row=1, column=0, padx=5, sticky=W)
+Label(frame16, text='Rockwool').grid(row=1, column=0, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans141).grid(row=1, column=1)
-Label(frame16, text='Perlite(kg)').grid(row=2, column=0, padx=5, sticky=W)
+Label(frame16, text='Perlite').grid(row=2, column=0, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans142).grid(row=2, column=1)
-Label(frame16, text='Cocofiber(kg)').grid(row=1, column=2, padx=5, sticky=W)
+Label(frame16, text='Cocofiber').grid(row=1, column=2, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans143).grid(row=1, column=3)
-Label(frame16, text='hemp fiber(kg)').grid(row=2, column=2, padx=5, sticky=W)
+Label(frame16, text='Hemp fiber').grid(row=2, column=2, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans144).grid(row=2, column=3)
-Label(frame16, text='Peat(kg)').grid(row=3, column=0, padx=5, sticky=W)
+Label(frame16, text='Peat').grid(row=3, column=0, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans145).grid(row=3, column=1)
-Label(frame16, text='Peat Moss Kg)').grid(row=3, column=2, padx=5, sticky=W)
+Label(frame16, text='Peat Moss').grid(row=3, column=2, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans146).grid(row=3, column=3)
 Checkbutton(frame160, text='No substrate is used', variable=ans147).grid(padx=5)
 
@@ -935,15 +938,15 @@ ans163 = IntVar()
 ans164 = IntVar()
 ans165 = IntVar()
 ans166 = IntVar()
-Label(frame18, text='Atrazine(kg)').grid(row=1, column=0, padx=5, sticky=W)
+Label(frame18, text='Atrazine').grid(row=1, column=0, padx=5, sticky=W)
 Entry(frame18, width=10, textvariable=ans161).grid(row=1, column=1)
-Label(frame18, text='Glyphosphate(kg)').grid(row=2, column=0, padx=5, sticky=W)
+Label(frame18, text='Glyphosphate').grid(row=2, column=0, padx=5, sticky=W)
 Entry(frame18, width=10, textvariable=ans162).grid(row=2, column=1)
-Label(frame18, text='Metolachlor(kg)').grid(row=3, column=0, padx=5, sticky=W)
+Label(frame18, text='Metolachlor').grid(row=3, column=0, padx=5, sticky=W)
 Entry(frame18, width=10, textvariable=ans163).grid(row=3, column=1)
-Label(frame18, text='Herbicide(kg)').grid(row=4, column=0, padx=5, sticky=W)
+Label(frame18, text='Herbicide').grid(row=4, column=0, padx=5, sticky=W)
 Entry(frame18, width=10, textvariable=ans164).grid(row=4, column=1)
-Label(frame18, text='Insectiside(kg)').grid(row=5, column=0, padx=5, sticky=W)
+Label(frame18, text='Insectiside').grid(row=5, column=0, padx=5, sticky=W)
 Entry(frame18, width=10, textvariable=ans165).grid(row=5, column=1)
 Checkbutton(frame180, text='I don\'t know', variable=ans166).grid(sticky=W, padx=5)
 
