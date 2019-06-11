@@ -691,7 +691,7 @@ startlabel = Label(frame0, text='© SFSF, 2019\n', font=12)
 copyright_label = Label(frame0, text='\nVertiCal, a sustainability calculator for vertical farms', font=12)
 startlabel.pack(fill=BOTH, side=BOTTOM)
 copyright_label.pack(fill=BOTH, side=BOTTOM)
-my_image = PhotoImage(file = "avf logo.png") # your image
+my_image = PhotoImage(file = "avf logo nb.png") # your image
 Label(frame0, image = my_image).pack(side=BOTTOM)
 
 # Enter farm's name
