@@ -77,7 +77,7 @@ def worksheetoutput(dictionary_name):
     # eventually create a loop for this.
     dicp = {}
 
-    sheet = workbook.sheet_by_name('CO2eq (kg)')
+    # sheet = workbook.sheet_by_name('CO2eq (kg)')
 
     for tabs in workbook.sheet_names():
         if tabs == 'Crop parameters':
@@ -90,7 +90,7 @@ def worksheetoutput(dictionary_name):
 
         else:
             sheet = workbook.sheet_by_name(tabs)
-            for i in range(1, 54):
+            for i in range(1, sheet.nrows):
                 if sheet.cell_value(i, 2) != '' and sheet.cell_value(i, 3) != '':
                     country = 4  # 4 is Netherlands
                     if sheet.cell_value(i, country) == '':
@@ -141,12 +141,14 @@ def worksheetoutput(dictionary_name):
 
     # Create the output: an Excel file
     wb = xlsxwriter.Workbook(farm_name.get() + '.xlsx')
+
+    sheet = workbook.sheet_by_name('Crop parameters')
     Total_Eoc = 0
     for keys, values in dictionary_name.items():
-        for i in range(1, len(lis)):
-            if keys == sheet.cell_value(i, 2):
-                dictionary_name[keys] += [sheet.cell_value(i, 3)]
-                Total_Eoc += sheet.cell_value(i, 3)
+        for i in range(1, len(lis)+1):
+            if keys == sheet.cell_value(i, 0):
+                dictionary_name[keys] += [sheet.cell_value(i, 1)]
+                Total_Eoc += sheet.cell_value(i, 1)
     Average_Eoc = Total_Eoc / (len(dictionary_name) - 1)
     dictionary_name[list(dictionary_name.keys())[0]] += [Average_Eoc]
 
@@ -661,11 +663,11 @@ def cal2(event):
         total_kg += kgVeg[i].get()
 
     # Calculating the fraction crop over the full area and fraction of kg
-    fracLetsur = fracEndsur = fracSpisur = fracBeasur = fracParsur = fracKalsur = fracBassur = fracRucsur = fracMicsur = 0
+    fracLetsur = fracEndsur = fracSpisur = fracBeasur = fracParsur = fracKalsur = fracBassur = fracRucsur = fracMicsur = fracMinsur = 0
     frac_sur = [fracLetsur, fracEndsur, fracSpisur, fracBeasur, fracParsur, fracKalsur, fracBassur, fracRucsur,
-                fracMicsur]
-    fracLetkg = fracEndkg = fracSpikg = fracBeakg = fracParkg = fracKalkg = fracBaskg = fracRuckg = fracMickg = 0
-    frac_kg = [fracLetkg, fracEndkg, fracSpikg, fracBeakg, fracParkg, fracKalkg, fracBaskg, fracRuckg, fracMickg]
+                fracMicsur,fracMinsur]
+    fracLetkg = fracEndkg = fracSpikg = fracBeakg = fracParkg = fracKalkg = fracBaskg = fracRuckg = fracMickg = fracMinkg = 0
+    frac_kg = [fracLetkg, fracEndkg, fracSpikg, fracBeakg, fracParkg, fracKalkg, fracBaskg, fracRuckg, fracMickg, fracMinkg]
     for i in range(0, len(frac_sur)):
         frac_sur[i] = surVeg[i].get() / total_area
         frac_kg[i] = kgVeg[i].get() / total_kg
@@ -754,13 +756,13 @@ country.current(0)
 country.grid(padx=10)
 
 # Here a list of all the possible crops a farmer can choose is read in. This is needed for Q2.
-wb = xlrd.open_workbook('Crops energy content.xlsx')
+wb = xlrd.open_workbook('Database_full.xlsx')
 lis = []
-database = wb.sheet_by_name('Basic database')
-for i in range(1, len(database.col_values(2))):
-    if database.col_values(2)[i] == "":
+database = wb.sheet_by_name('Crop parameters')
+for i in range(1, len(database.col_values(0))):
+    if database.col_values(0)[i] == "":
         break
-    lis.append(database.col_values(2)[i])
+    lis.append(database.col_values(0)[i])
 
 # Initialize variables to choose different crops in Q2
 ansLet = IntVar()
@@ -772,7 +774,8 @@ ansKal = IntVar()
 ansBas = IntVar()
 ansRuc = IntVar()
 ansMic = IntVar()
-ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic]
+ansMin = IntVar()
+ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin]
 
 # Initialize variables for surface of a specific crop in Q2
 surLet = IntVar()
@@ -784,7 +787,8 @@ surKal = IntVar()
 surBas = IntVar()
 surRuc = IntVar()
 surMic = IntVar()
-surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic]
+surMin = IntVar()
+surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin]
 
 # Initialize variables for sold produce of a specific crop in Q2
 kgLet = IntVar()
@@ -796,7 +800,8 @@ kgKal = IntVar()
 kgBas = IntVar()
 kgRuc = IntVar()
 kgMic = IntVar()
-kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic]
+kgMin = IntVar()
+kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
 
 Label(frame5, text='Crop [-]').grid(row=0, column=0, padx=5, sticky=W)
 Label(frame5, text='Surface [m2]').grid(row=0, column=1, padx=5, sticky=W)
