@@ -71,14 +71,17 @@ def worksheetoutput(dictionary_name):
         else:
             sheet = workbook.sheet_by_name(tabs)
             for i in range(1, sheet.nrows):
-                if sheet.cell_value(i, 2) != '' and sheet.cell_value(i, 3) != '':
-                    country = 4  # 4 is Netherlands
-                    if sheet.cell_value(i, country) == '':
-                        country = 3  # 3 is average
-                    dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
-                    if ans_packaging.get() == 0:
-                        dicp['Pac1'] = 0
-                        dicp['Pac2'] = 0
+                if sheet.cell_value(i, 2) != '':
+                    # print (sheet.cell_value(i,2))
+                    for j in range(0, sheet.ncols):
+                        if sheet.cell_value(0,j) == ans_country.get():
+                            country = j
+                            if sheet.cell_value(i, j) == '':
+                                country = 9  # 9 is world
+                            dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
+                            if ans_packaging.get() == 0:
+                                dicp['Pac1'] = 0
+                                dicp['Pac2'] = 0
 
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
@@ -741,19 +744,28 @@ question_finish = '13. This is the end of the questionnaire. \nPlease make sure 
 # Question 1: Where is your farm located?
 # (If you are in this frame, you can't go back and change your name)
 # Q1 needs to be specified here because pre and next are not initialized yet
+wb = xlrd.open_workbook('Database_full.xlsx')
 v = IntVar()
 var = StringVar()
 var.set(question_location)
 helloLabel = Label(frame1, textvariable=var, justify=LEFT)
 helloLabel.grid(row=0, column=0, padx=10, pady=10, sticky=W)
 ans_country = StringVar()
+sheet = wb.sheet_by_name('Energy (MJ)')
+list_country = []
+for i in range (0,sheet.ncols):
+    if sheet.cell_value(0,i) == 'Parameter Name':
+        for i in range (i,sheet.ncols):
+            list_country += [sheet.cell_value(0, i + 1)]
+            if sheet.cell_value(0, i+2) == 'World':
+                break
+
 country = ttk.Combobox(frame3, textvariable=ans_country, state='readonly')
-country['values'] = ('Netherlands', "Germany", "China", "Norway", "United States", 'Japan')
+country['values'] = list_country
 country.current(0)
 country.grid(padx=10)
 
 # Here a list of all the possible crops a farmer can choose is read in. This is needed for Q2.
-wb = xlrd.open_workbook('Database_full.xlsx')
 list_crop_species = []
 database = wb.sheet_by_name('Crop parameters')
 for i in range(1, len(database.col_values(0))):
