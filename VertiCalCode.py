@@ -17,7 +17,7 @@ frame1 = Frame(height=75, width=400)
 frame2 = Frame(height=40, width=400)
 frame3 = Frame(height=120, width=400)
 frame4 = Frame(height=120, width=400)
-frame5 = Frame(height=8000, width=500)
+frame5 = Frame(height=8000, width=400)
 frame6 = Frame(height=120, width=400)
 frame7 = Frame(height=120, width=400)
 frame8 = Frame(height=120, width=400)
@@ -42,7 +42,7 @@ frame20 = Frame(height=90, width=400)
 frame200 = Frame(height=120, width=400)
 frame21 = Frame(height=70, width=400)
 frame210 = Frame(height=120, width=400)
-frame_finish = Frame(height=75, width=400)
+frame_finish = Frame(height=120, width=400)
 all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11,
               frame12, frame13, frame14, frame15, frame16, frame160, frame17, frame170, frame18,
               frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame_finish]
@@ -386,12 +386,9 @@ def worksheetoutput(dictionary_name):
     return
     # ^^ End of function worksheet output
 
-
 # def pre() enables to go back to the previous question
 # i.e. forgetting the current frames and introducing new frames ??
 count = 0
-
-
 def pre():
     global count
     for i in range(len(list_ans)):  # if there is no value in Entry, make it back to 0
@@ -406,70 +403,69 @@ def pre():
     if count < 1:
         count = 1
     if count == 1:
-        var.set('1. In which country is your farm located?')
+        var.set(question_location)
         frame5.grid_forget()
         frame3.grid(sticky=W)
     if count == 2:
-        var.set('2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of each crop do you sell every year?')
+        var.set(question_crop_types)
         frame8.grid_forget()
         frame5.grid(sticky=W)
     if count == 3:
-        var.set(
-            '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?')
+        var.set(question_buy_renewable)
         frame9.grid_forget()
         frame8.grid(sticky=W)
     if count == 4:
-        var.set('4. Do you produce your own renewable energy and how much (kWh) \ndo you produce?')
+        var.set(question_produce_renewable)
         frame10.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity (kWh) do you sell?")
+        var.set(question_sell_electricity)
         frame11.grid_forget()
         frame110.grid_forget()
         frame111.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
-        var.set("6. Do you use any fossil fuels (excluding transportation), \nand how much do you use?")
+        var.set(question_fossil_fuel_use)
         frame14.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How many NPK chemicals (kg) do you use per year? ')
+        var.set(question_npk_use)
         frame16.grid_forget()
         frame160.grid_forget()
         frame14.grid(sticky=W)
     if count == 8:
-        var.set('8. Do you use substrate (kg) and how much per year?')
+        var.set(question_substrate_use)
         frame17.grid_forget()
         frame170.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water (L) do you buy?')
+        var.set(question_water_use)
         frame18.grid_forget()
         frame180.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (kg) do you use? ')
+        var.set(question_pesticide_use)
         frame19.grid_forget()
         frame190.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
     if count == 11:
-        var.set('11. Is the product sold to the customer packaged? ')
+        var.set(question_packaging_use)
         frame20.grid_forget()
         frame200.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How far (km) does your product travel to the distribution center \non average?')
+        var.set(question_transport)
         frame_finish.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count == 13:
-        var.set('13. This is was the questionnaire, are you finished?')
+        var.set(question_finish)
         frame_finish.grid(sticky=W)
     return
 
@@ -490,66 +486,64 @@ def next1():
             list_ans[i].set(00)
     count += 1
     if count == 2:
-        var.set('2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of each crop do you sell every year? ')
+        var.set(question_crop_types)
         frame3.grid_forget()
         frame5.grid(sticky=W)
     if count == 3:
-        var.set(
-            '3. How much renewable and non-renewable electricity (kWh)\ndo you buy per year?')
+        var.set(question_buy_renewable)
         frame5.grid_forget()
         frame8.grid(sticky=W)
     if count == 4:
-        var.set('4. Do you produce your own renewable energy and how much (kWh) \ndo you produce?')
+        var.set(question_produce_renewable)
         frame8.grid_forget()
         frame9.grid(sticky=W)
     if count == 5:
-        var.set("5. How much electricity (kWh) do you sell?")
+        var.set(question_sell_electricity)
         frame9.grid_forget()
         frame10.grid(sticky=W)
     if count == 6:
-        var.set(
-            "6. Do you use any fossil fuels (excluding transportation), \nand how much do you use?")
+        var.set(question_fossil_fuel_use)
         frame10.grid_forget()
         frame11.grid(sticky=W)
         frame111.grid(sticky=W)
         frame110.grid(sticky=W)
     if count == 7:
-        var.set('7. How many NPK chemicals (kg) do you use per year? ')
+        var.set(question_npk_use)
         frame11.grid_forget()
         frame111.grid_forget()
         frame110.grid_forget()
         frame14.grid(sticky=W)
     if count == 8:
-        var.set('8. Do you use substrate (kg) and how much per year?')
+        var.set(question_substrate_use)
         frame14.grid_forget()
         frame16.grid(sticky=W)
         frame160.grid(sticky=W)
     if count == 9:
-        var.set('9. How much water (L) do you buy?')
+        var.set(question_water_use)
         frame16.grid_forget()
         frame160.grid_forget()
         frame17.grid(sticky=W)
         frame170.grid(sticky=W)
     if count == 10:
-        var.set('10. How much pesticides (kg) do you use?')
+        var.set(question_pesticide_use)
         frame17.grid_forget()
         frame170.grid_forget()
         frame18.grid(sticky=W)
         frame180.grid(sticky=W)
     if count == 11:
-        var.set('11. Is the product sold to the customer packaged? ')
+        var.set(question_packaging_use)
         frame18.grid_forget()
         frame180.grid_forget()
         frame19.grid(sticky=W)
         frame190.grid(sticky=W)
     if count == 12:
-        var.set('12. How far (km) does your produce travel to the distribution center \non average?')
+        var.set(question_transport)
         frame19.grid_forget()
         frame190.grid_forget()
         frame20.grid(sticky=W)
         frame200.grid(sticky=W)
     if count == 13:
-        var.set('13. This is was the questionnaire, are you finished? ')
+        var.set(question_finish)
         frame20.grid_forget()
         frame200.grid_forget()
         frame_finish.grid(sticky=W)
@@ -591,10 +585,10 @@ def next2():
     frame3.grid()
     count += 1
     # The code below is necessary in the last frame to instruct the user where he can find the results of the analysis.
-    print_finish = 'If you click on the finish button, the questionnaire will close.'
-    print_finish_2 = 'Results of the analysis can then be found in: '
+    print_finish = 'When you click on the submit button, the questionnaire will close.'
+    print_finish_2 = 'The results of the analysis can then be found in: '
     print_farm_name = farm_name.get() + '.xlsx.'
-    Label(frame_finish, text=print_finish).grid(row=1, column=0, sticky=W)
+    Label(frame_finish, text=print_finish, justify=LEFT).grid(row=1, column=0, sticky=W)
     Label(frame_finish, text=print_finish_2).grid(row=2, column=0, sticky=W)
     Label(frame_finish, text=print_farm_name).grid(row=3, column=0, sticky=W)
     return
@@ -690,8 +684,10 @@ startbutton = Button(frame0, text='Start', command=start, font=12)
 startbutton.pack(fill=X, side=BOTTOM, anchor=CENTER)
 
 # The first page you see when starting the questionnaire
-startlabel = Label(frame0, text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n', font=12)
+startlabel = Label(frame0, text='© SFSF, 2019\n', font=12)
+copyright_label = Label(frame0, text='\nVertiCal, a sustainability calculator for vertical farms', font=12)
 startlabel.pack(fill=BOTH, side=BOTTOM)
+copyright_label.pack(fill=BOTH, side=BOTTOM)
 my_image = PhotoImage(file = "avf logo.png") # your image
 Label(frame0, image = my_image).pack(side=BOTTOM)
 
@@ -699,8 +695,8 @@ Label(frame0, image = my_image).pack(side=BOTTOM)
 frame0.pack(anchor=CENTER)
 farm_name = StringVar()
 Button(frame00, text='Next', command=next2).pack(fill=BOTH, side=BOTTOM, anchor=CENTER)
-Entry(frame00, textvariable=farm_name).pack(fill=BOTH, side=BOTTOM, anchor=CENTER)
-Label(frame00, text='\n\n\n\nEnter the name of your farm').pack(fill=BOTH, side=BOTTOM)
+Entry(frame00, textvariable=farm_name).pack(fill=BOTH, side=BOTTOM, anchor=CENTER, pady=5)
+Label(frame00, text='\n\n\n\nEnter the name of your farm:').pack(fill=BOTH, side=BOTTOM)
 
 # Basic frame containing previous and next labels
 button2 = Button(frame2, text=('Previous'), command=pre,padx=10)
@@ -727,16 +723,32 @@ filemenu.add_command(label='Quit', command=root.quit)
 menu.add_cascade(label='File', menu=filemenu)
 root.config(menu=menu)
 
+#Here all questions for the questionnaire are defined
+question_location = '1. In which country is your farm located?'
+question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kilograms of each crop do you sell per year?'
+question_buy_renewable = '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?'
+question_produce_renewable = '4. Do you produce your own renewable energy, \n and how much (kWh) do you produce per year?'
+question_sell_electricity = '5. How much electricity (kWh) do you sell per year?'
+question_fossil_fuel_use = "6. How much fossil fuel (excluding transportation) do you use per year?"
+question_npk_use = "7. How many NPK chemicals (kg) do you buy per year?"
+question_substrate_use = '8. Do you use any of the following substrates (kg)\n and how much per year?'
+question_water_use = '9. How much water (L) do you buy per year?'
+question_pesticide_use = '10. How much pesticides (kg) do you buy per year? '
+question_packaging_use = '11. Is the product sold to the customer packaged? '
+question_transport = '12. How far (km) does your product travel to the distribution center \non average?'
+question_finish = '13. This is the end of the questionnaire. \nPlease make sure that all questions are answered before you submit.'
+
 # Question 1: Where is your farm located?
 # (If you are in this frame, you can't go back and change your name)
 # Q1 needs to be specified here because pre and next are not initialized yet
 v = IntVar()
 var = StringVar()
-var.set('1. In which country is your farm located?')
-helloLabel = Label(frame1, textvariable=var).grid(row=0, column=0, padx=10, pady=10, sticky=W)
+var.set(question_location)
+helloLabel = Label(frame1, textvariable=var, justify=LEFT)
+helloLabel.grid(row=0, column=0, padx=10, pady=10, sticky=W)
 ans_country = StringVar()
 country = ttk.Combobox(frame3, textvariable=ans_country, state='readonly')
-country['values'] = ('Netherlands', "Germany", "Switzerland", "Norway", "United States", 'Japan')
+country['values'] = ('Netherlands', "Germany", "China", "Norway", "United States", 'Japan')
 country.current(0)
 country.grid(padx=10)
 
@@ -789,7 +801,7 @@ kgMin = IntVar()
 kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
 
 Label(frame5, text='Crop [-]').grid(row=0, column=0, padx=5, sticky=W)
-Label(frame5, text='Surface [m2]').grid(row=0, column=1, padx=5, sticky=W)
+Label(frame5, text='Area [m2]').grid(row=0, column=1, padx=5, sticky=W)
 Label(frame5, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
@@ -842,7 +854,7 @@ petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky
 petroly = Entry(frame11, width=5, textvariable=ans_petrol_use).grid(row=0, column=1)
 diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
 diesely = Entry(frame11, width=5, textvariable=ans_diesel_use).grid(row=1, column=1)
-Ngasl = Label(frame11, text='Natural gas (M3)').grid(row=0, column=2, padx=10, sticky=W)
+Ngasl = Label(frame11, text='Natural gas (m3)').grid(row=0, column=2, padx=10, sticky=W)
 Ngasy = Entry(frame11, width=5, textvariable=ans_natural_gas_use).grid(row=0, column=3)
 oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
 oily = Entry(frame11, width=5, textvariable=ans_oil_use).grid(row=1, column=3)
@@ -902,7 +914,7 @@ Label(frame16, text='Peat').grid(row=3, column=0, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans_peat_use).grid(row=3, column=1)
 Label(frame16, text='Peat Moss').grid(row=3, column=2, padx=5, sticky=W)
 Entry(frame16, width=10, textvariable=ans_peatmoss_use).grid(row=3, column=3)
-Checkbutton(frame160, text='No substrate is used', variable=ans_no_substrate_use).grid(padx=5)
+Checkbutton(frame160, text='None of these substrates are used', variable=ans_no_substrate_use).grid(padx=5)
 
 # Here the fields for water use (Q9) are created
 ans_tap_water_use = IntVar()
@@ -946,8 +958,8 @@ Entry(frame20, width=10, textvariable=ans_truck_use).grid(row=2, column=1)
 Checkbutton(frame200, text='I don\'t know', variable=ans_dont_know_transport).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
-Button_finish = Button(frame_finish, text=('Finish!'), command=close_program, padx = 10)
-Button_finish.grid(row=1, column=1, padx=10, sticky = E)
+Button_finish = Button(frame_finish, text=('Submit!'), command=close_program, padx = 10, justify=RIGHT)
+Button_finish.grid(row=4, column=0, padx=10)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
