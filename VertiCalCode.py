@@ -31,12 +31,13 @@ frame_pesticide_use_extension = Frame(height=120, width=400)
 frame_packaging_use = Frame(height=70, width=400)
 frame_transport = Frame(height=90, width=400)
 frame_transport_extension = Frame(height=120, width=400)
-
 frame_finish = Frame(height=120, width=400)
-all_frames = [frame_location, frame_previous_next, frame_location_extension, frame_crop_species, frame_buy_energy,
-              frame_create_renewable, frame_sell_renewable, frame_fuel_use, frame_fertilizer_use, frame_substrate_use,
-              frame_substrate_use_extension, frame_water_use,frame_water_use_extension, frame_pesticide_use,
-              frame_pesticide_use_extension, frame_packaging_use, frame_transport, frame_finish]
+
+all_frames = [frame_start, frame_farm_name, frame_location, frame_previous_next, frame_location_extension,
+              frame_crop_species, frame_buy_energy, frame_create_renewable, frame_sell_renewable, frame_fuel_use,
+              frame_fertilizer_use, frame_substrate_use, frame_substrate_use_extension, frame_water_use,
+              frame_water_use_extension, frame_pesticide_use, frame_pesticide_use_extension, frame_packaging_use,
+              frame_transport, frame_finish]
 
 # Set all the frames to a certain size
 for frame in all_frames:
@@ -465,12 +466,10 @@ def pre():
 
 # def next1() enables to go to the next question.
 # i.e. forgetting the current frames and introducing new frames
-# v = IntVar()
 
 
 def next1():
     global count
-    global v
     for i in range(len(list_ans)):  # if there is no value in Entry, set it back to 0
         try:
             if i != 0 or 2 or 1:
@@ -593,9 +592,9 @@ def file_open():
         num = -1
         for line in lines:
             num += 1
-            if num < 3:
+            if num < 2:
                 list_ans[num].set(str(line.strip('\n')))
-            if num >= 3:
+            if num >= 2:
                 list_ans[num].set(int(line.strip('\n')))
     except:
         pass
@@ -729,7 +728,6 @@ question_finish = '13. This is the end of the questionnaire. \nPlease make sure 
 # (If you are in this frame, you can't go back and change your name)
 # Q1 needs to be specified here because pre and next are not initialized yet
 wb = xlrd.open_workbook('Database_full.xlsx')
-v = IntVar()
 var = StringVar()
 var.set(question_location)
 helloLabel = Label(frame_location, textvariable=var, justify=LEFT)
@@ -782,6 +780,7 @@ surRuc = IntVar()
 surMic = IntVar()
 surMin = IntVar()
 surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin]
+ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin, surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin
 
 # Initialize variables for sold produce of a specific crop in Q2
 kgLet = IntVar()
@@ -959,13 +958,16 @@ Button_finish.grid(row=4, column=0, padx=10)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
-list_ans = [farm_name, ans_country, v, ans_buy_renew, ans_buy_nonrenew, ans_prod_solar, ans_prod_biomass, ans_prod_wind,
-            ans_sel_renew,ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use, ans_natural_gas_use,
-            ans_oil_use, ans_ammonium_nitrate_use, ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use,
-            ans_triple_super_phosphate_use, ans_single_super_phosphate_use, ans_ammonia_use, ans_limestone_use,
-            ans_NPK_151515_use, ans_phosphoric_acid_use, ans_mono_ammonium_phosphate_use, ans_dont_know_fertilizer,
-            ans_rockwool_use, ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use,
-            ans_no_substrate_use, ans_tap_water_use, ans_dont_know_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
+list_ans = [farm_name, ans_country, ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin,
+            surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin, kgLet, kgEnd, kgSpi, kgBea,
+            kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, ans_buy_renew, ans_buy_nonrenew, ans_prod_solar, ans_prod_biomass,
+            ans_prod_wind, ans_sel_renew,ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use,
+            ans_natural_gas_use, ans_oil_use, ans_ammonium_nitrate_use, ans_calcium_ammonium_nitrate_use,
+            ans_ammonium_sulphate_use, ans_triple_super_phosphate_use, ans_single_super_phosphate_use,
+            ans_ammonia_use, ans_limestone_use, ans_NPK_151515_use, ans_phosphoric_acid_use,
+            ans_mono_ammonium_phosphate_use, ans_dont_know_fertilizer, ans_rockwool_use, ans_perlite_use,
+            ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use, ans_no_substrate_use,
+            ans_tap_water_use, ans_dont_know_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
             ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_dont_know_pesticide_use, ans_packaging,
             ans_van_use,ans_truck_use, ans_dont_know_transport]
 
