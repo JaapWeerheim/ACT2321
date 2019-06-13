@@ -75,7 +75,6 @@ def worksheetoutput(dictionary_name):
                             if ans_packaging.get() == 0:
                                 dicp['Pac1'] = 0
                                 dicp['Pac2'] = 0
-    print(dicp)
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
     if ans_check_sell_energy.get() == 1:
@@ -179,7 +178,6 @@ def worksheetoutput(dictionary_name):
         Wco2 = frac_surf * (dicp['Wa1'] * ans_tap_water_use.get())
 
         # Calculation for total energy of water
-        print(type(dicp['Wa2']),dicp['Wa2'])
         Wenergy = frac_surf * (dicp['Wa2'] * ans_tap_water_use.get())
 
         # Calculation for total Co2 of pesticides
@@ -204,7 +202,6 @@ def worksheetoutput(dictionary_name):
         # Calculation for the total energy of packaging
         Pacenergy = kg_prod * dicp['Pac2']
 
-        print(type(Eenergy), type(Fenergy), type(FERenergy), type(Senergy), type(Wenergy), type(Penergy), type(Tenergy), type(Pacenergy))
         # calculations for the total Co2 and energy
         Totalco2 = Eco2 + Fco2 + FERco2 + Sco2 + Wco2 + Pco2 + Tco2 + Pacco2
         Totalenergy = Eenergy + Fenergy + FERenergy + Senergy + Wenergy + Penergy + Tenergy + Pacenergy
