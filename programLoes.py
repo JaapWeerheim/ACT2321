@@ -66,6 +66,7 @@ def worksheetoutput(dictionary_name):
             for keys, values in dictionary_name.items():
                 if keys == sheet.cell_value(count, 0):
                     dictionary_name[keys] += [sheet.cell_value(count, 4)]
+                    dictionary_name[keys] += [sheet.cell_value(count, 4)]
                 count += 1
 
         else:
@@ -695,7 +696,7 @@ startbutton.pack(fill=X, side=BOTTOM, anchor=CENTER)
 # The first page you see when starting the questionnaire
 startlabel = Label(frame0, text='\n\n\n\nQuestionnaire for Life Cycle Analysis of vertical farms\n\n\n', font=12)
 startlabel.pack(fill=BOTH, side=BOTTOM)
-my_image = PhotoImage(file = "avf logo.png") # your image
+my_image = PhotoImage(file = "avf logo nb.png") # your image
 Label(frame0, image = my_image).pack(side=BOTTOM)
 
 # Enter farm's name

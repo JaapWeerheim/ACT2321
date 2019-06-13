@@ -76,13 +76,14 @@ def worksheetoutput(dictionary_name):
                     for j in range(0, sheet.ncols):
                         if sheet.cell_value(0,j) == ans_country.get():
                             country = j
+                            print(sheet.cell_value(0,j))
                             if sheet.cell_value(i, j) == '':
                                 country = 9  # 9 is world
                             dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
                             if ans_packaging.get() == 0:
                                 dicp['Pac1'] = 0
                                 dicp['Pac2'] = 0
-
+    print(dicp)
     non_count = str()
     # If choose 'I don't know’ option, set the value back to zero
     if ans_check_sell_energy.get() == 1:
@@ -186,6 +187,7 @@ def worksheetoutput(dictionary_name):
         Wco2 = frac_surf * (dicp['Wa1'] * ans_tap_water_use.get())
 
         # Calculation for total energy of water
+        print(type(dicp['Wa2']),dicp['Wa2'])
         Wenergy = frac_surf * (dicp['Wa2'] * ans_tap_water_use.get())
 
         # Calculation for total Co2 of pesticides
@@ -210,6 +212,7 @@ def worksheetoutput(dictionary_name):
         # Calculation for the total energy of packaging
         Pacenergy = kg_prod * dicp['Pac2']
 
+        print(type(Eenergy), type(Fenergy), type(FERenergy), type(Senergy), type(Wenergy), type(Penergy), type(Tenergy), type(Pacenergy))
         # calculations for the total Co2 and energy
         Totalco2 = Eco2 + Fco2 + FERco2 + Sco2 + Wco2 + Pco2 + Tco2 + Pacco2
         Totalenergy = Eenergy + Fenergy + FERenergy + Senergy + Wenergy + Penergy + Tenergy + Pacenergy
@@ -221,6 +224,8 @@ def worksheetoutput(dictionary_name):
         # calculations for the total Co2 and energy per KJ product
         Totalco2_per_KJ_product = Totalco2_per_kg_product / Eoc
         Totalenergy_per_KJ_product = Totalenergy_per_kg_product / Eoc
+
+
 
         # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(cropname)
