@@ -68,7 +68,6 @@ def worksheetoutput(dictionary_name):
                     for j in range(0, sheet.ncols):
                         if sheet.cell_value(0,j) == ans_country.get():
                             country = j
-                            print(sheet.cell_value(0,j))
                             if sheet.cell_value(i, j) == '':
                                 country = 9  # 9 is world
                             dicp[sheet.cell_value(i, 2)] = sheet.cell_value(i, country)
@@ -214,8 +213,6 @@ def worksheetoutput(dictionary_name):
         Totalco2_per_KJ_product = Totalco2_per_kg_product / Eoc
         Totalenergy_per_KJ_product = Totalenergy_per_kg_product / Eoc
 
-
-
         # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(cropname)
         ws.write(0, 2, 'Total CO2 emitted(Kg)')
@@ -243,31 +240,6 @@ def worksheetoutput(dictionary_name):
         for x in range(len(labels_total)):
             ws.write(1 + x, 6, labels_total[x])
             ws.write(1 + x, 9, totals_output_round[x])
-
-        # labels_diff_aspects = ['Heating', 'Cooling', 'Electricity', 'Tillage', 'Sowing', 'Weeding', 'Harvest',
-        #                        'Fertilizer', 'Irrigation', 'Pesticide', 'Other']
-        # for x in range(len(labels_diff_aspects)):
-        #     ws.write(43 + x, 1, labels_diff_aspects[x])
-        #     ws.write(43 + x, 2, list_ans[22 + x].get()) * frac_surf
-
-        # # These values are currently written to a super random place in the script, it needs to be reconsidered
-        # # ws.write(43, 9, 'Heating')
-        # # ws.write(44, 9, 'Cooling')
-        # # ws.write(45, 9, 'Ventilation')
-        # # ws.write(46, 9, 'Lighting')
-        # # ws.write(47, 9, 'Machinery')
-        # # ws.write(48, 9, 'Storage')
-        # ws.write(49, 9, 'Selling renewables')
-        # ws.write(50, 9, 'Selling non-renewables')
-
-        # # ws.write(43, 10, ans81.get()) * frac_surf
-        # # ws.write(44, 10, ans82.get()) * frac_surf
-        # # ws.write(45, 10, ans83.get()) * frac_surf
-        # # ws.write(46, 10, ans84.get()) * frac_surf
-        # # ws.write(47, 10, ans85.get()) * frac_surf
-        # # ws.write(48, 10, ans86.get()) * frac_surf
-        # ws.write(49, 10, ans87.get()) * frac_surf
-        # ws.write(50, 10, ans88.get()) * frac_surf
 
         if ans_check_sell_energy.get() == 1 or ans_phosphoric_acid_use.get() == 1 or ans_no_substrate_use.get() == 1 or ans_dont_know_tap_water_use.get() == 1 or ans_dont_know_pesticide_use.get() == 1 or ans_dont_know_transport.get() == 1:
             ws.write(10, 1, non_count + 'is not taken into account because of lacking data')
@@ -378,6 +350,112 @@ def worksheetoutput(dictionary_name):
         # chart_col.set_style(4)
         # ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
+    # Write the raw data from the questionnaire to the Excel sheet
+    ws = wb.add_worksheet("Raw data")
+
+    # Write question 1
+    ws.write(0,0,  "Question 1")
+    ws.write(1, 0, 'Country:')
+    ws.write(1, 1, ans_country.get())
+
+    # Write question 2
+    ws.write(3,0, "Question 2")
+    ws.write(4,0, "Crop type")
+    ws.write(4,1, 'Surface [m2]')
+    ws.write(4,2, "Sold products [kg/year]")
+    for i in range(0,len(ansVeg)):
+        ws.write(5+i, 0, list_crop_species[i])
+        ws.write(5+i, 1, surVeg[i].get())
+        ws.write(5+i, 2, kgVeg[i].get())
+
+    # Write question 3, 4 and 5
+    ws.write(16,0, "Question 3-5")
+    ws.write(17,0, "Electricity type")
+    ws.write(17,1, "Amount [kWh/year]")
+    list_electricity = [ans_buy_renew.get(), ans_buy_nonrenew.get(), ans_prod_solar.get(), ans_prod_biomass.get(),
+                        ans_prod_wind.get(), ans_sel_renew.get(), ans_sel_non_renew.get()]
+    list_electricity_names = ["Bought renewable", "Bought non-renewable", "Produced solar",
+                              "Produced biomass", "Produced wind", "Sold renewable",
+                              "Sold non-renewable"]
+    for i in range(0,len(list_electricity)):
+        ws.write(18+i, 0, list_electricity_names[i])
+        ws.write(18+i, 1, list_electricity[i])
+
+    # Question 6
+    ws.write(26, 0, "Question 6")
+    ws.write(27, 0, "Fossil fuel type")
+    ws.write(27,1, "Consumption [per year]")
+    list_fuel = [ans_petrol_use.get(), ans_diesel_use.get(), ans_natural_gas_use.get(), ans_oil_use.get()]
+    list_fuel_names = ["Petrol (L)", "Diesel (L)", "Oil (L)", "Natural gas (m3)"]
+    for i in range(0, len(list_fuel)):
+        ws.write(28+i, 0, list_fuel_names[i])
+        ws.write(28+i, 1, list_fuel[i])
+
+    # Question 7
+    ws.write(33,0, "Question 7")
+    ws.write(34,0, "Fertilizer type")
+    ws.write(34,1, "Consumption [kg/year]")
+    list_fertilizers = [ans_ammonium_nitrate_use.get(), ans_calcium_ammonium_nitrate_use.get(),
+                        ans_ammonium_sulphate_use.get(),
+                        ans_triple_super_phosphate_use.get(), ans_single_super_phosphate_use.get(),
+                        ans_ammonia_use.get(),
+                        ans_limestone_use.get(), ans_NPK_151515_use.get(), ans_phosphoric_acid_use.get(),
+                        ans_mono_ammonium_phosphate_use.get()]
+
+    list_fertilizer_names = ["Ammonium nitrate", "Calcium ammonium nitrate", "Ammonium sulphate",
+                             "Triple super phosphate",
+                             "Single super phosphate", "Ammonia", "Limestone", "NPK 15-15-15", "Phosphoric acid",
+                             "Mono-ammonium phosphate"]
+    for i in range(0, len(list_fertilizers)):
+        ws.write(35+i, 0, list_fertilizer_names[i])
+        ws.write(35+i, 1, list_fertilizers[i])
+
+    # Question 8
+    ws.write(46,0, "Question 8")
+    ws.write(47,0, "Substrate type")
+    ws.write(47,1, "Consumption [kg/year]")
+    list_substrates = [ans_rockwool_use.get(), ans_perlite_use.get(), ans_cocofiber_use.get(), ans_hempfiber_use.get(),
+                       ans_peat_use.get(), ans_peatmoss_use.get()]
+    list_substrates_names = ["Rockwool", "Perlite", "Cocofiber", "Hempfiber", 'Peat', "Peatmoss"]
+    for i in range(0, len(list_substrates)):
+        ws.write(48+i, 0, list_substrates_names[i])
+        ws.write(48+i, 1, list_substrates[i])
+
+    # Question 9
+    ws.write(55,0, "Question 9")
+    ws.write(56,0, "Water consumption:")
+    ws.write(56,1, ans_tap_water_use.get())
+    ws.write(56,2 ,"[l/year]")
+
+    # Question 10
+    ws.write(58,0, "Question 10")
+    ws.write(59,0, "Pesticide type")
+    ws.write(59,1, "Consumption [kg/year]")
+    list_pesticides = [ans_atrazine_use.get(), ans_glyphosphate_use.get(),
+                       ans_metolachlor_use.get(), ans_herbicide_use.get(), ans_insecticide_use.get()]
+    list_pesticides_names = ["Atrazine", "Glyphosphate", "Metolachlore", "Herbicide", "Insecticide"]
+    for i in range(0, len(list_pesticides)):
+        ws.write(60+i, 0, list_pesticides_names[i])
+        ws.write(60+i, 1, list_pesticides[i])
+
+    # Question 11
+    ws.write(66,0, "Question 11")
+    ws.write(67,0, "Packaged [Yes/No]")
+    if ans_packaging.get == 0:
+        ws.write(67,1, "No")
+    else:
+        ws.write(67,1, "Yes")
+
+    # Question 12
+    ws.write(69,0, "Question 12")
+    ws.write(70,0, "Transportation means")
+    ws.write(70,1, "Average distance [km]")
+    ws.write(71, 0, "Van")
+    ws.write(71,1, ans_van_use.get())
+    ws.write(72,0, "Truck")
+    ws.write(72,1, ans_truck_use.get())
+
+    # Close the workbook again
     wb.close()
     # root.destroy()
     return
@@ -539,6 +617,7 @@ def quit1():
     return
 
 def close_program():
+    cal2()
     worksheetoutput(dic_crops)
     quit1()
     return
@@ -612,8 +691,9 @@ def file_save():
     return
 
 
-# cal2 is a function that processes answers on Q2 into a dictionary for use in function 'worksheetoutput'
-def cal2(event):
+# cal2 is a function that processes answers on Q2 into a dictionary for use in function 'worksheetoutput'.
+# It is done when all answers are submit at the end of the questionnaire.
+def cal2():
     global dic_crops
     total_area = 0
     total_kg = 0
@@ -777,7 +857,6 @@ surRuc = IntVar()
 surMic = IntVar()
 surMin = IntVar()
 surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin]
-ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin, surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin
 
 # Initialize variables for sold produce of a specific crop in Q2
 kgLet = IntVar()
@@ -803,8 +882,6 @@ for i in range(0, len(list_crop_species)):
     EntSur.grid(row=i + 1, column=1, sticky=W, padx=5)
     Entkg = Entry(frame_crop_species, textvariable=kgVeg[i])
     Entkg.grid(row=i + 1, column=2, sticky=W, padx=5)
-    EntSur.bind('<FocusOut>', cal2)
-    Entkg.bind('<FocusOut>', cal2)
     EntSur.bind("<Button-1>", rid_of_zeros_sur)
     Entkg.bind("<Button-1>", rid_of_zeros_kg)
 
