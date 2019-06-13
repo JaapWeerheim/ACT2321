@@ -11,41 +11,32 @@ root.wm_iconbitmap('sfsf logo.ico')
 root.geometry('440x440+500+200')
 
 # Setting heights and widths for every frame.
-frame0 = Frame(height=65, width=400)
-frame00 = Frame(height=65, width=400)
-frame1 = Frame(height=75, width=400)
-frame2 = Frame(height=40, width=400)
-frame3 = Frame(height=120, width=400)
-frame4 = Frame(height=120, width=400)
-frame5 = Frame(height=8000, width=400)
-frame6 = Frame(height=120, width=400)
-frame7 = Frame(height=120, width=400)
-frame8 = Frame(height=120, width=400)
-frame9 = Frame(height=120, width=400)
-frame10 = Frame(height=90, width=400)
-frame11 = Frame(height=70, width=400)
-frame110 = Frame(height=140, width=400)
-frame111 = Frame(height=40, width=400)
-frame12 = Frame(height=120, width=400)
-frame13 = Frame(height=120, width=400)
-frame14 = Frame(height=290, width=400)
-frame15 = Frame(height=120, width=400)
-frame16 = Frame(height=90, width=400)
-frame160 = Frame(height=120, width=400)
-frame17 = Frame(height=50, width=400)
-frame170 = Frame(height=120, width=400)
-frame18 = Frame(height=140, width=400)
-frame180 = Frame(height=120, width=400)
-frame19 = Frame(height=70, width=400)
-frame190 = Frame(height=120, width=400)
-frame20 = Frame(height=90, width=400)
-frame200 = Frame(height=120, width=400)
-frame21 = Frame(height=70, width=400)
-frame210 = Frame(height=120, width=400)
+frame_start = Frame(height=65, width=400)
+frame_farm_name = Frame(height=65, width=400)
+frame_location = Frame(height=75, width=400)
+frame_location_extension = Frame(height=120, width=400)
+frame_previous_next = Frame(height=40, width=400)
+frame_crop_species = Frame(height=8000, width=400)
+frame_buy_energy = Frame(height=120, width=400)
+frame_create_renewable = Frame(height=120, width=400)
+frame_sell_renewable = Frame(height=90, width=400)
+frame_fuel_use = Frame(height=70, width=400)
+frame_fertilizer_use = Frame(height=290, width=400)
+frame_substrate_use = Frame(height=90, width=400)
+frame_substrate_use_extension = Frame(height=120, width=400)
+frame_water_use = Frame(height=50, width=400)
+frame_water_use_extension = Frame(height=120, width=400)
+frame_pesticide_use = Frame(height=140, width=400)
+frame_pesticide_use_extension = Frame(height=120, width=400)
+frame_packaging_use = Frame(height=70, width=400)
+frame_transport = Frame(height=90, width=400)
+frame_transport_extension = Frame(height=120, width=400)
+
 frame_finish = Frame(height=120, width=400)
-all_frames = [frame1, frame2, frame3, frame4, frame5, frame6, frame7, frame8, frame9, frame10, frame11,
-              frame12, frame13, frame14, frame15, frame16, frame160, frame17, frame170, frame18,
-              frame180, frame19, frame190, frame20, frame200, frame21, frame210, frame_finish]
+all_frames = [frame_location, frame_previous_next, frame_location_extension, frame_crop_species, frame_buy_energy,
+              frame_create_renewable, frame_sell_renewable, frame_fuel_use, frame_fertilizer_use, frame_substrate_use,
+              frame_substrate_use_extension, frame_water_use,frame_water_use_extension, frame_pesticide_use,
+              frame_pesticide_use_extension, frame_packaging_use, frame_transport, frame_finish]
 
 # Set all the frames to a certain size
 for frame in all_frames:
@@ -412,66 +403,60 @@ def pre():
         count = 1
     if count == 1:
         var.set(question_location)
-        frame5.grid_forget()
-        frame3.grid(sticky=W)
+        frame_crop_species.grid_forget()
+        frame_location_extension.grid(sticky=W)
     if count == 2:
         var.set(question_crop_types)
-        frame8.grid_forget()
-        frame5.grid(sticky=W)
+        frame_buy_energy.grid_forget()
+        frame_crop_species.grid(sticky=W)
     if count == 3:
         var.set(question_buy_renewable)
-        frame9.grid_forget()
-        frame8.grid(sticky=W)
+        frame_create_renewable.grid_forget()
+        frame_buy_energy.grid(sticky=W)
     if count == 4:
         var.set(question_produce_renewable)
-        frame10.grid_forget()
-        frame9.grid(sticky=W)
+        frame_sell_renewable.grid_forget()
+        frame_create_renewable.grid(sticky=W)
     if count == 5:
         var.set(question_sell_electricity)
-        frame11.grid_forget()
-        frame110.grid_forget()
-        frame111.grid_forget()
-        frame10.grid(sticky=W)
+        frame_fuel_use.grid_forget()
+        frame_sell_renewable.grid(sticky=W)
     if count == 6:
         var.set(question_fossil_fuel_use)
-        frame14.grid_forget()
-        frame11.grid(sticky=W)
-        frame111.grid(sticky=W)
-        frame110.grid(sticky=W)
+        frame_fertilizer_use.grid_forget()
+        frame_fuel_use.grid(sticky=W)
     if count == 7:
         var.set(question_npk_use)
-        frame16.grid_forget()
-        frame160.grid_forget()
-        frame14.grid(sticky=W)
+        frame_substrate_use.grid_forget()
+        frame_substrate_use_extension.grid_forget()
+        frame_fertilizer_use.grid(sticky=W)
     if count == 8:
         var.set(question_substrate_use)
-        frame17.grid_forget()
-        frame170.grid_forget()
-        frame16.grid(sticky=W)
-        frame160.grid(sticky=W)
+        frame_water_use.grid_forget()
+        frame_water_use_extension.grid_forget()
+        frame_substrate_use.grid(sticky=W)
+        frame_substrate_use_extension.grid(sticky=W)
     if count == 9:
         var.set(question_water_use)
-        frame18.grid_forget()
-        frame180.grid_forget()
-        frame17.grid(sticky=W)
-        frame170.grid(sticky=W)
+        frame_pesticide_use.grid_forget()
+        frame_pesticide_use_extension.grid_forget()
+        frame_water_use.grid(sticky=W)
+        frame_water_use_extension.grid(sticky=W)
     if count == 10:
         var.set(question_pesticide_use)
-        frame19.grid_forget()
-        frame190.grid_forget()
-        frame18.grid(sticky=W)
-        frame180.grid(sticky=W)
+        frame_packaging_use.grid_forget()
+        frame_pesticide_use.grid(sticky=W)
+        frame_pesticide_use_extension.grid(sticky=W)
     if count == 11:
         var.set(question_packaging_use)
-        frame20.grid_forget()
-        frame200.grid_forget()
-        frame19.grid(sticky=W)
-        frame190.grid(sticky=W)
+        frame_transport.grid_forget()
+        frame_transport_extension.grid_forget()
+        frame_packaging_use.grid(sticky=W)
     if count == 12:
         var.set(question_transport)
         frame_finish.grid_forget()
-        frame20.grid(sticky=W)
-        frame200.grid(sticky=W)
+        frame_transport.grid(sticky=W)
+        frame_transport_extension.grid(sticky=W)
     if count == 13:
         var.set(question_finish)
         frame_finish.grid(sticky=W)
@@ -495,65 +480,59 @@ def next1():
     count += 1
     if count == 2:
         var.set(question_crop_types)
-        frame3.grid_forget()
-        frame5.grid(sticky=W)
+        frame_location_extension.grid_forget()
+        frame_crop_species.grid(sticky=W)
     if count == 3:
         var.set(question_buy_renewable)
-        frame5.grid_forget()
-        frame8.grid(sticky=W)
+        frame_crop_species.grid_forget()
+        frame_buy_energy.grid(sticky=W)
     if count == 4:
         var.set(question_produce_renewable)
-        frame8.grid_forget()
-        frame9.grid(sticky=W)
+        frame_buy_energy.grid_forget()
+        frame_create_renewable.grid(sticky=W)
     if count == 5:
         var.set(question_sell_electricity)
-        frame9.grid_forget()
-        frame10.grid(sticky=W)
+        frame_create_renewable.grid_forget()
+        frame_sell_renewable.grid(sticky=W)
     if count == 6:
         var.set(question_fossil_fuel_use)
-        frame10.grid_forget()
-        frame11.grid(sticky=W)
-        frame111.grid(sticky=W)
-        frame110.grid(sticky=W)
+        frame_sell_renewable.grid_forget()
+        frame_fuel_use.grid(sticky=W)
     if count == 7:
         var.set(question_npk_use)
-        frame11.grid_forget()
-        frame111.grid_forget()
-        frame110.grid_forget()
-        frame14.grid(sticky=W)
+        frame_fuel_use.grid_forget()
+        frame_fertilizer_use.grid(sticky=W)
     if count == 8:
         var.set(question_substrate_use)
-        frame14.grid_forget()
-        frame16.grid(sticky=W)
-        frame160.grid(sticky=W)
+        frame_fertilizer_use.grid_forget()
+        frame_substrate_use.grid(sticky=W)
+        frame_substrate_use_extension.grid(sticky=W)
     if count == 9:
         var.set(question_water_use)
-        frame16.grid_forget()
-        frame160.grid_forget()
-        frame17.grid(sticky=W)
-        frame170.grid(sticky=W)
+        frame_substrate_use.grid_forget()
+        frame_substrate_use_extension.grid_forget()
+        frame_water_use.grid(sticky=W)
+        frame_water_use_extension.grid(sticky=W)
     if count == 10:
         var.set(question_pesticide_use)
-        frame17.grid_forget()
-        frame170.grid_forget()
-        frame18.grid(sticky=W)
-        frame180.grid(sticky=W)
+        frame_water_use.grid_forget()
+        frame_water_use_extension.grid_forget()
+        frame_pesticide_use.grid(sticky=W)
+        frame_pesticide_use_extension.grid(sticky=W)
     if count == 11:
         var.set(question_packaging_use)
-        frame18.grid_forget()
-        frame180.grid_forget()
-        frame19.grid(sticky=W)
-        frame190.grid(sticky=W)
+        frame_pesticide_use.grid_forget()
+        frame_pesticide_use_extension.grid_forget()
+        frame_packaging_use.grid(sticky=W)
     if count == 12:
         var.set(question_transport)
-        frame19.grid_forget()
-        frame190.grid_forget()
-        frame20.grid(sticky=W)
-        frame200.grid(sticky=W)
+        frame_packaging_use.grid_forget()
+        frame_transport.grid(sticky=W)
+        frame_transport_extension.grid(sticky=W)
     if count == 13:
         var.set(question_finish)
-        frame20.grid_forget()
-        frame200.grid_forget()
+        frame_transport.grid_forget()
+        frame_transport_extension.grid_forget()
         frame_finish.grid(sticky=W)
     return
 
@@ -578,8 +557,8 @@ def enter(event):
 
 # The command of 'Start' button at the beginning
 def start():
-    frame0.pack_forget()
-    frame00.pack(anchor=CENTER)
+    frame_start.pack_forget()
+    frame_farm_name.pack(anchor=CENTER)
 
     return
 
@@ -587,10 +566,10 @@ def start():
 # The command of 'Next' button after you input the farm name
 def next2():
     global count
-    frame00.pack_forget()
-    frame1.grid()
-    frame2.grid()
-    frame3.grid()
+    frame_farm_name.pack_forget()
+    frame_location.grid()
+    frame_previous_next.grid()
+    frame_location_extension.grid()
     count += 1
     # The code below is necessary in the last frame to instruct the user where he can find the results of the analysis.
     print_finish = 'When you click on the submit button, the questionnaire will close.'
@@ -688,29 +667,29 @@ def rid_of_zeros_kg(event):
 # ^^ End of functions for the program. Below, the GUI of the program is further developed.
 # ------------------------------------------
 # Here the start button at the beginning is created
-startbutton = Button(frame0, text='Start', command=start, font=12)
+startbutton = Button(frame_start, text='Start', command=start, font=12)
 startbutton.pack(fill=X, side=BOTTOM, anchor=CENTER)
 
 # The first page you see when starting the questionnaire
-startlabel = Label(frame0, text='© SFSF, 2019\n', font=12)
-copyright_label = Label(frame0, text='\nVertiCal, a sustainability calculator for vertical farms', font=12)
+startlabel = Label(frame_start, text='© SFSF, 2019\n', font=12)
+copyright_label = Label(frame_start, text='\nVertiCal, a sustainability calculator for vertical farms', font=12)
 startlabel.pack(fill=BOTH, side=BOTTOM)
 copyright_label.pack(fill=BOTH, side=BOTTOM)
 my_image = PhotoImage(file = "avf logo nb.png") # your image
-Label(frame0, image = my_image).pack(side=BOTTOM)
+Label(frame_start, image = my_image).pack(side=BOTTOM)
 
 # Enter farm's name
-frame0.pack(anchor=CENTER)
+frame_start.pack(anchor=CENTER)
 farm_name = StringVar()
-Button(frame00, text='Next', command=next2).pack(fill=BOTH, side=BOTTOM, anchor=CENTER)
-Entry(frame00, textvariable=farm_name).pack(fill=BOTH, side=BOTTOM, anchor=CENTER, pady=5)
-Label(frame00, text='\n\n\n\nEnter the name of your farm:').pack(fill=BOTH, side=BOTTOM)
+Button(frame_farm_name, text='Next', command=next2).pack(fill=BOTH, side=BOTTOM, anchor=CENTER)
+Entry(frame_farm_name, textvariable=farm_name).pack(fill=BOTH, side=BOTTOM, anchor=CENTER, pady=5)
+Label(frame_farm_name, text='\n\n\n\nEnter the name of your farm:').pack(fill=BOTH, side=BOTTOM)
 
 # Basic frame containing previous and next labels
-button2 = Button(frame2, text=('Previous'), command=pre,padx=10)
+button2 = Button(frame_previous_next, text=('Previous'), command=pre, padx=10)
 button2.grid(row=0, column = 0, padx=10, sticky=W)
-shitlabel = Label(frame2, text='                                   ').grid(row=0, column=1)
-button1 = Button(frame2, text=('  Next  '), command=next1, padx=10)
+shitlabel = Label(frame_previous_next, text='                                   ').grid(row=0, column=1)
+button1 = Button(frame_previous_next, text=('  Next  '), command=next1, padx=10)
 button1.grid(row=0, column=2, sticky=E, padx=10)
 root.bind('<Return>', enter)
 
@@ -753,7 +732,7 @@ wb = xlrd.open_workbook('Database_full.xlsx')
 v = IntVar()
 var = StringVar()
 var.set(question_location)
-helloLabel = Label(frame1, textvariable=var, justify=LEFT)
+helloLabel = Label(frame_location, textvariable=var, justify=LEFT)
 helloLabel.grid(row=0, column=0, padx=10, pady=10, sticky=W)
 ans_country = StringVar()
 sheet = wb.sheet_by_name('Energy (MJ)')
@@ -765,7 +744,7 @@ for i in range (0,sheet.ncols):
             if sheet.cell_value(0, i+2) == 'World':
                 break
 
-country = ttk.Combobox(frame3, textvariable=ans_country, state='readonly')
+country = ttk.Combobox(frame_location_extension, textvariable=ans_country, state='readonly')
 country['values'] = list_country
 country.current(0)
 country.grid(padx=10)
@@ -817,16 +796,16 @@ kgMic = IntVar()
 kgMin = IntVar()
 kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
 
-Label(frame5, text='Crop [-]').grid(row=0, column=0, padx=5, sticky=W)
-Label(frame5, text='Area [m2]').grid(row=0, column=1, padx=5, sticky=W)
-Label(frame5, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
+Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=5, sticky=W)
+Label(frame_crop_species, text='Area [m2]').grid(row=0, column=1, padx=5, sticky=W)
+Label(frame_crop_species, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
 for i in range(0, len(list_crop_species)):
-    Checkbutton(frame5, text=list_crop_species[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W, padx=5)
-    EntSur = Entry(frame5, textvariable=surVeg[i])
+    Checkbutton(frame_crop_species, text=list_crop_species[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W, padx=5)
+    EntSur = Entry(frame_crop_species, textvariable=surVeg[i])
     EntSur.grid(row=i + 1, column=1, sticky=W, padx=5)
-    Entkg = Entry(frame5, textvariable=kgVeg[i])
+    Entkg = Entry(frame_crop_species, textvariable=kgVeg[i])
     Entkg.grid(row=i + 1, column=2, sticky=W, padx=5)
     EntSur.bind('<FocusOut>', cal2)
     Entkg.bind('<FocusOut>', cal2)
@@ -836,45 +815,45 @@ for i in range(0, len(list_crop_species)):
 # Here the fields for question 3 (buying electricity) are created
 ans_buy_renew = IntVar()
 ans_buy_nonrenew = IntVar()
-greenlabel = Label(frame8, text='Renewable').grid(row=1, column=0, padx=20, sticky=W)
-greenentry = Entry(frame8, width=10, textvariable=ans_buy_renew).grid(row=1, column=1)
-greylabel = Label(frame8, text='Non-renewable').grid(row=2, column=0, padx=20, sticky=W)
-greyentry = Entry(frame8, width=10, textvariable=ans_buy_nonrenew).grid(row=2, column=1)
+greenlabel = Label(frame_buy_energy, text='Renewable').grid(row=1, column=0, padx=20, sticky=W)
+greenentry = Entry(frame_buy_energy, width=10, textvariable=ans_buy_renew).grid(row=1, column=1)
+greylabel = Label(frame_buy_energy, text='Non-renewable').grid(row=2, column=0, padx=20, sticky=W)
+greyentry = Entry(frame_buy_energy, width=10, textvariable=ans_buy_nonrenew).grid(row=2, column=1)
 
 # Here the fields for question 4 (creation of renewable energy) are created
 ans_prod_solar = IntVar()
 ans_prod_biomass = IntVar()
 ans_prod_wind = IntVar()
-solarlabel = Label(frame9, text='Solar energy').grid(row=1, column=0, padx=20, sticky=W)
-solarentry = Entry(frame9, width=10, textvariable=ans_prod_solar).grid(row=1, column=1)
-biomasslabel = Label(frame9, text='Biomass').grid(row=2, column=0, padx=20, sticky=W)
-biomassentry = Entry(frame9, width=10, textvariable=ans_prod_biomass).grid(row=2, column=1)
-windlabel = Label(frame9, text='Windpower').grid(row=3, column=0, padx=20, sticky=W)
-windentry = Entry(frame9, width=10, textvariable=ans_prod_wind).grid(row=3, column=1)
+solarlabel = Label(frame_create_renewable, text='Solar energy').grid(row=1, column=0, padx=20, sticky=W)
+solarentry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_solar).grid(row=1, column=1)
+biomasslabel = Label(frame_create_renewable, text='Biomass').grid(row=2, column=0, padx=20, sticky=W)
+biomassentry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_biomass).grid(row=2, column=1)
+windlabel = Label(frame_create_renewable, text='Windpower').grid(row=3, column=0, padx=20, sticky=W)
+windentry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_wind).grid(row=3, column=1)
 
 # Here the fields for Q5 (how electricity is used) are created
 ans_sel_renew = IntVar()
 ans_sel_non_renew = IntVar()
 ans_check_sell_energy = IntVar()
-Label(frame10, text='Selling renewable').grid(row=0, column=0, sticky=W, padx=5)
-Entry(frame10, width=10, textvariable=ans_sel_renew).grid(row=0, column=1)
-Label(frame10, text='Selling non-renewable').grid(row=1, column=0, sticky=W, padx=5)
-Entry(frame10, width=10, textvariable=ans_sel_non_renew).grid(row=1, column=1)
-Checkbutton(frame10, text='I don\'t know', variable=ans_check_sell_energy).grid(row=3, column=0, sticky=W, padx=5)
+Label(frame_sell_renewable, text='Selling renewable').grid(row=0, column=0, sticky=W, padx=5)
+Entry(frame_sell_renewable, width=10, textvariable=ans_sel_renew).grid(row=0, column=1)
+Label(frame_sell_renewable, text='Selling non-renewable').grid(row=1, column=0, sticky=W, padx=5)
+Entry(frame_sell_renewable, width=10, textvariable=ans_sel_non_renew).grid(row=1, column=1)
+Checkbutton(frame_sell_renewable, text='I don\'t know', variable=ans_check_sell_energy).grid(row=3, column=0, sticky=W, padx=5)
 
 # Here the fields for Q6 (fossil fuel use) are created
 ans_petrol_use = IntVar()
 ans_diesel_use = IntVar()
 ans_natural_gas_use = IntVar()
 ans_oil_use = IntVar()
-petroll = Label(frame11, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky=W)
-petroly = Entry(frame11, width=5, textvariable=ans_petrol_use).grid(row=0, column=1)
-diesell = Label(frame11, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
-diesely = Entry(frame11, width=5, textvariable=ans_diesel_use).grid(row=1, column=1)
-Ngasl = Label(frame11, text='Natural gas (m3)').grid(row=0, column=2, padx=10, sticky=W)
-Ngasy = Entry(frame11, width=5, textvariable=ans_natural_gas_use).grid(row=0, column=3)
-oill = Label(frame11, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
-oily = Entry(frame11, width=5, textvariable=ans_oil_use).grid(row=1, column=3)
+petroll = Label(frame_fuel_use, text='Petrol (L)').grid(row=0, column=0, padx=5, sticky=W)
+petroly = Entry(frame_fuel_use, width=5, textvariable=ans_petrol_use).grid(row=0, column=1)
+diesell = Label(frame_fuel_use, text='Diesel (L)').grid(row=1, column=0, padx=5, sticky=W)
+diesely = Entry(frame_fuel_use, width=5, textvariable=ans_diesel_use).grid(row=1, column=1)
+Ngasl = Label(frame_fuel_use, text='Natural gas (m3)').grid(row=0, column=2, padx=10, sticky=W)
+Ngasy = Entry(frame_fuel_use, width=5, textvariable=ans_natural_gas_use).grid(row=0, column=3)
+oill = Label(frame_fuel_use, text='Oil (L)').grid(row=1, column=2, padx=10, sticky=W)
+oily = Entry(frame_fuel_use, width=5, textvariable=ans_oil_use).grid(row=1, column=3)
 
 
 # Here the field for fertilizer use are created (Q7)
@@ -889,27 +868,27 @@ ans_NPK_151515_use = IntVar()
 ans_phosphoric_acid_use = IntVar()
 ans_mono_ammonium_phosphate_use = IntVar()
 ans_dont_know_fertilizer = IntVar()
-Label(frame14, text='Ammoniumnitrate').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_ammonium_nitrate_use).grid(row=1, column=1)
-Label(frame14, text='Calciumammoniumnitrate').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_calcium_ammonium_nitrate_use).grid(row=2, column=1)
-Label(frame14, text='Ammoniumsulphate').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_ammonium_sulphate_use).grid(row=3, column=1)
-Label(frame14, text='Triplesuperphosphate').grid(row=4, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_triple_super_phosphate_use).grid(row=4, column=1)
-Label(frame14, text='Single super phosphate').grid(row=5, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_single_super_phosphate_use).grid(row=5, column=1)
-Label(frame14, text='Ammonia').grid(row=6, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_ammonia_use).grid(row=6, column=1)
-Label(frame14, text='Limestone').grid(row=7, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_limestone_use).grid(row=7, column=1)
-Label(frame14, text='NPK 15-15-15').grid(row=8, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_NPK_151515_use).grid(row=8, column=1)
-Label(frame14, text='Phosphoric acid').grid(row=9, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_phosphoric_acid_use).grid(row=9, column=1)
-Label(frame14, text='Mono-ammonium phosphate').grid(row=10, column=0, padx=5, sticky=W)
-Entry(frame14, width=10, textvariable=ans_mono_ammonium_phosphate_use).grid(row=10, column=1)
-Checkbutton(frame14, text='I don\'t know', variable=ans_dont_know_fertilizer).grid(row = 11, column = 0, padx=5, sticky=W)
+Label(frame_fertilizer_use, text='Ammoniumnitrate').grid(row=1, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_ammonium_nitrate_use).grid(row=1, column=1)
+Label(frame_fertilizer_use, text='Calciumammoniumnitrate').grid(row=2, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_calcium_ammonium_nitrate_use).grid(row=2, column=1)
+Label(frame_fertilizer_use, text='Ammoniumsulphate').grid(row=3, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_ammonium_sulphate_use).grid(row=3, column=1)
+Label(frame_fertilizer_use, text='Triplesuperphosphate').grid(row=4, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_triple_super_phosphate_use).grid(row=4, column=1)
+Label(frame_fertilizer_use, text='Single super phosphate').grid(row=5, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_single_super_phosphate_use).grid(row=5, column=1)
+Label(frame_fertilizer_use, text='Ammonia').grid(row=6, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_ammonia_use).grid(row=6, column=1)
+Label(frame_fertilizer_use, text='Limestone').grid(row=7, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_limestone_use).grid(row=7, column=1)
+Label(frame_fertilizer_use, text='NPK 15-15-15').grid(row=8, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_NPK_151515_use).grid(row=8, column=1)
+Label(frame_fertilizer_use, text='Phosphoric acid').grid(row=9, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_phosphoric_acid_use).grid(row=9, column=1)
+Label(frame_fertilizer_use, text='Mono-ammonium phosphate').grid(row=10, column=0, padx=5, sticky=W)
+Entry(frame_fertilizer_use, width=10, textvariable=ans_mono_ammonium_phosphate_use).grid(row=10, column=1)
+Checkbutton(frame_fertilizer_use, text='I don\'t know', variable=ans_dont_know_fertilizer).grid(row = 11, column = 0, padx=5, sticky=W)
 
 # Here the fields for substrate use (Q8) are created
 ans_rockwool_use = IntVar()
@@ -919,26 +898,26 @@ ans_hempfiber_use = IntVar()
 ans_peat_use = IntVar()
 ans_peatmoss_use = IntVar()
 ans_no_substrate_use = IntVar()
-Label(frame16, text='Rockwool').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_rockwool_use).grid(row=1, column=1)
-Label(frame16, text='Perlite').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_perlite_use).grid(row=2, column=1)
-Label(frame16, text='Cocofiber').grid(row=1, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_cocofiber_use).grid(row=1, column=3)
-Label(frame16, text='Hemp fiber').grid(row=2, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_hempfiber_use).grid(row=2, column=3)
-Label(frame16, text='Peat').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_peat_use).grid(row=3, column=1)
-Label(frame16, text='Peat Moss').grid(row=3, column=2, padx=5, sticky=W)
-Entry(frame16, width=10, textvariable=ans_peatmoss_use).grid(row=3, column=3)
-Checkbutton(frame160, text='None of these substrates are used', variable=ans_no_substrate_use).grid(padx=5)
+Label(frame_substrate_use, text='Rockwool').grid(row=1, column=0, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_rockwool_use).grid(row=1, column=1)
+Label(frame_substrate_use, text='Perlite').grid(row=2, column=0, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_perlite_use).grid(row=2, column=1)
+Label(frame_substrate_use, text='Cocofiber').grid(row=1, column=2, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_cocofiber_use).grid(row=1, column=3)
+Label(frame_substrate_use, text='Hemp fiber').grid(row=2, column=2, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_hempfiber_use).grid(row=2, column=3)
+Label(frame_substrate_use, text='Peat').grid(row=3, column=0, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_peat_use).grid(row=3, column=1)
+Label(frame_substrate_use, text='Peat Moss').grid(row=3, column=2, padx=5, sticky=W)
+Entry(frame_substrate_use, width=10, textvariable=ans_peatmoss_use).grid(row=3, column=3)
+Checkbutton(frame_substrate_use_extension, text='None of these substrates are used', variable=ans_no_substrate_use).grid(padx=5)
 
 # Here the fields for water use (Q9) are created
 ans_tap_water_use = IntVar()
 ans_dont_know_tap_water_use = IntVar()
-Label(frame17, text='Tap water').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame17, width=10, textvariable=ans_tap_water_use).grid(row=1, column=1)
-Checkbutton(frame170, text='I don\'t know', variable=ans_dont_know_tap_water_use).grid(sticky=W, padx=5)
+Label(frame_water_use, text='Tap water').grid(row=1, column=0, padx=5, sticky=W)
+Entry(frame_water_use, width=10, textvariable=ans_tap_water_use).grid(row=1, column=1)
+Checkbutton(frame_water_use_extension, text='I don\'t know', variable=ans_dont_know_tap_water_use).grid(sticky=W, padx=5)
 
 # Here the fields for pesticide use (Q10) are created
 ans_atrazine_use = IntVar()
@@ -947,32 +926,32 @@ ans_metolachlor_use = IntVar()
 ans_herbicide_use = IntVar()
 ans_insecticide_use = IntVar()
 ans_dont_know_pesticide_use = IntVar()
-Label(frame18, text='Atrazine').grid(row=1, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans_atrazine_use).grid(row=1, column=1)
-Label(frame18, text='Glyphosphate').grid(row=2, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans_glyphosphate_use).grid(row=2, column=1)
-Label(frame18, text='Metolachlor').grid(row=3, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans_metolachlor_use).grid(row=3, column=1)
-Label(frame18, text='Herbicide').grid(row=4, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans_herbicide_use).grid(row=4, column=1)
-Label(frame18, text='Insectiside').grid(row=5, column=0, padx=5, sticky=W)
-Entry(frame18, width=10, textvariable=ans_insecticide_use).grid(row=5, column=1)
-Checkbutton(frame180, text='I don\'t know', variable=ans_dont_know_pesticide_use).grid(sticky=W, padx=5)
+Label(frame_pesticide_use, text='Atrazine').grid(row=1, column=0, padx=5, sticky=W)
+Entry(frame_pesticide_use, width=10, textvariable=ans_atrazine_use).grid(row=1, column=1)
+Label(frame_pesticide_use, text='Glyphosphate').grid(row=2, column=0, padx=5, sticky=W)
+Entry(frame_pesticide_use, width=10, textvariable=ans_glyphosphate_use).grid(row=2, column=1)
+Label(frame_pesticide_use, text='Metolachlor').grid(row=3, column=0, padx=5, sticky=W)
+Entry(frame_pesticide_use, width=10, textvariable=ans_metolachlor_use).grid(row=3, column=1)
+Label(frame_pesticide_use, text='Herbicide').grid(row=4, column=0, padx=5, sticky=W)
+Entry(frame_pesticide_use, width=10, textvariable=ans_herbicide_use).grid(row=4, column=1)
+Label(frame_pesticide_use, text='Insectiside').grid(row=5, column=0, padx=5, sticky=W)
+Entry(frame_pesticide_use, width=10, textvariable=ans_insecticide_use).grid(row=5, column=1)
+Checkbutton(frame_pesticide_use_extension, text='I don\'t know', variable=ans_dont_know_pesticide_use).grid(sticky=W, padx=5)
 
 # Here the fields for packaging (Q11) are created
 ans_packaging = IntVar()
-Radiobutton(frame19, text='Yes, it is', variable=ans_packaging, value=1).grid(sticky=W, padx=5)
-Radiobutton(frame19, text='No, it isn\'t', variable=ans_packaging, value=0).grid(sticky=W, padx=5)
+Radiobutton(frame_packaging_use, text='Yes, it is', variable=ans_packaging, value=1).grid(sticky=W, padx=5)
+Radiobutton(frame_packaging_use, text='No, it isn\'t', variable=ans_packaging, value=0).grid(sticky=W, padx=5)
 
 # Here the fields for transportation (Q13)are created
 ans_van_use = IntVar()
 ans_truck_use = IntVar()
 ans_dont_know_transport = IntVar()
-Label(frame20, text='Van').grid(row=1, column=0, padx=40, sticky=W)
-Entry(frame20, width=10, textvariable=ans_van_use).grid(row=1, column=1)
-Label(frame20, text='Truck').grid(row=2, column=0, padx=40, sticky=W)
-Entry(frame20, width=10, textvariable=ans_truck_use).grid(row=2, column=1)
-Checkbutton(frame200, text='I don\'t know', variable=ans_dont_know_transport).grid(sticky=W, padx=40)
+Label(frame_transport, text='Van').grid(row=1, column=0, padx=40, sticky=W)
+Entry(frame_transport, width=10, textvariable=ans_van_use).grid(row=1, column=1)
+Label(frame_transport, text='Truck').grid(row=2, column=0, padx=40, sticky=W)
+Entry(frame_transport, width=10, textvariable=ans_truck_use).grid(row=2, column=1)
+Checkbutton(frame_transport_extension, text='I don\'t know', variable=ans_dont_know_transport).grid(sticky=W, padx=40)
 
 # Here fields for finishing the questionnaire are created
 Button_finish = Button(frame_finish, text=('Submit!'), command=close_program, padx = 10, justify=RIGHT)
@@ -980,10 +959,15 @@ Button_finish.grid(row=4, column=0, padx=10)
 
 
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
-list_ans = [farm_name, ans_country, v, ans_buy_renew, ans_buy_nonrenew, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_sel_renew,
-            ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use, ans_natural_gas_use, ans_oil_use, ans_ammonium_nitrate_use, ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use, ans_triple_super_phosphate_use, ans_single_super_phosphate_use, ans_ammonia_use, ans_limestone_use, ans_NPK_151515_use, ans_phosphoric_acid_use, ans_mono_ammonium_phosphate_use, ans_dont_know_fertilizer, ans_rockwool_use, ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use, ans_no_substrate_use, ans_tap_water_use, ans_dont_know_tap_water_use,
-            ans_atrazine_use, ans_glyphosphate_use, ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_dont_know_pesticide_use, ans_packaging, ans_van_use,
-            ans_truck_use, ans_dont_know_transport]
+list_ans = [farm_name, ans_country, v, ans_buy_renew, ans_buy_nonrenew, ans_prod_solar, ans_prod_biomass, ans_prod_wind,
+            ans_sel_renew,ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use, ans_natural_gas_use,
+            ans_oil_use, ans_ammonium_nitrate_use, ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use,
+            ans_triple_super_phosphate_use, ans_single_super_phosphate_use, ans_ammonia_use, ans_limestone_use,
+            ans_NPK_151515_use, ans_phosphoric_acid_use, ans_mono_ammonium_phosphate_use, ans_dont_know_fertilizer,
+            ans_rockwool_use, ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use,
+            ans_no_substrate_use, ans_tap_water_use, ans_dont_know_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
+            ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_dont_know_pesticide_use, ans_packaging,
+            ans_van_use,ans_truck_use, ans_dont_know_transport]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
