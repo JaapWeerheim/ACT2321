@@ -723,21 +723,26 @@ def cal2():
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
     return dic_crops
 
-def rid_of_zeros_sur(event):
-    for i in range(0, len(ansVeg)):
-        if ansVeg[i].get() == 1 and surVeg[i].get() <= 0:
-            surVeg[i].set('')
-        if ansVeg[i].get() == 0 and surVeg[i].get() >= 0:
-            surVeg[i].set(0)
+def rid_of_zeros_sur(event, ans, sur):
+    try:
+        if sur.get() <= 0 and ans.get() == 1:
+            sur.set('')
+    except:
+        sur.set(0)
+    if ans.get() == 0:
+        sur.set(0)
     return
 
-def rid_of_zeros_kg(event):
-    for i in range(0, len(ansVeg)):
-        if ansVeg[i].get() == 1 and kgVeg[i].get() <= 0:
-            kgVeg[i].set('')
-        if ansVeg[i].get() == 0 and kgVeg[i].get() > 0:
-            kgVeg[i].set(0)
+def rid_of_zeros_kg(event, ans, kg):
+    try:
+        if kg.get() <= 0 and ans.get() == 1:
+            kg.set('')
+    except:
+        kg.set(0)
+    if ans.get() == 0:
+        kg.set(0)
     return
+
 
 def rid_of_zeros(event, answer):
     try:
@@ -889,8 +894,11 @@ for i in range(0, len(list_crop_species)):
     EntSur.grid(row=i + 1, column=1, sticky=W, padx=5)
     Entkg = Entry(frame_crop_species, textvariable=kgVeg[i])
     Entkg.grid(row=i + 1, column=2, sticky=W, padx=5)
-    EntSur.bind("<Button-1>", rid_of_zeros_sur)
-    Entkg.bind("<Button-1>", rid_of_zeros_kg)
+    EntSur.bind("<FocusIn>", lambda event,y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event,y, z))
+    EntSur.bind("<FocusOut>", lambda event,y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event,y, z))
+    Entkg.bind("<FocusIn>", lambda event,y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event,y, z))
+    Entkg.bind("<FocusOut>", lambda event,y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event,y, z))
+
 
 # Here the fields for question 3 (buying electricity) are created
 ans_buy_renew = IntVar()
