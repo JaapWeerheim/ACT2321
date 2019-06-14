@@ -542,7 +542,6 @@ def pre():
 # def next1() enables to go to the next question.
 # i.e. forgetting the current frames and introducing new frames
 
-
 def next1():
     global count
     for i in range(len(list_ans)):  # if there is no value in Entry, set it back to 0
