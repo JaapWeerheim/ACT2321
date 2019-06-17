@@ -26,7 +26,7 @@ frame_substrate_use = Frame(height=90, width=400)
 frame_water_use = Frame(height=50, width=400)
 frame_pesticide_use = Frame(height=140, width=400)
 frame_packaging_use = Frame(height=70, width=400)
-frame_transport = Frame(height=90, width=400)
+frame_transport = Frame(height=120, width=400)
 frame_finish = Frame(height=120, width=400)
 
 all_frames = [frame_start, frame_farm_name, frame_location, frame_previous_next, frame_location_extension,
@@ -74,42 +74,42 @@ def worksheetoutput(dictionary_name):
     # If choose 'I don't know’ option, set the value back to zero
     if ans_check_buy_energy.get() == 1:
         ans_buy_renew.set(0); ans_buy_nonrenew.set(0)
-        non_count = ('bought electricity,')
+        non_count = ('bought electricity, ')
         nr_dont_know += 1
     if ans_check_create_renewable.get() == 1:
         ans_prod_biomass.set(0); ans_prod_solar.set(0); ans_prod_wind.set(0);
-        non_count = (non_count + 'renewable energy production,')
+        non_count = (non_count + 'renewable energy production, ')
         nr_dont_know += 1
     if ans_check_sell_energy.get() == 1:
         ans_sel_renew.set(0); ans_sel_non_renew.set(0)
-        non_count = (non_count + 'sold electricity,')
+        non_count = (non_count + 'sold electricity, ')
         nr_dont_know += 1
     if ans_check_fossil_fuel_use.get() == 1:
         ans_oil_use.set(0); ans_natural_gas_use.set(0); ans_diesel_use.set(0); ans_petrol_use.set(0)
-        non_count = (non_count + 'fossil fuel use,')
+        non_count = (non_count + 'fossil fuel use, ')
         nr_dont_know += 1
     if ans_check_fertilizer_use.get() == 1:
         ans_ammonium_nitrate_use.set(0); ans_calcium_ammonium_nitrate_use.set(0); ans_ammonium_sulphate_use.set(0);
         ans_triple_super_phosphate_use.set(0); ans_single_super_phosphate_use.set(0); ans_ammonia_use.set(0);
         ans_limestone_use.set(0); ans_NPK_151515_use.set(0); ans_phosphoric_acid_use.set(0); ans_mono_ammonium_phosphate_use.set(0)
-        non_count = (non_count + 'NPK chemicals,')
+        non_count = (non_count + 'NPK chemicals, ')
         nr_dont_know += 1
     if ans_check_substrate_use.get() == 1:
         ans_rockwool_use.set(0); ans_perlite_use.set(0); ans_cocofiber_use.set(0); ans_hempfiber_use.set(0);
         ans_peat_use.set(0); ans_peatmoss_use.set(0)
-        non_count = (non_count + 'substrate,')
+        non_count = (non_count + 'substrate, ')
         nr_dont_know += 1
     if ans_check_tap_water_use.get() == 1:
         ans_tap_water_use.set(0)
-        non_count = (non_count + 'water,')
+        non_count = (non_count + 'water, ')
         nr_dont_know += 1
     if ans_check_pesticide_use.get() == 1:
         ans_atrazine_use.set(0); ans_glyphosphate_use.set(0); ans_metolachlor_use.set(0); ans_herbicide_use.set(0);
         ans_insecticide_use.set(0)
-        non_count = (non_count + 'pesticides,')
+        non_count = (non_count + 'pesticides, ')
         nr_dont_know += 1
     if ans_check_transport.get() == 1:
-        ans_van_use.set(0); ans_truck_use.set(0);
+        ans_van_use.set(0); ans_truck_use.set(0); ans_percentage_truck_use.set(0); ans_percentage_van_use.set(0);
         non_count = (non_count + 'transport')
         nr_dont_know += 1
 
@@ -186,11 +186,15 @@ def worksheetoutput(dictionary_name):
                 (dicp['P2'] * ans_atrazine_use.get()) + (dicp['P4'] * ans_glyphosphate_use.get()) + +(dicp['P6'] * ans_metolachlor_use.get()) + +(dicp['P8'] * ans_herbicide_use.get()) + (
                 dicp['P10'] * ans_insecticide_use.get()))
 
+        # Scaling the percentages of transportation means
+        truck_use_percent = ans_percentage_truck_use.get()/(ans_percentage_truck_use.get() + ans_percentage_van_use.get())
+        van_use_percent = ans_percentage_van_use.get()/(ans_van_use.get() + ans_percentage_truck_use.get())
+
         # Calculation for total Co2 of transport
-        Tco2 = frac_kg * ((dicp['T3'] * ans_van_use.get()) + (dicp['T1'] * ans_truck_use.get()))
+        Tco2 = kg_prod * ((dicp['T3'] * ans_van_use.get() * van_use_percent * van_owner()) + (dicp['T1'] * ans_truck_use.get() * truck_use_percent * truck_owner()))
 
         # Calculation for total energy of transport
-        Tenergy = frac_kg * ((dicp['T4'] * ans_van_use.get()) + (dicp['T2'] * ans_truck_use.get()))
+        Tenergy = kg_prod * ((dicp['T4'] * ans_van_use.get() * van_use_percent * van_owner()) + (dicp['T2'] * ans_truck_use.get() * truck_use_percent * truck_owner()))
 
         # Calculation for the total Co2 of packaging
         Pacco2 = kg_prod * dicp['Pac1']
@@ -237,8 +241,6 @@ def worksheetoutput(dictionary_name):
         for x in range(len(labels_total)):
             ws.write(1 + x, 6, labels_total[x])
             ws.write(1 + x, 9, totals_output_round[x])
-
-
 
         if ans_check_buy_energy.get() == 1 or ans_check_create_renewable.get() == 1 or ans_check_sell_energy.get() == 1 \
                 or ans_check_fossil_fuel_use.get() == 1 or ans_check_fertilizer_use.get() == 1 or \
@@ -315,47 +317,6 @@ def worksheetoutput(dictionary_name):
         chart_col.set_title({'name': 'Total energy used from different sources'})
         chart_col.set_style(2)
         ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
-
-        # chart_col = wb.add_chart({'type': 'pie'})
-        # chart_col.add_series({
-        #     'name': 'Fossil fuels used',
-        #     'categories': [cropname, 43, 1, 53, 1],
-        #     'values': [cropname, 43, 2, 53, 2],
-        #     'points': [{'fill': {'color': 'blue'}},
-        #                {'fill': {'color': 'yellow'}},
-        #                {'fill': {'color': 'red'}},
-        #                {'fill': {'color': 'gray'}},
-        #                {'fill': {'color': 'black'}},
-        #                {'fill': {'color': 'purple'}},
-        #                {'fill': {'color': 'pink'}},
-        #                {'fill': {'color': 'cyan'}},
-        #                {'fill': {'color': 'magenta'}},
-        #                {'fill': {'color': 'brown'}},
-        #                ],
-        # })
-        # chart_col.set_title({'name': 'Fossil fuels used for different aspects'})
-        # chart_col.set_style(5)
-        # ws.insert_chart('A43', chart_col, {'x_offset': 25, 'y_offset': 10})
-
-        # chart_col = wb.add_chart({'type': 'pie'})
-        # chart_col.add_series({
-        #     'name': 'Electricity used',
-        #     'categories': [cropname, 43, 9, 50, 9],
-        #     'values': [cropname, 43, 10, 50, 10],
-        #     'points': [{'fill': {'color': 'blue'}},
-        #                {'fill': {'color': 'yellow'}},
-        #                {'fill': {'color': 'red'}},
-        #                {'fill': {'color': 'gray'}},
-        #                {'fill': {'color': 'black'}},
-        #                {'fill': {'color': 'purple'}},
-        #                {'fill': {'color': 'pink'}},
-        #                {'fill': {'color': 'cyan'}},
-        #
-        #                ],
-        # })
-        # chart_col.set_title({'name': 'Electricity used for different aspects'})
-        # chart_col.set_style(4)
-        # ws.insert_chart('I43', chart_col, {'x_offset': 25, 'y_offset': 10})
 
     # Write the raw data from the questionnaire to the Excel sheet
     ws = wb.add_worksheet("Raw data")
@@ -461,6 +422,12 @@ def worksheetoutput(dictionary_name):
     ws.write(71,1, ans_van_use.get())
     ws.write(72,0, "Truck")
     ws.write(72,1, ans_truck_use.get())
+    ws.write(70,2, "Percentage of products [%]")
+    ws.write(71,2, ans_percentage_van_use.get())
+    ws.write(72,2, ans_percentage_truck_use.get())
+    ws.write(70,3, "Owner")
+    ws.write(71,3, ans_van_own.get())
+    ws.write(72,3, ans_truck_own.get())
 
     # Close the workbook again
     wb.close()
@@ -535,6 +502,8 @@ def pre():
     if count == 13:
         var.set(question_finish)
         frame_finish.grid(sticky=W)
+    if count > 12:
+        count = 13
     return
 
 
@@ -598,6 +567,8 @@ def next1():
         var.set(question_finish)
         frame_transport.grid_forget()
         frame_finish.grid(sticky=W)
+    if count > 12:
+        count = 13
     return
 
 
@@ -637,6 +608,7 @@ def next2():
     frame_location_extension.grid()
     count += 1
     # The code below is necessary in the last frame to instruct the user where he can find the results of the analysis.
+    # Can only be created when the farm name is known.
     print_finish = 'When you click on the submit button, the questionnaire will close.'
     print_finish_2 = 'The results of the analysis can then be found in: '
     print_farm_name = farm_name.get() + '.xlsx.'
@@ -658,9 +630,9 @@ def file_open():
         num = -1
         for line in lines:
             num += 1
-            if num < 2:
+            if num < 4:
                 list_ans[num].set(str(line.strip('\n')))
-            if num >= 2:
+            if num >= 4:
                 list_ans[num].set(int(line.strip('\n')))
     except:
         pass
@@ -742,6 +714,23 @@ def rid_of_zeros(event, answer):
         answer.set(0)
     return
 
+def van_owner():
+    int_van = IntVar()
+    if ans_van_own.get() == "Self":
+        int_van = 2
+    else:
+        int_van = 1
+    return int_van
+
+def truck_owner():
+    int_truck = IntVar()
+    if ans_truck_own.get() == "Self":
+        int_truck = 2
+    else:
+        int_truck = 1
+    return int_truck
+
+
 # ^^ End of functions for the program. Below, the GUI of the program is further developed.
 # ------------------------------------------
 # Here the start button at the beginning is created
@@ -771,7 +760,6 @@ button1 = Button(frame_previous_next, text=('  Next  '), command=next1, padx=10)
 button1.grid(row=0, column=2, sticky=E, padx=10)
 root.bind('<Return>', enter)
 
-
 # Define the 'file' Menu
 root.file_opt = options = {}
 options['defaultextension'] = '.txt'
@@ -800,7 +788,9 @@ question_substrate_use = '8. Do you use any of the following substrates (kg)\n a
 question_water_use = '9. How much water (L) do you buy per year?'
 question_pesticide_use = '10. How much pesticides (kg) do you buy per year? '
 question_packaging_use = '11. Is the product sold to the customer packaged? '
-question_transport = '12. How far (km) does your product travel to the distribution center \non average?'
+question_transport = '12. How far does your product travel to the distribution center?\n'\
+                     'How are the products divided between the several transportation means?\n'\
+                     'Who is the owner of the transportation means?'
 question_finish = '13. This is the end of the questionnaire. \nPlease make sure that all questions are answered before you submit.'
 
 # Question 1: Where is your farm located?
@@ -1127,10 +1117,14 @@ ans_packaging = IntVar()
 Radiobutton(frame_packaging_use, text='Yes, it is', variable=ans_packaging, value=1).grid(sticky=W, padx=10)
 Radiobutton(frame_packaging_use, text='No, it isn\'t', variable=ans_packaging, value=0).grid(sticky=W, padx=10)
 
-# Here the fields for transportation (Q13)are created
+# Here the fields for transportation (Q12)are created
 ans_van_use = IntVar()
 ans_truck_use = IntVar()
+ans_percentage_van_use = IntVar()
+ans_percentage_truck_use = IntVar()
 ans_check_transport = IntVar()
+ans_van_own = StringVar()
+ans_truck_own = StringVar()
 van_label = Label(frame_transport, text='Van').grid(row=1, column=0, padx=10, sticky=W)
 van_entry = Entry(frame_transport, width=10, textvariable=ans_van_use)
 van_entry.grid(row=1, column=1)
@@ -1141,15 +1135,34 @@ tru_entry = Entry(frame_transport, width=10, textvariable=ans_truck_use)
 tru_entry.grid(row=2, column=1)
 tru_entry.bind("<FocusIn>", lambda event,z = ans_truck_use: rid_of_zeros(event,z))
 tru_entry.bind("<FocusOut>", lambda event,z = ans_truck_use: rid_of_zeros(event,z))
+distance_label = Label(frame_transport, text='Distance [km]').grid(row=0, column=1, padx=5, sticky=W)
+percent_label = Label(frame_transport, text ="Transported \nproducts [%]").grid(row=0, column=2, padx=5, sticky =W)
+van_percent_entry = Entry(frame_transport, width=10, textvariable=ans_percentage_van_use)
+van_percent_entry.grid(row=1, column=2)
+van_percent_entry.bind("<FocusIn>", lambda event,z = ans_percentage_van_use: rid_of_zeros(event,z))
+van_percent_entry.bind("<FocusOut>", lambda event,z = ans_percentage_van_use: rid_of_zeros(event,z))
+van_percent_truck = Entry(frame_transport, width=10, textvariable=ans_percentage_truck_use)
+van_percent_truck.grid(row=2, column=2)
+van_percent_truck.bind("<FocusIn>", lambda event,z = ans_percentage_truck_use: rid_of_zeros(event,z))
+van_percent_truck.bind("<FocusOut>", lambda event,z = ans_percentage_truck_use: rid_of_zeros(event,z))
 Checkbutton(frame_transport, text="I don't know", variable=ans_check_transport).grid(sticky=W, padx=10, row=3, column=0)
+own_label = Label(frame_transport, text ="Owner").grid(row=0, column=3, padx=5, sticky =W)
+list_own = ['External', 'Self']
+van_own = ttk.Combobox(frame_transport, textvariable=ans_van_own, state='readonly', width=10)
+van_own['values'] = list_own
+van_own.current(0)
+van_own.grid(padx=5, row=1, column=3, pady=5)
+truck_own = ttk.Combobox(frame_transport, textvariable=ans_truck_own, state='readonly', width=10)
+truck_own['values'] = list_own
+truck_own.current(0)
+truck_own.grid(padx=5, row=2, column=3)
 
 # Here fields for finishing the questionnaire are created
 Button_finish = Button(frame_finish, text=('Submit!'), command=close_program, padx = 10, justify=RIGHT)
 Button_finish.grid(row=4, column=0, padx=10)
 
-
 # At the end, a list containing all the variables is created. It is needed to be able to load previously filled in results
-list_ans = [farm_name, ans_country, ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin,
+list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin,
             surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin, kgLet, kgEnd, kgSpi, kgBea,
             kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, ans_buy_renew, ans_buy_nonrenew, ans_check_buy_energy,ans_prod_solar,
             ans_prod_biomass, ans_prod_wind, ans_check_create_renewable,ans_sel_renew, ans_sel_non_renew, ans_check_sell_energy,
@@ -1160,7 +1173,7 @@ list_ans = [farm_name, ans_country, ansLet, ansEnd, ansSpi, ansBea, ansPar, ansK
             ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use, ans_check_substrate_use,
             ans_tap_water_use, ans_check_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
             ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_check_pesticide_use, ans_packaging,
-            ans_van_use, ans_truck_use, ans_check_transport]
+            ans_van_use, ans_truck_use, ans_percentage_van_use, ans_percentage_truck_use, ans_check_transport]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
