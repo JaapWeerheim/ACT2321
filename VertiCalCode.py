@@ -102,7 +102,6 @@ def worksheetoutput(dictionary_name):
         nr_dont_know += 1
     if ans_check_transport.get() == 1:
         ans_van_use.set(0); ans_truck_use.set(0);
-        #ans_percentage_truck_use.set(0); ans_percentage_van_use.set(0);
         non_count = (non_count + 'transport')
         nr_dont_know += 1
 
@@ -571,6 +570,8 @@ def pre():
         var.set(question_location)
         frame_crop_species.grid_forget()
         frame_location_extension.grid(sticky=W)
+        keep_prev_empty.grid(row=0, column=0, padx=10)
+        button2.grid_remove()
     if count == 2:
         var.set(question_crop_types)
         frame_buy_energy.grid_forget()
@@ -615,11 +616,7 @@ def pre():
         var.set(question_transport)
         frame_finish.grid_forget()
         frame_transport.grid(sticky=W)
-    if count == 13:
-        var.set(question_finish)
-        frame_finish.grid(sticky=W)
-    if count > 12:
-        count = 13
+        button1.grid(row=0, column=2, sticky=E, padx=10)
     return
 
 
@@ -639,6 +636,8 @@ def next1():
         var.set(question_crop_types)
         frame_location_extension.grid_forget()
         frame_crop_species.grid(sticky=W)
+        keep_prev_empty.grid_remove()
+        button2.grid(row=0, column=0, padx=10, sticky=W)
     if count == 3:
         var.set(question_buy_renewable)
         frame_crop_species.grid_forget()
@@ -683,8 +682,7 @@ def next1():
         var.set(question_finish)
         frame_transport.grid_forget()
         frame_finish.grid(sticky=W)
-    if count > 12:
-        count = 13
+        button1.grid_remove()
     return
 
 
@@ -870,8 +868,9 @@ Label(frame_farm_name, text='\n\n\n\nEnter the name of your farm:').pack(fill=BO
 
 # Basic frame containing previous and next labels
 button2 = Button(frame_previous_next, text=('Previous'), command=pre, padx=10)
-button2.grid(row=0, column = 0, padx=10, sticky=W)
-shitlabel = Label(frame_previous_next, text='                                   ').grid(row=0, column=1)
+keep_prev_empty = Label(frame_previous_next, text = '                       ')
+keep_prev_empty.grid(row=0, column=0, padx=10)
+space_between_prev_next = Label(frame_previous_next, text='                                   ').grid(row=0, column=1)
 button1 = Button(frame_previous_next, text=('  Next  '), command=next1, padx=10)
 button1.grid(row=0, column=2, sticky=E, padx=10)
 root.bind('<Return>', enter)
