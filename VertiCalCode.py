@@ -570,7 +570,7 @@ def pre():
         var.set(question_location)
         frame_crop_species.grid_forget()
         frame_location_extension.grid(sticky=W)
-        keep_prev_empty.grid(row=0, column=0, padx=10)
+        keep_prev_empty.grid(row=0, column=0, padx=10, pady=0)
         button2.grid_remove()
     if count == 2:
         var.set(question_crop_types)
@@ -892,7 +892,7 @@ menu.add_cascade(label='File', menu=filemenu)
 root.config(menu=menu)
 
 #Here all questions for the questionnaire are defined
-question_location = '1. In which country is your farm located?'
+question_location = '1. In which country is your farm located? '
 question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kilograms of each crop do you sell per year?'
 question_buy_renewable = '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?'
 question_produce_renewable = '4. Do you produce your own renewable energy, \n and how much (kWh) do you produce per year?'
