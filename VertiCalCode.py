@@ -118,13 +118,31 @@ def worksheetoutput(dictionary_name):
 
     sheet = workbook.sheet_by_name('Crop parameters')
     Total_Eoc = 0
+    total_growth_cycles = 0
     for keys, values in dictionary_name.items():
         for i in range(1, len(list_crop_species) + 1):
             if keys == sheet.cell_value(i, 0):
-                dictionary_name[keys] += [sheet.cell_value(i, 1)]
-                Total_Eoc += sheet.cell_value(i, 1)
+                # Energy content
+                dictionary_name[keys] += [sheet.cell_value(i, 4)]
+                Total_Eoc += sheet.cell_value(i, 4)
+                # Growth period
+                dictionary_name[keys] += [365/sheet.cell_value(i, 5)]
+                total_growth_cycles += (365/sheet.cell_value(i,5))
     Average_Eoc = Total_Eoc / (len(dictionary_name) - 1)
+    average_growth_period = total_growth_cycles / (len(dictionary_name)-1)
     dictionary_name[list(dictionary_name.keys())[0]] += [Average_Eoc]
+    dictionary_name[list(dictionary_name.keys())[0]] += [average_growth_period]
+
+    # Calculation to find out the total combination of fraction surface and fraction growth period, needed for the substrate
+    # sum_frac = 0
+    # for keys, values in dictionary_name.items():
+    #     #if keys != 'Total':
+    #     frac_surf = values[0]
+    #     growth_cycles = values[4]
+    #     # Substrate calculations
+    #     frac_growth = growth_cycles / total_growth_cycles
+    #     frac_surf_growth = frac_growth * frac_surf
+    #     sum_frac += frac_surf_growth
 
     for keys, values in dictionary_name.items():
         cropname = keys
@@ -160,6 +178,12 @@ def worksheetoutput(dictionary_name):
                 dicp['Fe10'] * ans_single_super_phosphate_use.get()) + (dicp['Fe12'] * ans_ammonia_use.get()) + (dicp['Fe14'] * ans_limestone_use.get()) + (
                         dicp['Fe16'] * ans_NPK_151515_use.get()) + (dicp['Fe22'] * ans_phosphoric_acid_use.get()) + (dicp['Fe24'] * ans_mono_ammonium_phosphate_use.get())))
 
+
+        # Calculation in which growth period and fraction of surface are combined into one fraction for substrate calculation
+        # frac_growth = growth_cycles / total_growth_cycles
+        # frac_surf_growth = frac_growth * frac_surf
+        # frac_substrate = frac_surf_growth/sum_frac
+        # print(frac_substrate)
         # Calculation for total Co2 of substrates
         Sco2 = frac_surf * (
                 (dicp['S1'] * ans_rockwool_use.get()) + (dicp['S3'] * ans_perlite_use.get()) + (dicp['S5'] * ans_cocofiber_use.get()) + (dicp['S7'] * ans_hempfiber_use.get()) + (
@@ -216,107 +240,193 @@ def worksheetoutput(dictionary_name):
 
         # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(cropname)
-        ws.write(0, 2, 'Total CO2 emitted(Kg)')
-        ws.write(0, 4, 'Total energy used(MJ)')
-
+        cell_format_bold = wb.add_format({'bold': True,
+                                          'align': 'right'})
+        cell_format_header = wb.add_format({'bold': True,
+                                            'font_size': 16,
+                                            'align': 'center',
+                                            'fg_color': '#cdcdcd'})
+        ws.merge_range('B1:C1', 'CO\u2082 emitted', cell_format_header)
+        ws.write(1, 1, 'Total [kg]', cell_format_bold)
+        ws.write(1, 2, 'Per kg crop [kg/kg]', cell_format_bold)
+        ws.merge_range('D1:E1', 'Energy used', cell_format_header)
+        ws.write(1, 3, 'Total [MJ]', cell_format_bold)
+        ws.write(1, 4, 'Per kg crop [kg/kg]', cell_format_bold)
+        ws.set_column(2, 1, len('Per kg crop [kg/kg]'))
+        ws.set_column(3, 2, len('Per kg crop [kg/kg]'))
+        ws.set_column(4, 3, len('Per kg crop [kg/kg]'))
+        ws.set_column(5, 4, len('Per kg crop [kg/kg]'))
         # also labels in Dutch/other languages?
         labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
                          'Transport', 'Package']
         Co2_emitted = [Eco2, Fco2, FERco2, Sco2, Wco2, Pco2, Tco2, Pacco2]
-        Co2_emitted_round = [round(elem, 2) for elem in Co2_emitted]
+        Co2_emitted_round = [round(elem, 0) for elem in Co2_emitted]
         energy_used = [Eenergy, Fenergy, FERenergy, Senergy, Wenergy, Penergy, Tenergy, Pacenergy]
-        energy_used_round = [round(elem, 2) for elem in energy_used]
-
+        energy_used_round = [round(elem, 0) for elem in energy_used]
+        Co2_crop = []
+        energy_crop = []
+        sum_co2_per_crop = 0
+        sum_energy_per_crop = 0
+        for i in range(len(Co2_emitted)):
+            Co2_crop += [Co2_emitted[i] / dic_crops[cropname][2]]
+            energy_crop += [energy_used[i] / dic_crops[cropname][2]]
+            Co2_crop_round = [round(elem, 3) for elem in Co2_crop]
+            energy_crop_round = [round(elem, 3) for elem in energy_crop]
+            sum_co2_per_crop += Co2_emitted[i] / dic_crops[cropname][2]
+            sum_energy_per_crop += energy_used_round[i] / dic_crops[cropname][2]
+        cell_format_background1 = wb.add_format({'bg_color': '#cdcdcd'})
+        cell_format_background2 = wb.add_format({'bg_color': '#ffffff'})
+        cell_formats = [cell_format_background1, cell_format_background2]
+        cell_format_border = wb.add_format({'right': 1})
         for x in range(len(labels_output)):
-            ws.write(1 + x, 0, labels_output[x])
-            ws.write(1 + x, 2, Co2_emitted_round[x])
-            ws.write(1 + x, 4, energy_used_round[x])
+            if x % 2 == 0:
+                i = 1
+            else:
+                i = 0
+            ws.write(2 + x, 0, labels_output[x], cell_format_bold)
+            ws.write(2 + x, 1, Co2_emitted_round[x], cell_formats[i])
+            ws.write(2 + x, 2, Co2_crop_round[x], cell_formats[i])
+            ws.write(2 + x, 3, energy_used_round[x], cell_formats[i])
+            ws.write(2 + x, 4, energy_crop_round[x], cell_formats[i])
 
-        labels_total = ['Total CO2 emitted (Kg)', 'Total energy used(MJ)',
-                        'Total CO2 emitted per kg product (Kg/Kg)', 'Total Energy used per kg product (KJ/Kg)',
-                        'Total CO2 emitted per KJ product (Kg/KJ)', 'Total energy used per KJ product (KJ/KJ)']
+        cell_format_bottom = wb.add_format({'bottom': 1})
+        ws.write(3 + len(labels_output), 0, 'Total', cell_format_bold)
+        ws.write(3 + len(labels_output), 1, round(sum(Co2_emitted), 0), cell_format_bottom)
+        ws.write(3 + len(labels_output), 2, round(sum(Co2_crop), 3), cell_format_bottom)
+        ws.write(3 + len(labels_output), 3, round(sum(energy_used), 0), cell_format_bottom)
+        ws.write(3 + len(labels_output), 4, round(sum(energy_crop), 3), cell_format_bottom)
+        ws.set_column(0, 0, len('Fossil fuels'))
+
+        labels_total = ['Total CO\u2082 emitted [kg per year]', 'Total energy used [MJ per year]',
+                        'Total CO\u2082 emitted per kg product [kg/kg per year]',
+                        'Total Energy used per kg product [KJ/Kg per year]',
+                        'Total CO\u2082 emitted per KJ product [kg/KJ per year]',
+                        'Total energy used per KJ product [KJ/KJ per year]']
         totals_output = [Totalco2, Totalenergy, Totalco2_per_kg_product, Totalenergy_per_kg_product,
                          Totalco2_per_KJ_product, Totalenergy_per_KJ_product]
         totals_output_round = [round(elem, 2) for elem in totals_output]
         for x in range(len(labels_total)):
             ws.write(1 + x, 6, labels_total[x])
-            ws.write(1 + x, 9, totals_output_round[x])
+            ws.write(1 + x, 7, totals_output_round[x])
+        ws.set_column(6, 6, len('Total energy used per KJ product [KJ/KJ per year]'))
 
         if ans_check_buy_energy.get() == 1 or ans_check_create_renewable.get() == 1 or ans_check_sell_energy.get() == 1 \
                 or ans_check_fossil_fuel_use.get() == 1 or ans_check_fertilizer_use.get() == 1 or \
                 ans_check_substrate_use.get() == 1 or ans_check_tap_water_use.get() == 1 or \
                 ans_check_pesticide_use.get() == 1 or ans_check_transport.get() == 1:
             if nr_dont_know <= 4:
-                ws.write(10, 1, "Specifications of " + non_count + ' are not taken into account because of lacking data.')
+                ws.write(10, 1,
+                         "Specifications of " + non_count + ' are not taken into account because of lacking data.')
             else:
                 warning_format = wb.add_format({'bold': True, 'font_size': 16})
-                ws.write(10, 1, "You have used the 'I don't know' button too often. The analysis is missing too much data to show significant results. Please try again.", warning_format)
+                ws.write(10, 1,
+                         "You have used the 'I don't know' button too often. The analysis is missing too much data to show significant results. Please try again.",
+                         warning_format)
 
-
-        # Creating bar and pie charts
+        # Creating bar charts
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
-            'name': [cropname, 0, 2],
-            'categories': [cropname, 1, 0, 10, 0],
-            'values': [cropname, 1, 2, 10, 2],
-            'line': {cropname: 'yellow'}
+            'name': [cropname, 0, 1],
+            'categories': [cropname, 2, 0, 9, 0],
+            'values': [cropname, 2, 2, 9, 2],
+            'fill': {'color': 'black'}
         })
-        chart_col.set_title({'name': 'Total CO2 emitted from different sources'})
-        chart_col.set_y_axis({'name': 'Total CO2 emitted'})
-        chart_col.set_x_axis({'name': 'Different sources'})
-
-        chart_col.set_style(2)
+        chart_col.set_title({'name': 'Total CO\u2082 emitted from different sources',
+                             'name_font': {'size': 12}})
+        chart_col.set_y_axis({'name': 'Total CO\u2082 emitted',
+                              'major_gridlines': {
+                                  'visible': False
+                              }})
+        chart_col.set_x_axis({'name': 'Sources'})
         ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
-            'name': [cropname, 0, 4],
-            'categories': [cropname, 1, 0, 10, 0],
-            'values': [cropname, 1, 4, 10, 4],
-            'line': {'color': 'yellow'}
+            'name': [cropname, 0, 3],
+            'categories': [cropname, 2, 0, 9, 0],
+            'values': [cropname, 2, 3, 9, 3],
+            'fill': {'color': 'black'}
         })
-        chart_col.set_title({'name': 'Total energy used from different sources'})
-        chart_col.set_y_axis({'name': 'Total energy used'})
-        chart_col.set_x_axis({'name': 'Different sources'})
+        chart_col.set_title({'name': 'Total energy used from different sources',
+                             'name_font': {'size': 12}})
+        chart_col.set_y_axis({'name': 'Total energy used',
+                              'major_gridlines': {
+                                  'visible': False
+                              }})
+        chart_col.set_x_axis({'name': 'Sources'})
 
-        chart_col.set_style(2)
-        ws.insert_chart('I13', chart_col, {'x_offset': 20, 'y_offset': 8})
+        ws.insert_chart('E13', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        chart_col = wb.add_chart({'type': 'pie'})
-        chart_col.add_series({
-            'name': [cropname, 0, 1],
-            'categories': [cropname, 1, 0, 10, 0],
-            'values': [cropname, 1, 2, 10, 2],
-            'points': [{'fill': {'color': 'blue'}},
-                       {'fill': {'color': 'yellow'}},
-                       {'fill': {'color': 'red'}},
-                       {'fill': {'color': 'gray'}},
-                       {'fill': {'color': 'black'}},
-                       {'fill': {'color': 'purple'}},
-                       {'fill': {'color': 'pink'}},
-                       ],
-        })
-        chart_col.set_title({'name': 'Total CO2 emitted from different \nsources'})
-        chart_col.set_style(2)
-        ws.insert_chart('A28', chart_col, {'x_offset': 20, 'y_offset': 8})
+        if cropname == 'Total':
+            chart_col = wb.add_chart({'type': 'column'})
+            chart_col.add_series({
+                'name': [cropname, 0, 1],
+                'categories': [cropname, 2, 0, 9, 0],
+                'values': [cropname, 2, 1, 9, 1],
+                'fill': {'color': 'black'}
+            })
+            chart_col.set_title({'name': 'Total CO\u2082 emitted from different sources',
+                                 'name_font': {'size': 12}})
+            chart_col.set_y_axis({'name': 'Total CO\u2082 emitted',
+                                  'major_gridlines': {
+                                      'visible': False
+                                  }})
+            chart_col.set_x_axis({'name': 'Sources', })
 
-        chart_col = wb.add_chart({'type': 'pie'})
-        chart_col.add_series({
-            'name': [cropname, 0, 2],
-            'categories': [cropname, 1, 0, 10, 0],
-            'values': [cropname, 1, 4, 10, 4],
-            'points': [{'fill': {'color': 'blue'}},
-                       {'fill': {'color': 'yellow'}},
-                       {'fill': {'color': 'red'}},
-                       {'fill': {'color': 'gray'}},
-                       {'fill': {'color': 'black'}},
-                       {'fill': {'color': 'purple'}},
-                       {'fill': {'color': 'pink'}},
-                       ],
-        })
-        chart_col.set_title({'name': 'Total energy used from different sources'})
-        chart_col.set_style(2)
-        ws.insert_chart('I28', chart_col, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
+
+            chart_col = wb.add_chart({'type': 'column'})
+            chart_col.add_series({
+                'name': [cropname, 0, 4],
+                'categories': [cropname, 1, 0, 10, 0],
+                'values': [cropname, 1, 3, 10, 3],
+                'fill': {'color': 'black'}
+            })
+            chart_col.set_title({'name': 'Total energy used from different sources',
+                                 'name_font': {'size': 12}})
+            chart_col.set_y_axis({'name': 'Total energy used',
+                                  'major_gridlines': {
+                                      'visible': False
+                                  }})
+            chart_col.set_x_axis({'name': 'Sources'})
+
+            chart_co2 = wb.add_chart({'type': 'column'})
+            chart_co2.set_title({'name': 'CO\u2082 emitted per kg crop',
+                                 'name_font': {'size': 12}})
+            chart_energy = wb.add_chart({'type': 'column'})
+            chart_energy.set_title({'name': 'Energy used per kg crop',
+                                    'name_font': {'size': 12}})
+            headings = ['#ffffff', '#000000', '#cdcdcd', '#373737', '#828282', '#505050', '#e6e6e6', '#1e1e1e',
+                        '#b4b4b4', '#696969', '#9b9b9b']
+            count = 0
+            for keys, values in dictionary_name.items():
+                if keys != 'Total':
+                    chart_co2.add_series({'name': keys,
+                                          'values': [keys, 2, 2, 9, 2],
+                                          'categories': [keys, 2, 0, 9, 0],
+                                          'fill': {'color': headings[count]},
+                                          'border': {'color': 'black'}
+                                          })
+                    chart_energy.add_series({'name': keys,
+                                             'values': [keys, 2, 4, 9, 4],
+                                             'categories': [keys, 2, 0, 9, 0],
+                                             'fill': {'color': headings[count]},
+                                             'border': {'color': 'black'}
+                                             })
+                    count += 1
+            chart_co2.set_y_axis({'name': 'Co\u2082 used',
+                                  'major_gridlines': {
+                                      'visible': False
+                                  }})
+            chart_co2.set_x_axis({'name': 'Sources'})
+            chart_energy.set_y_axis({'name': 'Energy used',
+                                     'major_gridlines': {
+                                         'visible': False
+                                     }})
+            chart_energy.set_x_axis({'name': 'Sources'})
+            # chart_co2.set_size({'width': 960, 'height': 285})
+            ws.insert_chart('A28', chart_co2, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('E28', chart_energy, {'x_offset': 20, 'y_offset': 8})
 
     # Write the raw data from the questionnaire to the Excel sheet
     ws = wb.add_worksheet("Raw data")
