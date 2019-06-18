@@ -47,15 +47,7 @@ def worksheetoutput(dictionary_name):
     workbook = xlrd.open_workbook('Database_full.xlsx')
     dicp = {}
     for tabs in workbook.sheet_names():
-        if tabs == 'Crop parameters':
-            sheet = workbook.sheet_by_name(tabs)
-            count = 1
-            for keys, values in dictionary_name.items():
-                if keys == sheet.cell_value(count, 0):
-                    dictionary_name[keys] += [sheet.cell_value(count, 4)]
-                count += 1
-
-        else:
+        if tabs != 'Crop parameters':
             sheet = workbook.sheet_by_name(tabs)
             for i in range(1, sheet.nrows):
                 if sheet.cell_value(i, 2) != '':
@@ -109,7 +101,8 @@ def worksheetoutput(dictionary_name):
         non_count = (non_count + 'pesticides, ')
         nr_dont_know += 1
     if ans_check_transport.get() == 1:
-        ans_van_use.set(0); ans_truck_use.set(0); ans_percentage_truck_use.set(0); ans_percentage_van_use.set(0);
+        ans_van_use.set(0); ans_truck_use.set(0);
+        #ans_percentage_truck_use.set(0); ans_percentage_van_use.set(0);
         non_count = (non_count + 'transport')
         nr_dont_know += 1
 
@@ -127,29 +120,34 @@ def worksheetoutput(dictionary_name):
                 Total_Eoc += sheet.cell_value(i, 4)
                 # Growth period
                 dictionary_name[keys] += [365/sheet.cell_value(i, 5)]
-                total_growth_cycles += (365/sheet.cell_value(i,5))
+                total_growth_cycles += (365/sheet.cell_value(i, 5))
     Average_Eoc = Total_Eoc / (len(dictionary_name) - 1)
     average_growth_period = total_growth_cycles / (len(dictionary_name)-1)
     dictionary_name[list(dictionary_name.keys())[0]] += [Average_Eoc]
     dictionary_name[list(dictionary_name.keys())[0]] += [average_growth_period]
 
-    # Calculation to find out the total combination of fraction surface and fraction growth period, needed for the substrate
-    # sum_frac = 0
-    # for keys, values in dictionary_name.items():
-    #     #if keys != 'Total':
-    #     frac_surf = values[0]
-    #     growth_cycles = values[4]
-    #     # Substrate calculations
-    #     frac_growth = growth_cycles / total_growth_cycles
-    #     frac_surf_growth = frac_growth * frac_surf
-    #     sum_frac += frac_surf_growth
 
+    # Calculation to find out the total combination of fraction surface and fraction growth period, needed for the substrate
+    # Take care: this for loop cannot be combined with the for loop behind it since it needs to run through this whole loop,
+    # to find the final sum_frac in order to properly do the calculations on substrate in the next for loop.
+    sum_frac = 0
+    for keys, values in dictionary_name.items():
+        if keys != 'Total':
+            frac_surf = values[0]
+            growth_cycles = values[4]
+            # Substrate calculations
+            frac_growth = growth_cycles / total_growth_cycles
+            frac_surf_growth = frac_growth * frac_surf
+            sum_frac += frac_surf_growth
+
+    # doing the calculations
     for keys, values in dictionary_name.items():
         cropname = keys
-        kg_prod = values[2]
         frac_surf = values[0]
         frac_kg = values[1]
+        kg_prod = values[2]
         Eoc = values[3]
+        growth_cycles = values[4]
 
         # Calculation for total C02 of electricity usage
         Eco2 = frac_surf * ((dicp['C1'] * ans_buy_renew.get()) + (dicp['C3'] * ans_buy_nonrenew.get()) + (dicp['C5'] * ans_prod_solar.get()) + (dicp['C7'] * ans_prod_wind.get()) + (
@@ -178,19 +176,23 @@ def worksheetoutput(dictionary_name):
                 dicp['Fe10'] * ans_single_super_phosphate_use.get()) + (dicp['Fe12'] * ans_ammonia_use.get()) + (dicp['Fe14'] * ans_limestone_use.get()) + (
                         dicp['Fe16'] * ans_NPK_151515_use.get()) + (dicp['Fe22'] * ans_phosphoric_acid_use.get()) + (dicp['Fe24'] * ans_mono_ammonium_phosphate_use.get())))
 
-
         # Calculation in which growth period and fraction of surface are combined into one fraction for substrate calculation
-        # frac_growth = growth_cycles / total_growth_cycles
-        # frac_surf_growth = frac_growth * frac_surf
-        # frac_substrate = frac_surf_growth/sum_frac
-        # print(frac_substrate)
+        if keys != 'Total':
+            frac_growth = growth_cycles / total_growth_cycles
+            frac_surf_growth = frac_growth * frac_surf
+            frac_substrate = frac_surf_growth/sum_frac
+        else:
+            # frac_substrate for total just need to be one
+            frac_substrate = 1
+
+
         # Calculation for total Co2 of substrates
-        Sco2 = frac_surf * (
+        Sco2 = frac_substrate * (
                 (dicp['S1'] * ans_rockwool_use.get()) + (dicp['S3'] * ans_perlite_use.get()) + (dicp['S5'] * ans_cocofiber_use.get()) + (dicp['S7'] * ans_hempfiber_use.get()) + (
                 dicp['S9'] * ans_peat_use.get()) + (dicp['S11'] * ans_peatmoss_use.get()))
 
         # Calculation for total energy of substrates
-        Senergy = frac_surf * (
+        Senergy = frac_substrate * (
                 (dicp['S2'] * ans_rockwool_use.get()) + (dicp['S4'] * ans_perlite_use.get()) + (dicp['S6'] * ans_cocofiber_use.get()) + (dicp['S8'] * ans_hempfiber_use.get()) + (
                 dicp['S10'] * ans_peat_use.get()) + (dicp['S12'] * ans_peatmoss_use.get()))
 
@@ -211,8 +213,12 @@ def worksheetoutput(dictionary_name):
                 dicp['P10'] * ans_insecticide_use.get()))
 
         # Scaling the percentages of transportation means
-        truck_use_percent = ans_percentage_truck_use.get()/(ans_percentage_truck_use.get() + ans_percentage_van_use.get())
-        van_use_percent = ans_percentage_van_use.get()/(ans_van_use.get() + ans_percentage_truck_use.get())
+        if ans_percentage_van_use.get() or ans_percentage_truck_use.get() > 0:
+            truck_use_percent = ans_percentage_truck_use.get()/(ans_percentage_truck_use.get() + ans_percentage_van_use.get())
+            van_use_percent = ans_percentage_van_use.get()/(ans_van_use.get() + ans_percentage_truck_use.get())
+        else:
+            truck_use_percent = 50
+            van_use_percent = 50
 
         # Calculation for total Co2 of transport
         Tco2 = kg_prod * ((dicp['T3'] * ans_van_use.get() * van_use_percent * van_owner()) + (dicp['T1'] * ans_truck_use.get() * truck_use_percent * truck_owner()))
