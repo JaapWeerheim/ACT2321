@@ -485,7 +485,7 @@ def worksheetoutput(dictionary_name):
     # Write question 2
     ws.write(3, 0, "Question 2", cell_format_questions)
     ws.write(4, 0, "Crop type", cell_format_expl_quest)
-    ws.write(4, 1, 'Surface [m2]', cell_format_expl_quest)
+    ws.write(4, 1, str_area_super, cell_format_expl_quest)
     ws.write(4, 2, "Sold products [kg per year]", cell_format_expl_quest)
 
     for i in range(0, len(ansVeg)):
@@ -519,7 +519,7 @@ def worksheetoutput(dictionary_name):
     ws.write(27, 0, "Fossil fuel type", cell_format_expl_quest)
     ws.write(27, 1, "Consumption [per year]", cell_format_expl_quest)
     list_fuel = [ans_petrol_use.get(), ans_diesel_use.get(), ans_natural_gas_use.get(), ans_oil_use.get()]
-    list_fuel_names = ["Petrol (L)", "Diesel (L)", "Oil (L)", "Natural gas (m3)"]
+    list_fuel_names = ["Petrol (L)", "Diesel (L)", "Oil (L)", str_gas_super]
     for i in range(0, len(list_fuel)):
         if i % 2 == 0:
             x = 1
@@ -1007,6 +1007,10 @@ question_transport = '12. How far does your product travel to the distribution c
                      'Who is the owner of the transportation means?'
 question_finish = '13. This is the end of the questionnaire. \nPlease make sure that all questions are answered before you submit.'
 
+#Define super and subscripts:
+SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+SUP = str.maketrans("0123456789", '⁰¹²³⁴⁵⁶⁷⁸⁹')
+
 # Question 1: Where is your farm located?
 # (If you are in this frame, you can't go back and change your name)
 # Q1 needs to be specified here because pre and next are not initialized yet
@@ -1078,7 +1082,9 @@ kgMin = IntVar()
 kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
 
 Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=10, sticky=W)
-Label(frame_crop_species, text='Area [m2]').grid(row=0, column=1, padx=5, sticky=W)
+str_area = 'Area [m2]'
+str_area_super = str_area.translate(SUP)
+Label(frame_crop_species, text=str_area_super).grid(row=0, column=1, padx=5, sticky=W)
 Label(frame_crop_species, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
@@ -1164,7 +1170,9 @@ diesely = Entry(frame_fuel_use, width=5, textvariable=ans_diesel_use)
 diesely.grid(row=1, column=1)
 diesely.bind("<FocusIn>", lambda event,z = ans_diesel_use: rid_of_zeros(event,z))
 diesely.bind("<FocusOut>", lambda event,z = ans_diesel_use: rid_of_zeros(event,z))
-Ngasl = Label(frame_fuel_use, text='Natural gas (m3)').grid(row=0, column=2, padx=10, sticky=W)
+str_gas = 'Natural gas (m3)'
+str_gas_super = str_gas.translate(SUP)
+Ngasl = Label(frame_fuel_use, text=str_gas_super).grid(row=0, column=2, padx=10, sticky=W)
 Ngasy = Entry(frame_fuel_use, width=5, textvariable=ans_natural_gas_use)
 Ngasy.grid(row=0, column=3)
 Ngasy.bind("<FocusIn>", lambda event,z = ans_natural_gas_use: rid_of_zeros(event,z))
