@@ -12,10 +12,10 @@ root.geometry('440x440+500+200')
 
 # Setting heights and widths for every frame.
 frame_start = Frame(height=65, width=400)
+frame_previous_next = Frame(height=40, width=400)
 frame_farm_name = Frame(height=65, width=400)
 frame_location = Frame(height=75, width=400)
 frame_location_extension = Frame(height=120, width=400)
-frame_previous_next = Frame(height=40, width=400)
 frame_crop_species = Frame(height=8000, width=400)
 frame_buy_energy = Frame(height=120, width=400)
 frame_create_renewable = Frame(height=120, width=400)
@@ -967,6 +967,17 @@ def rid_of_zeros_sur(event, ans, sur):
         sur.set(0)
     return
 
+# This function attempts to remove the zeros in the question on which crops a farmer grows, in the seeding entries
+def rid_of_zeros_seedlings(event, ans, seedlings):
+    try:
+        if seedlings.get() <= 0 and ans.get() == 1:
+            seedlings.set('')
+    except:
+        seedlings.set(0)
+    if ans.get() == 0:
+        seedlings.set(0)
+    return
+
 
 # This function attempts to remove the zeros in the question on which crops a farmer grows, in the kg entries
 def rid_of_zeros_kg(event, ans, kg):
@@ -1055,8 +1066,8 @@ root.config(menu=menu)
 
 # Here all questions for the questionnaire are defined
 question_location = '1. In which country is your farm located? '
-question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kilograms ' \
-                      'of each crop do you sell per year?'
+question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of seedlings ' \
+                      'do you buy per year?\nHow many kilograms of each crop do you sell per year?'
 question_buy_renewable = '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?'
 question_produce_renewable = '4. Do you produce your own renewable energy, \n and how much (kWh) do you produce ' \
                              'per year?'
@@ -1144,20 +1155,38 @@ kgMic = IntVar()
 kgMin = IntVar()
 kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
 
+# Initialize variables for buying seeds
+seedLet = IntVar()
+seedEnd = IntVar()
+seedSpi = IntVar()
+seedBea = IntVar()
+seedPar = IntVar()
+seedKal = IntVar()
+seedBas = IntVar()
+seedRuc = IntVar()
+seedMic = IntVar()
+seedMin = IntVar()
+seedVeg = [seedLet, seedEnd, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin]
+
 Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=10, sticky=W)
 Label(frame_crop_species, text='Area [m\u00b2]').grid(row=0, column=1, padx=5, sticky=W)
-Label(frame_crop_species, text='Sold products [kg/year]').grid(row=0, column=2, padx=5, sticky=W)
+Label(frame_crop_species, text='Seedlings\n[kg/year]').grid(row=0, column=2, padx=5, sticky=W)
+Label(frame_crop_species, text='Sold products\n[kg/year]').grid(row=0, column=3, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
 for i in range(0, len(list_crop_species)):
     Checkbutton(frame_crop_species, text=list_crop_species[i], variable=ansVeg[i]).grid(row=i + 1, column=0, sticky=W,
                                                                                         padx=10)
-    surface_entry = Entry(frame_crop_species, textvariable=surVeg[i])
+    surface_entry = Entry(frame_crop_species, textvariable=surVeg[i], width=12)
     surface_entry.grid(row=i + 1, column=1, sticky=W, padx=5)
-    kg_entry = Entry(frame_crop_species, textvariable=kgVeg[i])
-    kg_entry.grid(row=i + 1, column=2, sticky=W, padx=5)
+    seed_entry = Entry(frame_crop_species, textvariable =seedVeg[i], width=12)
+    seed_entry.grid(row=i + 1, column=2, sticky=W, padx=5)
+    kg_entry = Entry(frame_crop_species, textvariable=kgVeg[i], width=12)
+    kg_entry.grid(row=i + 1, column=3, sticky=W, padx=5)
     surface_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event, y, z))
     surface_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event, y, z))
+    seed_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_seedlings(event, y, z))
+    seed_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_seedlings(event, y, z))
     kg_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event, y, z))
     kg_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event, y, z))
 
