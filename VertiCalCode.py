@@ -246,15 +246,45 @@ def worksheetoutput(dictionary_name):
         # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(cropname)
         cell_format_bold = wb.add_format({'bold': True,
-                                          'align': 'right'})
+                                          'align': 'right',
+                                          'fg_color': '#cdcdcd'})
+        cell_format_total = wb.add_format({'bold': True,
+                                           'align': 'right',
+                                           'top': 1,
+                                           'fg_color': '#cdcdcd'})
         cell_format_header = wb.add_format({'bold': True,
                                             'font_size': 16,
                                             'align': 'center',
                                             'fg_color': '#cdcdcd'})
-        ws.merge_range('B1:C1', 'CO\u2082 emitted', cell_format_header)
+        cell_format_questions = wb.add_format({'bold': True,
+                                               'font_size': 14})
+        cell_format_expl_quest = wb.add_format({'bold': True,
+                                                'align': 'right',
+                                                'fg_color': '#cdcdcd',
+                                                'top': 1})
+        cell_format_top = wb.add_format({'bold': True,
+                                         'top': 1})
+        cell_format_alignR = wb.add_format({'align': 'right'})
+        cell_format_alignR0 = wb.add_format({'align': 'right',
+                                             'bg_color': '#e6e6e6'})
+        cell_format_alignR1 = wb.add_format({'align': 'right',
+                                             'bg_color': '#ffffff'})
+        cell_format_ll = wb.add_format({'left': 1})
+        cell_format_tl = wb.add_format({'top': 1})
+        cell_format_bl = wb.add_format({'bottom': 1})
+        cell_format_rll = wb.add_format({'right': 1,
+                                         'left': 1})
+        cell_format_background1 = wb.add_format({'bg_color': '#e6e6e6'})
+        cell_format_background2 = wb.add_format({'bg_color': '#ffffff'})
+        cell_formats = [cell_format_background1, cell_format_background2]
+
+        # add images
+        ws.insert_image('A1', 'sfsf logo png.png', {'x_offset': 20, 'x_scale': 0.05, 'y_scale': 0.05})
+
+        ws.merge_range('B1:C1', 'CO\u2082-eq', cell_format_header)
         ws.write(1, 1, 'Total [kg]', cell_format_bold)
         ws.write(1, 2, 'Per kg crop [kg/kg]', cell_format_bold)
-        ws.merge_range('D1:E1', 'Energy used', cell_format_header)
+        ws.merge_range('D1:E1', 'Energy use', cell_format_header)
         ws.write(1, 3, 'Total [MJ]', cell_format_bold)
         ws.write(1, 4, 'Per kg crop [kg/kg]', cell_format_bold)
         ws.set_column(2, 1, len('Per kg crop [kg/kg]'))
@@ -279,10 +309,7 @@ def worksheetoutput(dictionary_name):
             energy_crop_round = [round(elem, 3) for elem in energy_crop]
             sum_co2_per_crop += Co2_emitted[i] / dic_crops[cropname][2]
             sum_energy_per_crop += energy_used_round[i] / dic_crops[cropname][2]
-        cell_format_background1 = wb.add_format({'bg_color': '#cdcdcd'})
-        cell_format_background2 = wb.add_format({'bg_color': '#ffffff'})
-        cell_formats = [cell_format_background1, cell_format_background2]
-        cell_format_border = wb.add_format({'right': 1})
+
         for x in range(len(labels_output)):
             if x % 2 == 0:
                 i = 1
@@ -294,25 +321,38 @@ def worksheetoutput(dictionary_name):
             ws.write(2 + x, 3, energy_used_round[x], cell_formats[i])
             ws.write(2 + x, 4, energy_crop_round[x], cell_formats[i])
 
-        cell_format_bottom = wb.add_format({'bottom': 1})
-        ws.write(3 + len(labels_output), 0, 'Total', cell_format_bold)
-        ws.write(3 + len(labels_output), 1, round(sum(Co2_emitted), 0), cell_format_bottom)
-        ws.write(3 + len(labels_output), 2, round(sum(Co2_crop), 3), cell_format_bottom)
-        ws.write(3 + len(labels_output), 3, round(sum(energy_used), 0), cell_format_bottom)
-        ws.write(3 + len(labels_output), 4, round(sum(energy_crop), 3), cell_format_bottom)
-        ws.set_column(0, 0, len('Fossil fuels'))
+        ws.write(0, 0, '', cell_format_bold)
+        ws.write(1, 0, '', cell_format_bold)
+        ws.write(2 + len(labels_output), 0, 'Total', cell_format_total)
+        ws.write(2 + len(labels_output), 1, round(sum(Co2_emitted), 0), cell_format_top)
+        ws.write(2 + len(labels_output), 2, round(sum(Co2_crop), 3), cell_format_top)
+        ws.write(2 + len(labels_output), 3, round(sum(energy_used), 0), cell_format_top)
+        ws.write(2 + len(labels_output), 4, round(sum(energy_crop), 3), cell_format_top)
+        ws.set_column(0, 0, 12)
+        ws.set_row(0, 20)
+        ws.set_row(1, 12)
 
-        labels_total = ['Total CO\u2082 emitted [kg per year]', 'Total energy used [MJ per year]',
-                        'Total CO\u2082 emitted per kg product [kg/kg per year]',
-                        'Total Energy used per kg product [KJ/Kg per year]',
-                        'Total CO\u2082 emitted per KJ product [kg/KJ per year]',
+        for i in range(0, 11):
+            if i < 5:
+                ws.write(11, i, '', cell_format_tl)
+            ws.write(i, 5, '', cell_format_ll)
+
+        ws.write(3, 6, '', cell_format_tl)
+        ws.write(3, 7, '', cell_format_tl)
+        ws.write(1, 8, '', cell_format_ll)
+        ws.write(2, 8, '', cell_format_ll)
+        ws.write(0, 6, '', cell_format_bl)
+        ws.write(0, 7, '', cell_format_bl)
+        ws.write(1, 5, '', cell_format_rll)
+        ws.write(2, 5, '', cell_format_rll)
+
+        labels_total = ['Total CO\u2082 emitted per KJ product [kg/KJ per year]',
                         'Total energy used per KJ product [KJ/KJ per year]']
-        totals_output = [Totalco2, Totalenergy, Totalco2_per_kg_product, Totalenergy_per_kg_product,
-                         Totalco2_per_KJ_product, Totalenergy_per_KJ_product]
+        totals_output = [Totalco2_per_KJ_product, Totalenergy_per_KJ_product]
         totals_output_round = [round(elem, 2) for elem in totals_output]
         for x in range(len(labels_total)):
-            ws.write(1 + x, 6, labels_total[x])
-            ws.write(1 + x, 7, totals_output_round[x])
+            ws.write(1 + x, 6, labels_total[x], cell_format_background1)
+            ws.write(1 + x, 7, totals_output_round[x], cell_format_background1)
         ws.set_column(6, 6, len('Total energy used per KJ product [KJ/KJ per year]'))
 
         if ans_check_buy_energy.get() == 1 or ans_check_create_renewable.get() == 1 or ans_check_sell_energy.get() == 1 \
@@ -320,11 +360,11 @@ def worksheetoutput(dictionary_name):
                 ans_check_substrate_use.get() == 1 or ans_check_tap_water_use.get() == 1 or \
                 ans_check_pesticide_use.get() == 1 or ans_check_transport.get() == 1:
             if nr_dont_know <= 4:
-                ws.write(10, 1,
+                ws.write(12, 1,
                          "Specifications of " + non_count + ' are not taken into account because of lacking data.')
             else:
                 warning_format = wb.add_format({'bold': True, 'font_size': 16})
-                ws.write(10, 1,
+                ws.write(12, 1,
                          "You have used the 'I don't know' button too often. The analysis is missing too much data to show significant results. Please try again.",
                          warning_format)
 
@@ -336,14 +376,14 @@ def worksheetoutput(dictionary_name):
             'values': [cropname, 2, 2, 9, 2],
             'fill': {'color': 'black'}
         })
-        chart_col.set_title({'name': 'Total CO\u2082 emitted from different sources',
+        chart_col.set_title({'name': 'Total CO\u2082-eq from different sources',
                              'name_font': {'size': 12}})
-        chart_col.set_y_axis({'name': 'Total CO\u2082 emitted',
+        chart_col.set_y_axis({'name': 'CO\u2082-eq[kg]',
                               'major_gridlines': {
                                   'visible': False
                               }})
         chart_col.set_x_axis({'name': 'Sources'})
-        ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
+        ws.insert_chart('A15', chart_col, {'x_offset': 20, 'y_offset': 8})
 
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
@@ -354,13 +394,13 @@ def worksheetoutput(dictionary_name):
         })
         chart_col.set_title({'name': 'Total energy used from different sources',
                              'name_font': {'size': 12}})
-        chart_col.set_y_axis({'name': 'Total energy used',
+        chart_col.set_y_axis({'name': 'Energy [MJ]',
                               'major_gridlines': {
                                   'visible': False
                               }})
         chart_col.set_x_axis({'name': 'Sources'})
 
-        ws.insert_chart('E13', chart_col, {'x_offset': 20, 'y_offset': 8})
+        ws.insert_chart('E15', chart_col, {'x_offset': 20, 'y_offset': 8})
 
         if cropname == 'Total':
             chart_col = wb.add_chart({'type': 'column'})
@@ -370,15 +410,15 @@ def worksheetoutput(dictionary_name):
                 'values': [cropname, 2, 1, 9, 1],
                 'fill': {'color': 'black'}
             })
-            chart_col.set_title({'name': 'Total CO\u2082 emitted from different sources',
+            chart_col.set_title({'name': 'Total CO\u2082-eq from different sources',
                                  'name_font': {'size': 12}})
-            chart_col.set_y_axis({'name': 'Total CO\u2082 emitted',
+            chart_col.set_y_axis({'name': 'CO\u2082-eq [kg]',
                                   'major_gridlines': {
                                       'visible': False
                                   }})
             chart_col.set_x_axis({'name': 'Sources', })
 
-            ws.insert_chart('A13', chart_col, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('A15', chart_col, {'x_offset': 20, 'y_offset': 8})
 
             chart_col = wb.add_chart({'type': 'column'})
             chart_col.add_series({
@@ -389,14 +429,14 @@ def worksheetoutput(dictionary_name):
             })
             chart_col.set_title({'name': 'Total energy used from different sources',
                                  'name_font': {'size': 12}})
-            chart_col.set_y_axis({'name': 'Total energy used',
+            chart_col.set_y_axis({'name': 'Energy [MJ]',
                                   'major_gridlines': {
                                       'visible': False
                                   }})
             chart_col.set_x_axis({'name': 'Sources'})
 
             chart_co2 = wb.add_chart({'type': 'column'})
-            chart_co2.set_title({'name': 'CO\u2082 emitted per kg crop',
+            chart_co2.set_title({'name': 'CO\u2082-eq per kg crop',
                                  'name_font': {'size': 12}})
             chart_energy = wb.add_chart({'type': 'column'})
             chart_energy.set_title({'name': 'Energy used per kg crop',
@@ -419,65 +459,79 @@ def worksheetoutput(dictionary_name):
                                              'border': {'color': 'black'}
                                              })
                     count += 1
-            chart_co2.set_y_axis({'name': 'Co\u2082 used',
+            chart_co2.set_y_axis({'name': 'Co\u2082-eq [kg/kg]',
                                   'major_gridlines': {
                                       'visible': False
                                   }})
             chart_co2.set_x_axis({'name': 'Sources'})
-            chart_energy.set_y_axis({'name': 'Energy used',
+            chart_energy.set_y_axis({'name': 'Energy [MJ/kg]',
                                      'major_gridlines': {
                                          'visible': False
                                      }})
             chart_energy.set_x_axis({'name': 'Sources'})
             # chart_co2.set_size({'width': 960, 'height': 285})
-            ws.insert_chart('A28', chart_co2, {'x_offset': 20, 'y_offset': 8})
-            ws.insert_chart('E28', chart_energy, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('A30', chart_co2, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('E30', chart_energy, {'x_offset': 20, 'y_offset': 8})
 
-    # Write the raw data from the questionnaire to the Excel sheet
+        # Write the raw data from the questionnaire to the Excel sheet
     ws = wb.add_worksheet("Raw data")
+    ws.set_column(0, 2, len('Percentage of products [%]'))
 
     # Write question 1
-    ws.write(0,0,  "Question 1")
-    ws.write(1, 0, 'Country:')
-    ws.write(1, 1, ans_country.get())
+    ws.write(0, 0, "Question 1", cell_format_questions)
+    ws.write(1, 0, 'Country', cell_format_expl_quest)
+    ws.write(1, 1, ans_country.get(), cell_format_alignR0)
 
     # Write question 2
-    ws.write(3,0, "Question 2")
-    ws.write(4,0, "Crop type")
-    ws.write(4,1, 'Surface [m2]')
-    ws.write(4,2, "Sold products [kg/year]")
-    for i in range(0,len(ansVeg)):
-        ws.write(5+i, 0, list_crop_species[i])
-        ws.write(5+i, 1, surVeg[i].get())
-        ws.write(5+i, 2, kgVeg[i].get())
+    ws.write(3, 0, "Question 2", cell_format_questions)
+    ws.write(4, 0, "Crop type", cell_format_expl_quest)
+    ws.write(4, 1, 'Surface [m2]', cell_format_expl_quest)
+    ws.write(4, 2, "Sold products [kg per year]", cell_format_expl_quest)
+
+    for i in range(0, len(ansVeg)):
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(5 + i, 0, list_crop_species[i], cell_format_bold)
+        ws.write(5 + i, 1, surVeg[i].get(), cell_formats[x])
+        ws.write(5 + i, 2, kgVeg[i].get(), cell_formats[x])
 
     # Write question 3, 4 and 5
-    ws.write(16,0, "Question 3-5")
-    ws.write(17,0, "Electricity type")
-    ws.write(17,1, "Amount [kWh/year]")
+    ws.write(16, 0, "Question 3-5", cell_format_questions)
+    ws.write(17, 0, "Electricity type", cell_format_expl_quest)
+    ws.write(17, 1, "Amount [kWh per year]", cell_format_expl_quest)
     list_electricity = [ans_buy_renew.get(), ans_buy_nonrenew.get(), ans_prod_solar.get(), ans_prod_biomass.get(),
                         ans_prod_wind.get(), ans_sel_renew.get(), ans_sel_non_renew.get()]
     list_electricity_names = ["Bought renewable", "Bought non-renewable", "Produced solar",
                               "Produced biomass", "Produced wind", "Sold renewable",
                               "Sold non-renewable"]
-    for i in range(0,len(list_electricity)):
-        ws.write(18+i, 0, list_electricity_names[i])
-        ws.write(18+i, 1, list_electricity[i])
+    for i in range(0, len(list_electricity)):
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(18 + i, 0, list_electricity_names[i], cell_format_bold)
+        ws.write(18 + i, 1, list_electricity[i], cell_formats[x])
 
     # Question 6
-    ws.write(26, 0, "Question 6")
-    ws.write(27, 0, "Fossil fuel type")
-    ws.write(27,1, "Consumption [per year]")
+    ws.write(26, 0, "Question 6", cell_format_questions)
+    ws.write(27, 0, "Fossil fuel type", cell_format_expl_quest)
+    ws.write(27, 1, "Consumption [per year]", cell_format_expl_quest)
     list_fuel = [ans_petrol_use.get(), ans_diesel_use.get(), ans_natural_gas_use.get(), ans_oil_use.get()]
     list_fuel_names = ["Petrol (L)", "Diesel (L)", "Oil (L)", "Natural gas (m3)"]
     for i in range(0, len(list_fuel)):
-        ws.write(28+i, 0, list_fuel_names[i])
-        ws.write(28+i, 1, list_fuel[i])
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(28 + i, 0, list_fuel_names[i], cell_format_bold)
+        ws.write(28 + i, 1, list_fuel[i], cell_formats[x])
 
     # Question 7
-    ws.write(33,0, "Question 7")
-    ws.write(34,0, "Fertilizer type")
-    ws.write(34,1, "Consumption [kg/year]")
+    ws.write(33, 0, "Question 7", cell_format_questions)
+    ws.write(34, 0, "Fertilizer type", cell_format_expl_quest)
+    ws.write(34, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_fertilizers = [ans_ammonium_nitrate_use.get(), ans_calcium_ammonium_nitrate_use.get(),
                         ans_ammonium_sulphate_use.get(),
                         ans_triple_super_phosphate_use.get(), ans_single_super_phosphate_use.get(),
@@ -490,60 +544,105 @@ def worksheetoutput(dictionary_name):
                              "Single super phosphate", "Ammonia", "Limestone", "NPK 15-15-15", "Phosphoric acid",
                              "Mono-ammonium phosphate"]
     for i in range(0, len(list_fertilizers)):
-        ws.write(35+i, 0, list_fertilizer_names[i])
-        ws.write(35+i, 1, list_fertilizers[i])
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(35 + i, 0, list_fertilizer_names[i], cell_format_bold)
+        ws.write(35 + i, 1, list_fertilizers[i], cell_formats[x])
 
     # Question 8
-    ws.write(46,0, "Question 8")
-    ws.write(47,0, "Substrate type")
-    ws.write(47,1, "Consumption [kg/year]")
+    ws.write(46, 0, "Question 8", cell_format_questions)
+    ws.write(47, 0, "Substrate type", cell_format_expl_quest)
+    ws.write(47, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_substrates = [ans_rockwool_use.get(), ans_perlite_use.get(), ans_cocofiber_use.get(), ans_hempfiber_use.get(),
                        ans_peat_use.get(), ans_peatmoss_use.get()]
     list_substrates_names = ["Rockwool", "Perlite", "Cocofiber", "Hempfiber", 'Peat', "Peatmoss"]
     for i in range(0, len(list_substrates)):
-        ws.write(48+i, 0, list_substrates_names[i])
-        ws.write(48+i, 1, list_substrates[i])
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(48 + i, 0, list_substrates_names[i], cell_format_bold)
+        ws.write(48 + i, 1, list_substrates[i], cell_formats[x])
 
     # Question 9
-    ws.write(55,0, "Question 9")
-    ws.write(56,0, "Water consumption:")
-    ws.write(56,1, ans_tap_water_use.get())
-    ws.write(56,2 ,"[l/year]")
+    ws.write(55, 0, "Question 9", cell_format_questions)
+    ws.write(56, 0, "Water consumption:", cell_format_expl_quest)
+    ws.write(56, 1, ans_tap_water_use.get(), cell_format_alignR0)
+    ws.write(56, 2, "[L per year]", cell_format_alignR0)
 
     # Question 10
-    ws.write(58,0, "Question 10")
-    ws.write(59,0, "Pesticide type")
-    ws.write(59,1, "Consumption [kg/year]")
+    ws.write(58, 0, "Question 10", cell_format_questions)
+    ws.write(59, 0, "Pesticide type", cell_format_expl_quest)
+    ws.write(59, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_pesticides = [ans_atrazine_use.get(), ans_glyphosphate_use.get(),
                        ans_metolachlor_use.get(), ans_herbicide_use.get(), ans_insecticide_use.get()]
     list_pesticides_names = ["Atrazine", "Glyphosphate", "Metolachlore", "Herbicide", "Insecticide"]
     for i in range(0, len(list_pesticides)):
-        ws.write(60+i, 0, list_pesticides_names[i])
-        ws.write(60+i, 1, list_pesticides[i])
+        if i % 2 == 0:
+            x = 1
+        else:
+            x = 0
+        ws.write(60 + i, 0, list_pesticides_names[i], cell_format_bold)
+        ws.write(60 + i, 1, list_pesticides[i], cell_formats[x])
 
     # Question 11
-    ws.write(66,0, "Question 11")
-    ws.write(67,0, "Packaged [Yes/No]")
+    ws.write(66, 0, "Question 11", cell_format_questions)
+    ws.write(67, 0, "Packaged [Yes/No]", cell_format_expl_quest)
     if ans_packaging.get == 0:
-        ws.write(67,1, "No")
+        ws.write(67, 1, "No", cell_format_alignR0)
     else:
-        ws.write(67,1, "Yes")
+        ws.write(67, 1, "Yes", cell_format_alignR0)
 
     # Question 12
-    ws.write(69,0, "Question 12")
-    ws.write(70,0, "Transportation means")
-    ws.write(70,1, "Average distance [km]")
-    ws.write(71, 0, "Van")
-    ws.write(71,1, ans_van_use.get())
-    ws.write(72,0, "Truck")
-    ws.write(72,1, ans_truck_use.get())
-    ws.write(70,2, "Percentage of products [%]")
-    ws.write(71,2, ans_percentage_van_use.get())
-    ws.write(72,2, ans_percentage_truck_use.get())
-    ws.write(70,3, "Owner")
-    ws.write(71,3, ans_van_own.get())
-    ws.write(72,3, ans_truck_own.get())
+    ws.write(69, 0, "Question 12", cell_format_questions)
+    ws.write(70, 0, "Transportation means", cell_format_expl_quest)
+    ws.write(70, 1, "Average distance [km]", cell_format_expl_quest)
+    ws.write(71, 0, "Van", cell_format_bold)
+    ws.write(71, 1, ans_van_use.get(), cell_formats[0])
+    ws.write(72, 0, "Truck", cell_format_bold)
+    ws.write(72, 1, ans_truck_use.get(), cell_formats[1])
+    ws.write(70, 2, "Percentage of products [%]", cell_format_expl_quest)
+    ws.write(71, 2, ans_percentage_van_use.get(), cell_formats[0])
+    ws.write(72, 2, ans_percentage_truck_use.get(), cell_formats[1])
+    ws.write(70, 3, "Owner", cell_format_expl_quest)
+    ws.write(71, 3, ans_van_own.get(), cell_format_alignR0)
+    ws.write(72, 3, ans_truck_own.get(), cell_format_alignR1)
 
+    # adding border lines
+    for i in range(0, 11):
+        ws.write(4 + i, 3, '', cell_format_ll)
+        ws.write(34 + i, 2, '', cell_format_ll)
+        if i < 2:
+            ws.write(2, i, '', cell_format_tl)
+            ws.write(25, i, '', cell_format_tl)
+            ws.write(32, i, '', cell_format_tl)
+            ws.write(45, i, '', cell_format_tl)
+            ws.write(54, i, '', cell_format_tl)
+            ws.write(65, i, '', cell_format_tl)
+            ws.write(68, i, '', cell_format_tl)
+            ws.write(57, i, '', cell_format_ll)
+        if i < 3:
+            ws.write(15, i, '', cell_format_tl)
+            ws.write(70 + i, 4, '', cell_format_ll)
+            ws.write(57, i, '', cell_format_tl)
+            ws.write(55, i, '', cell_format_bl)
+        if i < 4:
+            ws.write(73, i, '', cell_format_tl)
+        if i < 5:
+            ws.write(27 + i, 2, '', cell_format_ll)
+        if i < 6:
+            ws.write(59 + i, 2, '', cell_format_ll)
+        if i < 7:
+            ws.write(47 + i, 2, '', cell_format_ll)
+        if i < 8:
+            ws.write(17 + i, 2, '', cell_format_ll)
+    ws.write(0, 1, '', cell_format_bl)
+    ws.write(1, 2, '', cell_format_ll)
+    ws.write(66, 1, '', cell_format_bl)
+    ws.write(67, 2, '', cell_format_ll)
+    ws.write(56, 3, '', cell_format_ll)
     # Close the workbook again
     wb.close()
     # root.destroy()
