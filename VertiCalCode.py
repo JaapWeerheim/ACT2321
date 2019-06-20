@@ -138,6 +138,8 @@ def worksheet_output(dictionary_name):
     # and growth cycles.
     total_eoc = 0
     total_growth_cycles = 0
+    total_seed_co2 = 0
+    total_seed_energy = 0
     for keys, values in dictionary_name.items():
         for i in range(1, len(list_crop_species) + 1):
             if keys == sheet.cell_value(i, 0):
@@ -147,12 +149,22 @@ def worksheet_output(dictionary_name):
                 # Growth period
                 dictionary_name[keys] += [365/sheet.cell_value(i, 5)]
                 total_growth_cycles += (365/sheet.cell_value(i, 5))
+                # Seed co2:
+                dictionary_name[keys] += [sheet.cell_value(i,6)]
+                total_seed_co2 += sheet.cell_value(i,6)
+                # Seed energy:
+                dictionary_name[keys] += [sheet.cell_value(i,7)]
+                total_seed_energy = sheet.cell_value(i,7)
 
     # The values for dictionary element 'Total' contain average values:
     average_eoc = total_eoc / (len(dictionary_name) - 1)
     average_growth_period = total_growth_cycles / (len(dictionary_name)-1)
+    average_seed_co2 = total_seed_co2 / (len(dictionary_name) - 1)
+    average_seed_energy = total_seed_energy / (len(dictionary_name) - 1)
     dictionary_name[list(dictionary_name.keys())[0]] += [average_eoc]
     dictionary_name[list(dictionary_name.keys())[0]] += [average_growth_period]
+    dictionary_name[list(dictionary_name.keys())[0]] += [average_seed_co2]
+    dictionary_name[list(dictionary_name.keys())[0]] += [average_seed_energy]
 
     # Calculation to find out the total combination of fraction surface and fraction growth period,
     # needed for the substrate calculations.
@@ -176,12 +188,14 @@ def worksheet_output(dictionary_name):
         kg_prod = values[2]
         eoc = values[3]
         growth_cycles = values[4]
+        co2_emission_co2 = values[5]
+        energy_emission_seed = values[6]
 
         # Calculation for total CO2 of seeds
-        seed_co2 = kg_seeds * dic_p['Se1']
+        seed_co2 = kg_seeds * co2_emission_co2
 
         # Calculation for total energy of seeds
-        seed_energy = kg_seeds * dic_p['Se2']
+        seed_energy = kg_seeds * energy_emission_seed
 
         # Calculation for total C02 of electricity usage
         eco2 = fraction_sur * (
