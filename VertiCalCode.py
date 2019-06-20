@@ -16,7 +16,7 @@ frame_previous_next = Frame(height=40, width=400)
 frame_farm_name = Frame(height=65, width=400)
 frame_location = Frame(height=75, width=400)
 frame_location_extension = Frame(height=120, width=400)
-frame_crop_species = Frame(height=8000, width=400)
+frame_crop_species = Frame(height=10000, width=400)
 frame_buy_energy = Frame(height=120, width=400)
 frame_create_renewable = Frame(height=120, width=400)
 frame_sell_renewable = Frame(height=90, width=400)
@@ -67,10 +67,18 @@ def worksheet_output(dictionary_name):
     # outputs are left out of the analysis.
     non_count = str()
     nr_do_not_know = 0
+    # Check if seed data is filled in
+    seed_empty_counter = 0
+    for y in range(0,len(ansVeg)):
+        if ansVeg[y].get() == 1 and seedVeg[y].get() == 0:
+            seed_empty_counter += 1
+    if seed_empty_counter > 0:
+        non_count = 'seeds, '
+        nr_do_not_know += 1
     if ans_check_buy_energy.get() == 1:
         ans_buy_renew.set(0)
         ans_buy_non_renew.set(0)
-        non_count = 'bought electricity, '
+        non_count = (non_count + 'bought electricity, ')
         nr_do_not_know += 1
     if ans_check_create_renewable.get() == 1:
         ans_prod_biomass.set(0)
@@ -172,7 +180,7 @@ def worksheet_output(dictionary_name):
     # loop, to find the final sum_fraction in order to properly do the calculations on substrate in the next for loop.
     sum_fraction = 0
     for keys, values in dictionary_name.items():
-        if keys != 'Total':
+        if keys != 'Overview':
             fraction_sur = values[0]
             growth_cycles = values[4]
             # Substrate calculations
@@ -436,19 +444,15 @@ def worksheet_output(dictionary_name):
             ws.write(1 + x, 7, totals_output_round[x], cell_format_background1)
         ws.set_column(6, 6, len('Total energy used per KJ product [KJ/KJ per year]'))
 
-        if ans_check_buy_energy.get() == 1 or ans_check_create_renewable.get() == 1 \
-                or ans_check_sell_energy.get() == 1 or ans_check_fossil_fuel_use.get() == 1 \
-                or ans_check_fertilizer_use.get() == 1 or ans_check_substrate_use.get() == 1 or \
-                ans_check_tap_water_use.get() == 1 or ans_check_pesticide_use.get() == 1 or \
-                ans_check_transport.get() == 1:
-            if nr_do_not_know <= 4:
+        # Create a warning message when data is not filled in in the tool
+        if nr_do_not_know > 0 and nr_do_not_know <= 4:
                 ws.write(13, 1,
                          "Specifications of " + non_count + ' are not taken into account because of lacking data.')
-            else:
-                warning_format = wb.add_format({'bold': True, 'font_size': 16})
-                ws.write(13, 1,
-                         "You have used the 'I don't know' button too often. The analysis is missing too much data to"
-                         " show significant results. Please try again.", warning_format)
+        if nr_do_not_know > 4:
+            warning_format = wb.add_format({'bold': True, 'font_size': 16})
+            ws.write(13, 1,
+                     "You have used the 'I don't know' button too often. The analysis is missing too much data to"
+                     " show significant results. Please try again.", warning_format)
 
         # Creating bar charts
         chart_col = wb.add_chart({'type': 'column'})
@@ -483,8 +487,8 @@ def worksheet_output(dictionary_name):
         chart_col.set_x_axis({'name': 'Sources'})
         ws.insert_chart('E15', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        # In the tab total, several more graphs are created than in the other tabs.
-        if crop_name == 'Total':
+        # In the tab overview, several more graphs are created than in the other tabs.
+        if crop_name == 'Overview':
             chart_col = wb.add_chart({'type': 'column'})
             chart_col.add_series({
                 'name': [crop_name, 0, 1],
@@ -976,47 +980,23 @@ def cal2():
 
     # Creating a dictionary of all parameters: [fraction surface, fraction kg,kg vegetation]
     dic_crops = {}
-    dic_crops['Total'] = [1, total_seeds, total_kg]
+    dic_crops['Overview'] = [1, total_seeds, total_kg]
     for i in range(0, len(fraction_sur)):
         dic_crops[list_crop_species[i]] = [fraction_sur[i], seedVeg[i].get(), kgVeg[i].get()]
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
     return dic_crops
 
 
-# This function attempts to remove the zeros in the question on which crops a farmer grows, in the sur entries
-def rid_of_zeros_sur(event, ans, sur):
+# This function attempts to remove the zeros in the question on which crops a farmer grows
+def rid_of_zeros_q2(event, ans, param):
     try:
-        if sur.get() <= 0 and ans.get() == 1:
-            sur.set('')
+        if param.get() <= 0 and ans.get() == 1:
+            param.set('')
     except:
-        sur.set(0)
+        param.set(0)
     if ans.get() == 0:
-        sur.set(0)
+        param.set(0)
     return
-
-# This function attempts to remove the zeros in the question on which crops a farmer grows, in the seeding entries
-def rid_of_zeros_seedlings(event, ans, seeds):
-    try:
-        if seeds.get() <= 0 and ans.get() == 1:
-            seeds.set('')
-    except:
-        seeds.set(0)
-    if ans.get() == 0:
-        seeds.set(0)
-    return
-
-
-# This function attempts to remove the zeros in the question on which crops a farmer grows, in the kg entries
-def rid_of_zeros_kg(event, ans, kg):
-    try:
-        if kg.get() <= 0 and ans.get() == 1:
-            kg.set('')
-    except:
-        kg.set(0)
-    if ans.get() == 0:
-        kg.set(0)
-    return
-
 
 # This function attempts to remove the zeros in all entries as soon as they are clicked
 def rid_of_zeros(event,answer):
@@ -1154,7 +1134,8 @@ ansBas = IntVar()
 ansRuc = IntVar()
 ansMic = IntVar()
 ansMin = IntVar()
-ansVeg = [ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin]
+ansOthers = IntVar()
+ansVeg = [ansLet, ansSpi, ansBea, ansPar, ansKal, ansBas, ansRuc, ansMic, ansMin, ansOthers]
 
 # Initialize variables for surface of a specific crop in Q2
 surLet = IntVar()
@@ -1167,7 +1148,8 @@ surBas = IntVar()
 surRuc = IntVar()
 surMic = IntVar()
 surMin = IntVar()
-surVeg = [surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin]
+surOthers = IntVar()
+surVeg = [surLet, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin, surOthers]
 
 # Initialize variables for sold produce of a specific crop in Q2
 kgLet = IntVar()
@@ -1180,7 +1162,8 @@ kgBas = IntVar()
 kgRuc = IntVar()
 kgMic = IntVar()
 kgMin = IntVar()
-kgVeg = [kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin]
+kgOthers = IntVar()
+kgVeg = [kgLet, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, kgOthers]
 
 # Initialize variables for buying seeds
 seedLet = IntVar()
@@ -1193,7 +1176,8 @@ seedBas = IntVar()
 seedRuc = IntVar()
 seedMic = IntVar()
 seedMin = IntVar()
-seedVeg = [seedLet, seedEnd, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin]
+seedOthers = IntVar()
+seedVeg = [seedLet, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin, seedOthers]
 
 Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=10, sticky=W)
 Label(frame_crop_species, text='Area [m\u00b2]').grid(row=0, column=1, padx=5, sticky=W)
@@ -1206,16 +1190,16 @@ for i in range(0, len(list_crop_species)):
                                                                                         padx=10)
     surface_entry = Entry(frame_crop_species, textvariable=surVeg[i], width=12)
     surface_entry.grid(row=i + 1, column=1, sticky=W, padx=5)
-    seed_entry = Entry(frame_crop_species, textvariable =seedVeg[i], width=12)
+    seed_entry = Entry(frame_crop_species, textvariable=seedVeg[i], width=12)
     seed_entry.grid(row=i + 1, column=2, sticky=W, padx=5)
     kg_entry = Entry(frame_crop_species, textvariable=kgVeg[i], width=12)
     kg_entry.grid(row=i + 1, column=3, sticky=W, padx=5)
-    surface_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event, y, z))
-    surface_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_sur(event, y, z))
-    seed_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_seedlings(event, y, z))
-    seed_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_seedlings(event, y, z))
-    kg_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event, y, z))
-    kg_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_kg(event, y, z))
+    surface_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_q2(event, y, z))
+    surface_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=surVeg[i]: rid_of_zeros_q2(event, y, z))
+    seed_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_q2(event, y, z))
+    seed_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=seedVeg[i]: rid_of_zeros_q2(event, y, z))
+    kg_entry.bind("<FocusIn>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_q2(event, y, z))
+    kg_entry.bind("<FocusOut>", lambda event, y=ansVeg[i], z=kgVeg[i]: rid_of_zeros_q2(event, y, z))
 
 # Here the fields for question 3 (buying electricity) are created
 ans_buy_renew = IntVar()
