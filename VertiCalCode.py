@@ -344,8 +344,8 @@ def worksheet_output(dictionary_name):
         total_energy_per_kg_product = total_energy / kg_prod
 
         # Calculations for the total Co2 and energy per KJ product
-        total_co2_per_kj_product = total_co2_per_kg_product / eoc
-        total_energy_per_kj_product = total_energy_per_kg_product / eoc
+        total_co2_per_kj_product = (total_co2_per_kg_product / eoc)
+        total_energy_per_kj_product = (total_energy_per_kg_product / eoc) *1000
 
         # Writing the outputs to the previously created Excel sheet
         ws = wb.add_worksheet(crop_name)
@@ -426,8 +426,7 @@ def worksheet_output(dictionary_name):
             ws.write(2 + x, 3, energy_used_round[x], cell_formats[i])
             ws.write(2 + x, 4, energy_crop_round[x], cell_formats[i])
 
-        ws.write(0, 0, '', cell_format_bold)
-        ws.write(1, 0, '', cell_format_bold)
+        ws.merge_range('A1:A2', '', cell_format_bold)
         ws.write(2 + len(labels_output), 0, 'Total', cell_format_total)
         ws.write(2 + len(labels_output), 1, round(sum(co2_emitted), 0), cell_format_top)
         ws.write(2 + len(labels_output), 2, round(sum(co2_crop), 3), cell_format_top)
@@ -478,6 +477,7 @@ def worksheet_output(dictionary_name):
             'values': [crop_name, 2, 1, 11, 1],
             'fill': {'color': 'black'}
         })
+        chart_col.set_legend({'none': True})
         chart_col.set_title({'name': 'Total CO\u2082eq from different sources',
                              'name_font': {'size': 12}})
         chart_col.set_y_axis({'name': 'CO\u2082eq[kg]',
@@ -494,6 +494,7 @@ def worksheet_output(dictionary_name):
             'values': [crop_name, 2, 3, 11, 3],
             'fill': {'color': 'black'}
         })
+        chart_col.set_legend({'none': True})
         chart_col.set_title({'name': 'Total energy used from different sources',
                              'name_font': {'size': 12}})
         chart_col.set_y_axis({'name': 'Energy [MJ]',
@@ -510,8 +511,9 @@ def worksheet_output(dictionary_name):
                 'name': [crop_name, 0, 1],
                 'categories': [crop_name, 2, 0, 11, 0],
                 'values': [crop_name, 2, 1, 11, 1],
-                'fill': {'color': 'black'}
+                'fill': {'color': 'black'},
             })
+            chart_col.set_legend({'none': True})
             chart_col.set_title({'name': 'Total CO\u2082eq from different sources',
                                  'name_font': {'size': 12}})
             chart_col.set_y_axis({'name': 'CO\u2082eq [kg]',
@@ -526,8 +528,9 @@ def worksheet_output(dictionary_name):
                 'name': [crop_name, 0, 4],
                 'categories': [crop_name, 2, 0, 11, 0],
                 'values': [crop_name, 2, 3, 11, 3],
-                'fill': {'color': 'black'}
+                'fill': {'color': 'black'},
             })
+            chart_col.set_legend({'none': True})
             chart_col.set_title({'name': 'Total energy used from different sources',
                                  'name_font': {'size': 12}})
             chart_col.set_y_axis({'name': 'Energy [MJ]',
