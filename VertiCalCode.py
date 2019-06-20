@@ -16,7 +16,7 @@ frame_previous_next = Frame(height=40, width=400)
 frame_farm_name = Frame(height=65, width=400)
 frame_location = Frame(height=75, width=400)
 frame_location_extension = Frame(height=120, width=400)
-frame_crop_species = Frame(height=10000, width=400)
+frame_crop_species = Frame(height=8000, width=400)
 frame_buy_energy = Frame(height=120, width=400)
 frame_create_renewable = Frame(height=120, width=400)
 frame_sell_renewable = Frame(height=90, width=400)
@@ -27,12 +27,13 @@ frame_water_use = Frame(height=50, width=400)
 frame_pesticide_use = Frame(height=140, width=400)
 frame_packaging_use = Frame(height=70, width=400)
 frame_transport = Frame(height=120, width=400)
+frame_building = Frame(height=120, width=400)
 frame_finish = Frame(height=120, width=400)
 
 all_frames = [frame_start, frame_farm_name, frame_location, frame_previous_next, frame_location_extension,
               frame_crop_species, frame_buy_energy, frame_create_renewable, frame_sell_renewable, frame_fuel_use,
               frame_fertilizer_use, frame_substrate_use, frame_water_use, frame_pesticide_use, frame_packaging_use,
-              frame_transport, frame_finish]
+              frame_transport, frame_building, frame_finish]
 
 # Set all the frames to a certain size
 for frame in all_frames:
@@ -136,6 +137,12 @@ def worksheet_output(dictionary_name):
         ans_van_use.set(0)
         ans_truck_use.set(0)
         non_count = (non_count + 'transport')
+        nr_do_not_know += 1
+    if ans_check_building.get() == 1:
+        ans_steel.set(0)
+        ans_aluminium.set(0)
+        ans_plastic.set(0)
+        non_count = (non_count + 'building')
         nr_do_not_know += 1
 
     # Create the output: an Excel file
@@ -319,10 +326,18 @@ def worksheet_output(dictionary_name):
         # Calculation for the total energy of packaging
         pac_energy = kg_prod * dic_p['Pac2']
 
+        # Calculation for the total Co2 of building
+        buil_co2 = fraction_sur * (((ans_steel.get() * dic_p['B1']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B3']) / dic_p['BL2'])
+        + ((ans_plastic.get() * dic_p['B5']) / dic_p['BL3']))
+
+        # Calculation for the total energy of building
+        buil_energy = fraction_sur * (((ans_steel.get() * dic_p['B2']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B4']) / dic_p['BL2'])
+        + ((ans_plastic.get() * dic_p['B6']) / dic_p['BL3']))
+
         # calculations for the total Co2 and energy
-        total_co2 = seed_co2 + eco2 + f_co2 + fer_co2 + s_co2 + w_co2 + p_co2 + t_co2 + pac_co2
+        total_co2 = seed_co2 + eco2 + f_co2 + fer_co2 + s_co2 + w_co2 + p_co2 + t_co2 + pac_co2 + buil_co2
         total_energy = seed_energy + e_energy + f_energy + fer_energy + s_energy + w_energy + p_energy + t_energy + \
-                       pac_energy
+                       pac_energy + buil_energy
 
         # Calculations for the total Co2 and energy per kg product
         total_co2_per_kg_product = total_co2 / kg_prod
@@ -381,10 +396,11 @@ def worksheet_output(dictionary_name):
         ws.set_column(5, 4, len('Per kg crop [kg/kg]'))
 
         labels_output = ['Seeds', 'Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
-                         'Transport', 'Package']
-        co2_emitted = [seed_co2, eco2, f_co2, fer_co2, s_co2, w_co2, p_co2, t_co2, pac_co2]
+                         'Transport', 'Package', 'Buildings']
+        co2_emitted = [seed_co2, eco2, f_co2, fer_co2, s_co2, w_co2, p_co2, t_co2, pac_co2, buil_co2]
         co2_emitted_round = [round(elem, 0) for elem in co2_emitted]
-        energy_used = [seed_energy, e_energy, f_energy, fer_energy, s_energy, w_energy, p_energy, t_energy, pac_energy]
+        energy_used = [seed_energy, e_energy, f_energy, fer_energy, s_energy, w_energy, p_energy, t_energy, pac_energy,
+                       buil_energy]
         energy_used_round = [round(elem, 0) for elem in energy_used]
         co2_crop = []
         energy_crop = []
@@ -421,9 +437,9 @@ def worksheet_output(dictionary_name):
         ws.set_row(0, 20)
         ws.set_row(1, 12)
 
-        for i in range(0, 12):
+        for i in range(0, 13):
             if i < 5:
-                ws.write(12, i, '', cell_format_tl)
+                ws.write(13, i, '', cell_format_tl)
             ws.write(i, 5, '', cell_format_ll)
 
         ws.write(3, 6, '', cell_format_tl)
@@ -446,11 +462,11 @@ def worksheet_output(dictionary_name):
 
         # Create a warning message when data is not filled in in the tool
         if nr_do_not_know > 0 and nr_do_not_know <= 4:
-                ws.write(13, 1,
+                ws.write(14, 1,
                          "Specifications of " + non_count + ' are not taken into account because of lacking data.')
         if nr_do_not_know > 4:
             warning_format = wb.add_format({'bold': True, 'font_size': 16})
-            ws.write(13, 1,
+            ws.write(14, 1,
                      "You have used the 'I don't know' button too often. The analysis is missing too much data to"
                      " show significant results. Please try again.", warning_format)
 
@@ -458,8 +474,8 @@ def worksheet_output(dictionary_name):
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
             'name': [crop_name, 0, 1],
-            'categories': [crop_name, 2, 0, 9, 0],
-            'values': [crop_name, 2, 1, 9, 1],
+            'categories': [crop_name, 2, 0, 11, 0],
+            'values': [crop_name, 2, 1, 11, 1],
             'fill': {'color': 'black'}
         })
         chart_col.set_title({'name': 'Total CO\u2082eq from different sources',
@@ -469,13 +485,13 @@ def worksheet_output(dictionary_name):
                                   'visible': False
                               }})
         chart_col.set_x_axis({'name': 'Sources'})
-        ws.insert_chart('A15', chart_col, {'x_offset': 20, 'y_offset': 8})
+        ws.insert_chart('A16', chart_col, {'x_offset': 20, 'y_offset': 8})
 
         chart_col = wb.add_chart({'type': 'column'})
         chart_col.add_series({
             'name': [crop_name, 0, 3],
-            'categories': [crop_name, 2, 0, 9, 0],
-            'values': [crop_name, 2, 3, 9, 3],
+            'categories': [crop_name, 2, 0, 11, 0],
+            'values': [crop_name, 2, 3, 11, 3],
             'fill': {'color': 'black'}
         })
         chart_col.set_title({'name': 'Total energy used from different sources',
@@ -485,15 +501,15 @@ def worksheet_output(dictionary_name):
                                   'visible': False
                               }})
         chart_col.set_x_axis({'name': 'Sources'})
-        ws.insert_chart('E15', chart_col, {'x_offset': 20, 'y_offset': 8})
+        ws.insert_chart('E16', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        # In the tab overview, several more graphs are created than in the other tabs.
+        # In the tab total, several more graphs are created than in the other tabs.
         if crop_name == 'Overview':
             chart_col = wb.add_chart({'type': 'column'})
             chart_col.add_series({
                 'name': [crop_name, 0, 1],
-                'categories': [crop_name, 2, 0, 9, 0],
-                'values': [crop_name, 2, 1, 9, 1],
+                'categories': [crop_name, 2, 0, 11, 0],
+                'values': [crop_name, 2, 1, 11, 1],
                 'fill': {'color': 'black'}
             })
             chart_col.set_title({'name': 'Total CO\u2082eq from different sources',
@@ -503,13 +519,13 @@ def worksheet_output(dictionary_name):
                                       'visible': False
                                   }})
             chart_col.set_x_axis({'name': 'Sources', })
-            ws.insert_chart('A15', chart_col, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('A16', chart_col, {'x_offset': 20, 'y_offset': 8})
 
             chart_col = wb.add_chart({'type': 'column'})
             chart_col.add_series({
                 'name': [crop_name, 0, 4],
-                'categories': [crop_name, 1, 0, 10, 0],
-                'values': [crop_name, 1, 3, 10, 3],
+                'categories': [crop_name, 2, 0, 11, 0],
+                'values': [crop_name, 2, 3, 11, 3],
                 'fill': {'color': 'black'}
             })
             chart_col.set_title({'name': 'Total energy used from different sources',
@@ -531,16 +547,16 @@ def worksheet_output(dictionary_name):
 
             count = 0
             for keys, values in dictionary_name.items():
-                if keys != 'Total':
+                if keys != 'Overview':
                     chart_co2.add_series({'name': keys,
-                                          'values': [keys, 2, 2, 9, 2],
-                                          'categories': [keys, 2, 0, 9, 0],
+                                          'values': [keys, 2, 2, 11, 2],
+                                          'categories': [keys, 2, 0, 11, 0],
                                           'fill': {'color': headings[count]},
                                           'border': {'color': 'black'}
                                           })
                     chart_energy.add_series({'name': keys,
-                                             'values': [keys, 2, 4, 9, 4],
-                                             'categories': [keys, 2, 0, 9, 0],
+                                             'values': [keys, 2, 4, 11, 4],
+                                             'categories': [keys, 2, 0, 11, 0],
                                              'fill': {'color': headings[count]},
                                              'border': {'color': 'black'}
                                              })
@@ -557,8 +573,8 @@ def worksheet_output(dictionary_name):
                                      }})
             chart_energy.set_x_axis({'name': 'Sources'})
             # chart_co2.set_size({'width': 960, 'height': 285})
-            ws.insert_chart('A30', chart_co2, {'x_offset': 20, 'y_offset': 8})
-            ws.insert_chart('E30', chart_energy, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('A31', chart_co2, {'x_offset': 20, 'y_offset': 8})
+            ws.insert_chart('E31', chart_energy, {'x_offset': 20, 'y_offset': 8})
 
     # Write the raw data from the questionnaire to the Excel sheet
     ws = wb.add_worksheet("Raw data")
@@ -643,7 +659,8 @@ def worksheet_output(dictionary_name):
     ws.write(46, 0, "Question 8", cell_format_questions)
     ws.write(47, 0, "Substrate type", cell_format_expl_quest)
     ws.write(47, 1, "Consumption [kg per year]", cell_format_expl_quest)
-    list_substrates = [ans_rockwool_use.get(), ans_perlite_use.get(), ans_cocofiber_use.get(), ans_hempfiber_use.get(),
+    list_substrates = [ans_rockwool_use.get(), ans_perlite_use.get(), ans_cocofiber_use.get(),
+                       ans_hempfiber_use.get(),
                        ans_peat_use.get(), ans_peatmoss_use.get()]
     list_substrates_names = ["Rockwool", "Perlite", "Cocofiber", "Hempfiber", 'Peat', "Peatmoss"]
     for i in range(0, len(list_substrates)):
@@ -698,6 +715,17 @@ def worksheet_output(dictionary_name):
     ws.write(71, 3, ans_van_own.get(), cell_format_align_r1)
     ws.write(72, 3, ans_truck_own.get(), cell_format_align_r1)
 
+    # Question 13
+    ws.write(74, 0, 'Question 13', cell_format_questions)
+    ws.write(75, 0, 'Building', cell_format_expl_quest)
+    ws.write(75, 1, 'Amount [kg]', cell_format_expl_quest)
+    ws.write(76, 0, 'Steel', cell_format_bold)
+    ws.write(76, 1, ans_steel.get(), cell_formats[1])
+    ws.write(77, 0, 'Aluminium', cell_format_bold)
+    ws.write(77, 1, ans_aluminium.get(), cell_formats[0])
+    ws.write(78, 0, 'Plastic', cell_format_bold)
+    ws.write(78, 1, ans_plastic.get(), cell_formats[1])
+
     # Adding border lines
     for i in range(0, 11):
         ws.write(4 + i, 4, '', cell_format_ll)
@@ -711,6 +739,7 @@ def worksheet_output(dictionary_name):
             ws.write(65, i, '', cell_format_tl)
             ws.write(68, i, '', cell_format_tl)
             ws.write(57, i, '', cell_format_ll)
+            ws.write(79, i, '', cell_format_tl)
         if i < 3:
             ws.write(70 + i, 4, '', cell_format_ll)
             ws.write(57, i, '', cell_format_tl)
@@ -718,6 +747,7 @@ def worksheet_output(dictionary_name):
         if i < 4:
             ws.write(15, i, '', cell_format_tl)
             ws.write(73, i, '', cell_format_tl)
+            ws.write(75 + i, 2, '', cell_format_ll)
         if i < 5:
             ws.write(27 + i, 2, '', cell_format_ll)
         if i < 6:
@@ -801,8 +831,12 @@ def pre():
         frame_packaging_use.grid(sticky=W)
     if count == 12:
         var.set(question_transport)
-        frame_finish.grid_forget()
+        frame_building.grid_forget()
         frame_transport.grid(sticky=W)
+    if count == 13:
+        var.set(question_building)
+        frame_finish.grid_forget()
+        frame_building.grid(sticky=W)
         button1.grid(row=0, column=2, sticky=E, padx=10)
     return
 
@@ -864,8 +898,12 @@ def next1():
         frame_packaging_use.grid_forget()
         frame_transport.grid(sticky=W)
     if count == 13:
-        var.set(question_finish)
+        var.set(question_building)
         frame_transport.grid_forget()
+        frame_building.grid(sticky=W)
+    if count == 14:
+        var.set(question_finish)
+        frame_building.grid_forget()
         frame_finish.grid(sticky=W)
         button1.grid_remove()
     return
@@ -1088,7 +1126,8 @@ question_packaging_use = '11. Is the product sold to the customer packaged? '
 question_transport = '12. How far does your product travel to the distribution center?\n'\
                      'How are the products divided between the several transportation means?\n'\
                      'Who is the owner of the transportation means?'
-question_finish = '13. This is the end of the questionnaire. \nPlease make sure that all questions are answered ' \
+question_building = '13. How much of the following materials (kg) were used to \nbuild your growing system? '
+question_finish = '14. This is the end of the questionnaire. \nPlease make sure that all questions are answered ' \
                   'before you submit.'
 
 # Question 1: Where is your farm located?
@@ -1483,15 +1522,38 @@ truck_own['values'] = list_own
 truck_own.current(0)
 truck_own.grid(padx=5, row=2, column=3)
 
+# Here the fields for building (Q13) are created
+ans_steel = IntVar()
+ans_aluminium = IntVar()
+ans_plastic = IntVar()
+ans_check_building = IntVar()
+steel_label = Label(frame_building, text='Steel').grid(row=2, column=0, padx=10, sticky=W)
+steel_entry = Entry(frame_building, width=10, textvariable=ans_steel)
+steel_entry.grid(row=2, column=1)
+steel_entry.bind("<FocusIn>", lambda event, z=ans_steel: rid_of_zeros(event, z))
+steel_entry.bind("<FocusOut>", lambda event, z=ans_steel: rid_of_zeros(event, z))
+aluminium_label = Label(frame_building, text='Aluminium').grid(row=3, column=0, padx=10, sticky=W)
+aluminium_entry = Entry(frame_building, width=10, textvariable=ans_aluminium)
+aluminium_entry.grid(row=3, column=1)
+aluminium_entry.bind("<FocusIn>", lambda event, z=ans_aluminium: rid_of_zeros(event, z))
+aluminium_entry.bind("<FocusOut>", lambda event, z=ans_aluminium: rid_of_zeros(event, z))
+plastic_label = Label(frame_building, text='Plastic').grid(row=4, column=0, padx=10, sticky=W)
+plastic_entry = Entry(frame_building, width=10, textvariable=ans_plastic)
+plastic_entry.grid(row=4, column=1)
+plastic_entry.bind("<FocusIn>", lambda event, z=ans_plastic: rid_of_zeros(event, z))
+plastic_entry.bind("<FocusOut>", lambda event, z=ans_plastic: rid_of_zeros(event, z))
+Checkbutton(frame_building, text="I don't know", variable=ans_check_building).grid(sticky=W, padx=10, row=5, column=0)
+
 # Here fields for finishing the questionnaire are created
 Button_finish = Button(frame_finish, text='Submit!', command=close_program, padx=10, justify=RIGHT)
 Button_finish.grid(row=4, column=0, padx=10)
 
 # At the end, a list containing all the variables is created. Needed to be able to load previously filled in results.
-list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansEnd, ansSpi, ansBea, ansPar, ansKal, ansBas,
-            ansRuc, ansMic, ansMin, surLet, surEnd, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin,
-            kgLet, kgEnd, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, ans_buy_renew, ans_buy_non_renew,
-            ans_check_buy_energy, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_check_create_renewable,
+list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansSpi, ansBea, ansPar, ansKal, ansBas,
+            ansRuc, ansMic, ansMin, ansOthers, surLet, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin,
+            surOthers, seedLet, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin,
+            seedOthers, kgLet, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, kgOthers, ans_buy_renew,
+            ans_buy_non_renew, ans_check_buy_energy, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_check_create_renewable,
             ans_sel_renew, ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use,
             ans_natural_gas_use, ans_oil_use, ans_check_fossil_fuel_use, ans_ammonium_nitrate_use,
             ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use, ans_triple_super_phosphate_use,
@@ -1500,7 +1562,8 @@ list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansEnd, 
             ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use,
             ans_check_substrate_use, ans_tap_water_use, ans_check_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
             ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_check_pesticide_use, ans_packaging,
-            ans_van_use, ans_truck_use, ans_percentage_van_use, ans_percentage_truck_use, ans_check_transport]
+            ans_van_use, ans_truck_use, ans_percentage_van_use, ans_percentage_truck_use, ans_check_transport,
+            ans_steel, ans_aluminium, ans_plastic, ans_check_building]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
