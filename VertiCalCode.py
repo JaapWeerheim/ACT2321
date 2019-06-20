@@ -172,10 +172,16 @@ def worksheet_output(dictionary_name):
     for keys, values in dictionary_name.items():
         crop_name = keys
         fraction_sur = values[0]
-        # frac_kg = values[1]
+        kg_seeds = values[1]
         kg_prod = values[2]
         eoc = values[3]
         growth_cycles = values[4]
+
+        # Calculation for total CO2 of seeds
+        seed_co2 = kg_seeds * dic_p['Se1']
+
+        # Calculation for total energy of seeds
+        seed_energy = kg_seeds * dic_p['Se2']
 
         # Calculation for total C02 of electricity usage
         eco2 = fraction_sur * (
@@ -292,8 +298,9 @@ def worksheet_output(dictionary_name):
         pac_energy = kg_prod * dic_p['Pac2']
 
         # calculations for the total Co2 and energy
-        total_co2 = eco2 + f_co2 + fer_co2 + s_co2 + w_co2 + p_co2 + t_co2 + pac_co2
-        total_energy = e_energy + f_energy + fer_energy + s_energy + w_energy + p_energy + t_energy + pac_energy
+        total_co2 = seed_co2 + eco2 + f_co2 + fer_co2 + s_co2 + w_co2 + p_co2 + t_co2 + pac_co2
+        total_energy = seed_energy + e_energy + f_energy + fer_energy + s_energy + w_energy + p_energy + t_energy + \
+                       pac_energy
 
         # Calculations for the total Co2 and energy per kg product
         total_co2_per_kg_product = total_co2 / kg_prod
@@ -351,11 +358,11 @@ def worksheet_output(dictionary_name):
         ws.set_column(4, 3, len('Per kg crop [kg/kg]'))
         ws.set_column(5, 4, len('Per kg crop [kg/kg]'))
 
-        labels_output = ['Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
+        labels_output = ['Seeds', 'Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
                          'Transport', 'Package']
-        co2_emitted = [eco2, f_co2, fer_co2, s_co2, w_co2, p_co2, t_co2, pac_co2]
+        co2_emitted = [seed_co2, eco2, f_co2, fer_co2, s_co2, w_co2, p_co2, t_co2, pac_co2]
         co2_emitted_round = [round(elem, 0) for elem in co2_emitted]
-        energy_used = [e_energy, f_energy, fer_energy, s_energy, w_energy, p_energy, t_energy, pac_energy]
+        energy_used = [seed_energy, e_energy, f_energy, fer_energy, s_energy, w_energy, p_energy, t_energy, pac_energy]
         energy_used_round = [round(elem, 0) for elem in energy_used]
         co2_crop = []
         energy_crop = []
@@ -392,9 +399,9 @@ def worksheet_output(dictionary_name):
         ws.set_row(0, 20)
         ws.set_row(1, 12)
 
-        for i in range(0, 11):
+        for i in range(0, 12):
             if i < 5:
-                ws.write(11, i, '', cell_format_tl)
+                ws.write(12, i, '', cell_format_tl)
             ws.write(i, 5, '', cell_format_ll)
 
         ws.write(3, 6, '', cell_format_tl)
@@ -421,11 +428,11 @@ def worksheet_output(dictionary_name):
                 ans_check_tap_water_use.get() == 1 or ans_check_pesticide_use.get() == 1 or \
                 ans_check_transport.get() == 1:
             if nr_do_not_know <= 4:
-                ws.write(12, 1,
+                ws.write(13, 1,
                          "Specifications of " + non_count + ' are not taken into account because of lacking data.')
             else:
                 warning_format = wb.add_format({'bold': True, 'font_size': 16})
-                ws.write(12, 1,
+                ws.write(13, 1,
                          "You have used the 'I don't know' button too often. The analysis is missing too much data to"
                          " show significant results. Please try again.", warning_format)
 
@@ -537,7 +544,7 @@ def worksheet_output(dictionary_name):
 
     # Write the raw data from the questionnaire to the Excel sheet
     ws = wb.add_worksheet("Raw data")
-    ws.set_column(0, 2, len('Percentage of products [%]'))
+    ws.set_column(0, 3, len('Sold products [kg per year]'))
 
     # Write question 1
     ws.write(0, 0, "Question 1", cell_format_questions)
@@ -548,7 +555,8 @@ def worksheet_output(dictionary_name):
     ws.write(3, 0, "Question 2", cell_format_questions)
     ws.write(4, 0, "Crop type", cell_format_expl_quest)
     ws.write(4, 1, "Area [m\u00b2]", cell_format_expl_quest)
-    ws.write(4, 2, "Sold products [kg per year]", cell_format_expl_quest)
+    ws.write(4, 2, "Seeds [kg per year]", cell_format_expl_quest)
+    ws.write(4, 3, "Sold products [kg per year]", cell_format_expl_quest)
     for i in range(0, len(ansVeg)):
         if i % 2 == 0:
             x = 1
@@ -556,7 +564,8 @@ def worksheet_output(dictionary_name):
             x = 0
         ws.write(5 + i, 0, list_crop_species[i], cell_format_bold)
         ws.write(5 + i, 1, surVeg[i].get(), cell_formats[x])
-        ws.write(5 + i, 2, kgVeg[i].get(), cell_formats[x])
+        ws.write(5 + i, 2, seedVeg[i].get(), cell_formats[x])
+        ws.write(5 + i, 3, kgVeg[i].get(), cell_formats[x])
 
     # Write question 3, 4 and 5
     ws.write(16, 0, "Question 3-5", cell_format_questions)
@@ -668,11 +677,12 @@ def worksheet_output(dictionary_name):
     ws.write(71, 2, ans_percentage_van_use.get(), cell_formats[0])
     ws.write(72, 2, ans_percentage_truck_use.get(), cell_formats[1])
     ws.write(70, 3, "Owner", cell_format_expl_quest)
+    ws.write(71, 3, ans_van_own.get(), cell_format_align_r1)
     ws.write(72, 3, ans_truck_own.get(), cell_format_align_r1)
 
     # Adding border lines
     for i in range(0, 11):
-        ws.write(4 + i, 3, '', cell_format_ll)
+        ws.write(4 + i, 4, '', cell_format_ll)
         ws.write(34 + i, 2, '', cell_format_ll)
         if i < 2:
             ws.write(2, i, '', cell_format_tl)
@@ -684,11 +694,11 @@ def worksheet_output(dictionary_name):
             ws.write(68, i, '', cell_format_tl)
             ws.write(57, i, '', cell_format_ll)
         if i < 3:
-            ws.write(15, i, '', cell_format_tl)
             ws.write(70 + i, 4, '', cell_format_ll)
             ws.write(57, i, '', cell_format_tl)
             ws.write(55, i, '', cell_format_bl)
         if i < 4:
+            ws.write(15, i, '', cell_format_tl)
             ws.write(73, i, '', cell_format_tl)
         if i < 5:
             ws.write(27 + i, 2, '', cell_format_ll)
@@ -926,13 +936,16 @@ def cal2():
     global dic_crops
     total_area = 0
     total_kg = 0
+    total_seeds = 0
     for i in range(0, len(ansVeg)):
         if ansVeg[i].get() == 0:
             kgVeg[i].set(0)
             surVeg[i].set(0)
+            seedVeg[i].set(0)
 
         total_area += surVeg[i].get()
         total_kg += kgVeg[i].get()
+        total_seeds += seedVeg[i].get()
 
     # Calculating the fraction crop over the full area and fraction of kg
     fraction_let_sur = fraction_end_sur = fraction_spi_sur = fraction_bea_sur = fraction_par_sur = fraction_kal_sur =\
@@ -949,9 +962,9 @@ def cal2():
 
     # Creating a dictionary of all parameters: [fraction surface, fraction kg,kg vegetation]
     dic_crops = {}
-    dic_crops['Total'] = [1, 1, total_kg]
+    dic_crops['Total'] = [1, total_seeds, total_kg]
     for i in range(0, len(fraction_sur)):
-        dic_crops[list_crop_species[i]] = [fraction_sur[i], fraction_kg[i], kgVeg[i].get()]
+        dic_crops[list_crop_species[i]] = [fraction_sur[i], seedVeg[i].get(), kgVeg[i].get()]
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
     return dic_crops
 
@@ -968,14 +981,14 @@ def rid_of_zeros_sur(event, ans, sur):
     return
 
 # This function attempts to remove the zeros in the question on which crops a farmer grows, in the seeding entries
-def rid_of_zeros_seedlings(event, ans, seedlings):
+def rid_of_zeros_seedlings(event, ans, seeds):
     try:
-        if seedlings.get() <= 0 and ans.get() == 1:
-            seedlings.set('')
+        if seeds.get() <= 0 and ans.get() == 1:
+            seeds.set('')
     except:
-        seedlings.set(0)
+        seeds.set(0)
     if ans.get() == 0:
-        seedlings.set(0)
+        seeds.set(0)
     return
 
 
@@ -1066,7 +1079,7 @@ root.config(menu=menu)
 
 # Here all questions for the questionnaire are defined
 question_location = '1. In which country is your farm located? '
-question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of seedlings ' \
+question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of seeds ' \
                       'do you buy per year?\nHow many kilograms of each crop do you sell per year?'
 question_buy_renewable = '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?'
 question_produce_renewable = '4. Do you produce your own renewable energy, \n and how much (kWh) do you produce ' \
@@ -1170,7 +1183,7 @@ seedVeg = [seedLet, seedEnd, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRu
 
 Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=10, sticky=W)
 Label(frame_crop_species, text='Area [m\u00b2]').grid(row=0, column=1, padx=5, sticky=W)
-Label(frame_crop_species, text='Seedlings\n[kg/year]').grid(row=0, column=2, padx=5, sticky=W)
+Label(frame_crop_species, text='Seeds\n[kg/year]').grid(row=0, column=2, padx=5, sticky=W)
 Label(frame_crop_species, text='Sold products\n[kg/year]').grid(row=0, column=3, padx=5, sticky=W)
 
 # In this for loop, the fields for Q2 are created
