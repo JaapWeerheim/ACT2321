@@ -180,7 +180,7 @@ def worksheet_output(dictionary_name):
     # loop, to find the final sum_fraction in order to properly do the calculations on substrate in the next for loop.
     sum_fraction = 0
     for keys, values in dictionary_name.items():
-        if keys != 'Total':
+        if keys != 'Overview':
             fraction_sur = values[0]
             growth_cycles = values[4]
             # Substrate calculations
@@ -487,8 +487,8 @@ def worksheet_output(dictionary_name):
         chart_col.set_x_axis({'name': 'Sources'})
         ws.insert_chart('E15', chart_col, {'x_offset': 20, 'y_offset': 8})
 
-        # In the tab total, several more graphs are created than in the other tabs.
-        if crop_name == 'Total':
+        # In the tab overview, several more graphs are created than in the other tabs.
+        if crop_name == 'Overview':
             chart_col = wb.add_chart({'type': 'column'})
             chart_col.add_series({
                 'name': [crop_name, 0, 1],
@@ -980,7 +980,7 @@ def cal2():
 
     # Creating a dictionary of all parameters: [fraction surface, fraction kg,kg vegetation]
     dic_crops = {}
-    dic_crops['Total'] = [1, total_seeds, total_kg]
+    dic_crops['Overview'] = [1, total_seeds, total_kg]
     for i in range(0, len(fraction_sur)):
         dic_crops[list_crop_species[i]] = [fraction_sur[i], seedVeg[i].get(), kgVeg[i].get()]
     dic_crops = {x: y for x, y in dic_crops.items() if y != [0, 0, 0]}
