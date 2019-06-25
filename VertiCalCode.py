@@ -80,10 +80,8 @@ def worksheet_output(dictionary_name):
             plant_germ = sheet.cell_value(1+y, 2)
             seed_weight = sheet.cell_value(1+y, 3)
             seed_calc = (kgVeg[y].get() * plant_weight * seed_weight) / plant_germ
-            print(seed_calc, ' = calculation')
             seedVeg[y].set(seed_calc)
-            print(seedVeg[y].get(), ' = after .set')
-        print(seedVeg[y].get())
+
 
     if ans_check_buy_energy.get() == 1:
         ans_buy_renew.set(0)
@@ -148,7 +146,8 @@ def worksheet_output(dictionary_name):
         non_count = (non_count + 'transport')
         nr_do_not_know += 1
     if ans_check_building.get() == 1:
-        ans_steel.set(0)
+        ans_ssteel.set(0)
+        ans_bsteel.set(0)
         ans_aluminium.set(0)
         ans_plastic.set(0)
         non_count = (non_count + 'building')
@@ -254,7 +253,7 @@ def worksheet_output(dictionary_name):
                 (dic_p['Fe9'] * ans_single_super_phosphate_use.get()) + (dic_p['Fe11'] * ans_ammonia_use.get()) +
                 (dic_p['Fe13'] * ans_limestone_use.get()) + (dic_p['Fe15'] * ans_NPK_151515_use.get()) +
                 (dic_p['Fe21'] * ans_phosphoric_acid_use.get()) +
-                (dic_p['Fe22'] * ans_mono_ammonium_phosphate_use.get()))
+                (dic_p['Fe23'] * ans_mono_ammonium_phosphate_use.get()))
 
         # Calculation for total energy of fertilizers
         fer_energy = fraction_sur * (
@@ -319,15 +318,27 @@ def worksheet_output(dictionary_name):
             truck_use_percent = 50
             van_use_percent = 50
 
+        # Van calculations
+        if ans_van_own.get() == 'Self':
+            van_co2 = kg_prod * (dic_p['T7'] * ans_van_use.get() * van_use_percent)
+            van_energy = (dic_p['T8'] * ans_van_use.get() * van_use_percent)
+        else:
+            van_co2 = kg_prod * (dic_p['T3'] * ans_van_use.get() * van_use_percent)
+            van_energy = (dic_p['T4'] * ans_van_use.get() * van_use_percent)
+
+        # Truck calculations
+        if ans_truck_own.get() == 'Self':
+            truck_co2 = kg_prod * (dic_p['T5'] * ans_truck_use.get() * truck_use_percent)
+            truck_energy = (dic_p['T6'] * ans_truck_use.get() * truck_use_percent)
+        else:
+            truck_co2 = kg_prod * (dic_p['T1'] * ans_truck_use.get() * truck_use_percent)
+            truck_energy = (dic_p['T2'] * ans_truck_use.get() * truck_use_percent)
+
         # Calculation for total Co2 of transport
-        t_co2 = kg_prod * (
-                (dic_p['T3'] * ans_van_use.get() * van_use_percent * van_owner()) +
-                (dic_p['T1'] * ans_truck_use.get() * truck_use_percent * truck_owner()))
+        t_co2 = van_co2 + truck_co2
 
         # Calculation for total energy of transport
-        t_energy = kg_prod * (
-                (dic_p['T4'] * ans_van_use.get() * van_use_percent * van_owner()) +
-                (dic_p['T2'] * ans_truck_use.get() * truck_use_percent * truck_owner()))
+        t_energy = van_energy + truck_energy
 
         # Calculation for the total Co2 of packaging
         pac_co2 = kg_prod * dic_p['Pac1']
@@ -336,12 +347,12 @@ def worksheet_output(dictionary_name):
         pac_energy = kg_prod * dic_p['Pac2']
 
         # Calculation for the total Co2 of growing system
-        buil_co2 = fraction_sur * (((ans_steel.get() * dic_p['B1']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B3']) / dic_p['BL2'])
-        + ((ans_plastic.get() * dic_p['B5']) / dic_p['BL3']))
+        buil_co2 = fraction_sur * (((ans_ssteel.get() * dic_p['B1']) / dic_p['BL1']) + ((ans_bsteel.get() * dic_p['B3']) / dic_p['BL2']) + ((ans_aluminium.get() * dic_p['B5']) / dic_p['BL3'])
+        + ((ans_plastic.get() * dic_p['B7']) / dic_p['BL4']))
 
         # Calculation for the total energy of growing system
-        buil_energy = fraction_sur * (((ans_steel.get() * dic_p['B2']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B4']) / dic_p['BL2'])
-        + ((ans_plastic.get() * dic_p['B6']) / dic_p['BL3']))
+        buil_energy = fraction_sur * (((ans_ssteel.get() * dic_p['B2']) / dic_p['BL2']) + ((ans_bsteel.get() * dic_p['B4']) / dic_p['BL2']) + ((ans_aluminium.get() * dic_p['B6']) / dic_p['BL3'])
+        + ((ans_plastic.get() * dic_p['B8']) / dic_p['BL4']))
 
         # calculations for the total Co2 and energy
         total_co2 = seed_co2 + eco2 + f_co2 + fer_co2 + s_co2 + w_co2 + p_co2 + t_co2 + pac_co2 + buil_co2
@@ -398,7 +409,7 @@ def worksheet_output(dictionary_name):
         ws.merge_range('B1:C1', 'CO\u2082eq', cell_format_header)
         ws.write(1, 1, 'Total [kg]', cell_format_bold)
         ws.write(1, 2, 'Per kg crop [kg/kg]', cell_format_bold)
-        ws.merge_range('D1:E1', 'Energy use', cell_format_header)
+        ws.merge_range('D1:E1', 'Energy consumption', cell_format_header)
         ws.write(1, 3, 'Total [MJ]', cell_format_bold)
         ws.write(1, 4, 'Per kg crop [MJ/kg]', cell_format_bold)
         ws.set_column(2, 1, len('Per kg crop [kg/kg]'))
@@ -732,12 +743,14 @@ def worksheet_output(dictionary_name):
     ws.write(74, 0, 'Question 13', cell_format_questions)
     ws.write(75, 0, 'Growing system', cell_format_expl_quest)
     ws.write(75, 1, 'Amount [kg]', cell_format_expl_quest)
-    ws.write(76, 0, 'Steel', cell_format_bold)
-    ws.write(76, 1, ans_steel.get(), cell_formats[1])
-    ws.write(77, 0, 'Aluminium', cell_format_bold)
-    ws.write(77, 1, ans_aluminium.get(), cell_formats[0])
-    ws.write(78, 0, 'Plastic', cell_format_bold)
-    ws.write(78, 1, ans_plastic.get(), cell_formats[1])
+    ws.write(76, 0, 'Stainless Steel', cell_format_bold)
+    ws.write(76, 1, ans_ssteel.get(), cell_formats[1])
+    ws.write(77, 0, 'Black Steel', cell_format_bold)
+    ws.write(77, 1, ans_bsteel.get(), cell_formats[0])
+    ws.write(78, 0, 'Aluminium', cell_format_bold)
+    ws.write(78, 1, ans_aluminium.get(), cell_formats[1])
+    ws.write(79, 0, 'Plastic', cell_format_bold)
+    ws.write(79, 1, ans_plastic.get(), cell_formats[0])
 
     # Adding border lines
     for i in range(0, 11):
@@ -752,7 +765,7 @@ def worksheet_output(dictionary_name):
             ws.write(65, i, '', cell_format_tl)
             ws.write(68, i, '', cell_format_tl)
             ws.write(57, i, '', cell_format_ll)
-            ws.write(79, i, '', cell_format_tl)
+            ws.write(80, i, '', cell_format_tl)
         if i < 3:
             ws.write(70 + i, 4, '', cell_format_ll)
             ws.write(57, i, '', cell_format_tl)
@@ -760,9 +773,9 @@ def worksheet_output(dictionary_name):
         if i < 4:
             ws.write(15, i, '', cell_format_tl)
             ws.write(73, i, '', cell_format_tl)
-            ws.write(75 + i, 2, '', cell_format_ll)
         if i < 5:
             ws.write(27 + i, 2, '', cell_format_ll)
+            ws.write(75 + i, 2, '', cell_format_ll)
         if i < 6:
             ws.write(59 + i, 2, '', cell_format_ll)
         if i < 7:
@@ -1135,8 +1148,8 @@ question_npk_use = "7. How many NPK chemicals (kg) do you buy per year?"
 question_substrate_use = '8. Do you use any of the following substrates (kg)\n and how much per year?'
 question_water_use = '9. How much water (L) do you buy per year?'
 question_pesticide_use = '10. How much pesticides (kg) do you buy per year? '
-question_packaging_use = '11. Is the product sold to the customer packaged? '
-question_transport = '12. How far does your product travel to the distribution center?\n'\
+question_packaging_use = '11. Is the product sold to the customer packaged in plastic? '
+question_transport = '12. How far does your product travel to the first buyer?\n'\
                      'How are the products divided between the several transportation means?\n'\
                      'Who is the owner of the transportation means?'
 question_building = '13. How much of the following materials (kg) were used to \nbuild your growing system? '
@@ -1538,26 +1551,32 @@ truck_own.current(0)
 truck_own.grid(padx=5, row=2, column=3)
 
 # Here the fields for building (Q13) are created
-ans_steel = IntVar()
+ans_ssteel = IntVar()
+ans_bsteel = IntVar()
 ans_aluminium = IntVar()
 ans_plastic = IntVar()
 ans_check_building = IntVar()
-steel_label = Label(frame_building, text='Steel').grid(row=2, column=0, padx=10, sticky=W)
-steel_entry = Entry(frame_building, width=10, textvariable=ans_steel)
-steel_entry.grid(row=2, column=1)
-steel_entry.bind("<FocusIn>", lambda event, z=ans_steel: rid_of_zeros(event, z))
-steel_entry.bind("<FocusOut>", lambda event, z=ans_steel: rid_of_zeros(event, z))
-aluminium_label = Label(frame_building, text='Aluminium').grid(row=3, column=0, padx=10, sticky=W)
+ssteel_label = Label(frame_building, text='Stainless steel').grid(row=2, column=0, padx=10, sticky=W)
+ssteel_entry = Entry(frame_building, width=10, textvariable=ans_ssteel)
+ssteel_entry.grid(row=2, column=1)
+ssteel_entry.bind("<FocusIn>", lambda event, z=ans_ssteel: rid_of_zeros(event, z))
+ssteel_entry.bind("<FocusOut>", lambda event, z=ans_ssteel: rid_of_zeros(event, z))
+bsteel_label = Label(frame_building, text='Black steel').grid(row=3, column=0, padx=10, sticky=W)
+bsteel_entry = Entry(frame_building, width=10, textvariable=ans_bsteel)
+bsteel_entry.grid(row=3, column=1)
+bsteel_entry.bind("<FocusIn>", lambda event, z=ans_bsteel: rid_of_zeros(event, z))
+bsteel_entry.bind("<FocusOut>", lambda event, z=ans_bsteel: rid_of_zeros(event, z))
+aluminium_label = Label(frame_building, text='Aluminium').grid(row=4, column=0, padx=10, sticky=W)
 aluminium_entry = Entry(frame_building, width=10, textvariable=ans_aluminium)
-aluminium_entry.grid(row=3, column=1)
+aluminium_entry.grid(row=4, column=1)
 aluminium_entry.bind("<FocusIn>", lambda event, z=ans_aluminium: rid_of_zeros(event, z))
 aluminium_entry.bind("<FocusOut>", lambda event, z=ans_aluminium: rid_of_zeros(event, z))
-plastic_label = Label(frame_building, text='Plastic').grid(row=4, column=0, padx=10, sticky=W)
+plastic_label = Label(frame_building, text='Plastic').grid(row=5, column=0, padx=10, sticky=W)
 plastic_entry = Entry(frame_building, width=10, textvariable=ans_plastic)
-plastic_entry.grid(row=4, column=1)
+plastic_entry.grid(row=5, column=1)
 plastic_entry.bind("<FocusIn>", lambda event, z=ans_plastic: rid_of_zeros(event, z))
 plastic_entry.bind("<FocusOut>", lambda event, z=ans_plastic: rid_of_zeros(event, z))
-Checkbutton(frame_building, text="I don't know", variable=ans_check_building).grid(sticky=W, padx=10, row=5, column=0)
+Checkbutton(frame_building, text="I don't know", variable=ans_check_building).grid(sticky=W, padx=10, row=6, column=0)
 
 # Here fields for finishing the questionnaire are created
 Button_finish = Button(frame_finish, text='Submit!', command=close_program, padx=10, justify=RIGHT)
@@ -1578,7 +1597,7 @@ list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansSpi, 
             ans_check_substrate_use, ans_tap_water_use, ans_check_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
             ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_check_pesticide_use, ans_packaging,
             ans_van_use, ans_truck_use, ans_percentage_van_use, ans_percentage_truck_use, ans_check_transport,
-            ans_steel, ans_aluminium, ans_plastic, ans_check_building]
+            ans_ssteel, ans_bsteel, ans_aluminium, ans_plastic, ans_check_building]
 
 # Important statement. If not placed here, program crashes. Assures that all information from above is in the program
 root.mainloop()
