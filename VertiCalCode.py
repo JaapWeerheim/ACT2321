@@ -52,13 +52,16 @@ def worksheet_output(dictionary_name):
     for tabs in workbook.sheet_names():
         if tabs != 'Crop parameters':
             sheet = workbook.sheet_by_name(tabs)
+            for j in range(0, sheet.ncols):
+                if sheet.cell_value(0, j) == 'World':
+                    world = j
             for i in range(1, sheet.nrows):
                 if sheet.cell_value(i, 2) != '':
                     for j in range(0, sheet.ncols):
                         if sheet.cell_value(0, j) == ans_country.get():
                             country_name = j
                             if sheet.cell_value(i, j) == '':
-                                country_name = 9  # 9 is world
+                                country_name = world
                             dic_p[sheet.cell_value(i, 2)] = sheet.cell_value(i, country_name)
                             if ans_packaging.get() == 0:
                                 dic_p['Pac1'] = 0
@@ -72,10 +75,16 @@ def worksheet_output(dictionary_name):
     seed_empty_counter = 0
     for y in range(0,len(ansVeg)):
         if ansVeg[y].get() == 1 and seedVeg[y].get() == 0:
-            seed_empty_counter += 1
-    if seed_empty_counter > 0:
-        non_count = 'seeds, '
-        nr_do_not_know += 1
+            sheet = workbook.sheet_by_name('Crop parameters')
+            plant_weight = sheet.cell_value(1+y, 1)
+            plant_germ = sheet.cell_value(1+y, 2)
+            seed_weight = sheet.cell_value(1+y, 3)
+            seed_calc = (kgVeg[y].get() * plant_weight * seed_weight) / plant_germ
+            print(seed_calc, ' = calculation')
+            seedVeg[y].set(seed_calc)
+            print(seedVeg[y].get(), ' = after .set')
+        print(seedVeg[y].get())
+
     if ans_check_buy_energy.get() == 1:
         ans_buy_renew.set(0)
         ans_buy_non_renew.set(0)
@@ -326,11 +335,11 @@ def worksheet_output(dictionary_name):
         # Calculation for the total energy of packaging
         pac_energy = kg_prod * dic_p['Pac2']
 
-        # Calculation for the total Co2 of building
+        # Calculation for the total Co2 of growing system
         buil_co2 = fraction_sur * (((ans_steel.get() * dic_p['B1']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B3']) / dic_p['BL2'])
         + ((ans_plastic.get() * dic_p['B5']) / dic_p['BL3']))
 
-        # Calculation for the total energy of building
+        # Calculation for the total energy of growing system
         buil_energy = fraction_sur * (((ans_steel.get() * dic_p['B2']) / dic_p['BL1']) + ((ans_aluminium.get() * dic_p['B4']) / dic_p['BL2'])
         + ((ans_plastic.get() * dic_p['B6']) / dic_p['BL3']))
 
@@ -372,6 +381,8 @@ def worksheet_output(dictionary_name):
                                              'bg_color': '#e6e6e6'})
         cell_format_align_r1 = wb.add_format({'align': 'right',
                                              'bg_color': '#ffffff'})
+        cell_format_align_r12 = wb.add_format({'align': 'right',
+                                              'bg_color': '#e6e6e6'})
         cell_format_ll = wb.add_format({'left': 1})
         cell_format_tl = wb.add_format({'top': 1})
         cell_format_bl = wb.add_format({'bottom': 1})
@@ -396,7 +407,7 @@ def worksheet_output(dictionary_name):
         ws.set_column(5, 4, len('Per kg crop [kg/kg]'))
 
         labels_output = ['Seeds', 'Electricity', 'Fossil fuels', 'Fertilizer', 'Substrates', 'Water', 'Pesticides',
-                         'Transport', 'Package', 'Buildings']
+                         'Transport', 'Packaging', 'Growing system']
         co2_emitted = [seed_co2, eco2, f_co2, fer_co2, s_co2, w_co2, p_co2, t_co2, pac_co2, buil_co2]
         co2_emitted_round = [round(elem, 0) for elem in co2_emitted]
         energy_used = [seed_energy, e_energy, f_energy, fer_energy, s_energy, w_energy, p_energy, t_energy, pac_energy,
@@ -432,9 +443,7 @@ def worksheet_output(dictionary_name):
         ws.write(2 + len(labels_output), 2, round(sum(co2_crop), 3), cell_format_top)
         ws.write(2 + len(labels_output), 3, round(sum(energy_used), 0), cell_format_top)
         ws.write(2 + len(labels_output), 4, round(sum(energy_crop), 3), cell_format_top)
-        ws.set_column(0, 0, 12)
-        ws.set_row(0, 20)
-        ws.set_row(1, 12)
+        ws.set_column(0, 0, 15)
 
         for i in range(0, 13):
             if i < 5:
@@ -594,6 +603,7 @@ def worksheet_output(dictionary_name):
     ws.write(4, 1, "Area [m\u00b2]", cell_format_expl_quest)
     ws.write(4, 2, "Seeds [kg per year]", cell_format_expl_quest)
     ws.write(4, 3, "Sold products [kg per year]", cell_format_expl_quest)
+
     for i in range(0, len(ansVeg)):
         if i % 2 == 0:
             x = 1
@@ -601,7 +611,7 @@ def worksheet_output(dictionary_name):
             x = 0
         ws.write(5 + i, 0, list_crop_species[i], cell_format_bold)
         ws.write(5 + i, 1, surVeg[i].get(), cell_formats[x])
-        ws.write(5 + i, 2, seedVeg[i].get(), cell_formats[x])
+        ws.write(5 + i, 2, round(seedVeg[i].get(), 3), cell_formats[x])
         ws.write(5 + i, 3, kgVeg[i].get(), cell_formats[x])
 
     # Write question 3, 4 and 5
@@ -626,7 +636,7 @@ def worksheet_output(dictionary_name):
     ws.write(27, 0, "Fossil fuel type", cell_format_expl_quest)
     ws.write(27, 1, "Consumption [per year]", cell_format_expl_quest)
     list_fuel = [ans_petrol_use.get(), ans_diesel_use.get(), ans_natural_gas_use.get(), ans_oil_use.get()]
-    list_fuel_names = ["Petrol (L)", "Diesel (L)", "Oil (L)", "Natural gas (m\u00b3)"]
+    list_fuel_names = ["Petrol [L]", "Diesel [L]", "Oil [L]", "Natural gas [m\u00b3]"]
     for i in range(0, len(list_fuel)):
         if i % 2 == 0:
             x = 1
@@ -708,19 +718,19 @@ def worksheet_output(dictionary_name):
     ws.write(70, 0, "Transportation means", cell_format_expl_quest)
     ws.write(70, 1, "Average distance [km]", cell_format_expl_quest)
     ws.write(71, 0, "Van", cell_format_bold)
-    ws.write(71, 1, ans_van_use.get(), cell_formats[0])
+    ws.write(71, 1, ans_van_use.get(), cell_formats[1])
     ws.write(72, 0, "Truck", cell_format_bold)
-    ws.write(72, 1, ans_truck_use.get(), cell_formats[1])
+    ws.write(72, 1, ans_truck_use.get(), cell_formats[0])
     ws.write(70, 2, "Percentage of products [%]", cell_format_expl_quest)
-    ws.write(71, 2, ans_percentage_van_use.get(), cell_formats[0])
-    ws.write(72, 2, ans_percentage_truck_use.get(), cell_formats[1])
+    ws.write(71, 2, ans_percentage_van_use.get(), cell_formats[1])
+    ws.write(72, 2, ans_percentage_truck_use.get(), cell_formats[0])
     ws.write(70, 3, "Owner", cell_format_expl_quest)
     ws.write(71, 3, ans_van_own.get(), cell_format_align_r1)
-    ws.write(72, 3, ans_truck_own.get(), cell_format_align_r1)
+    ws.write(72, 3, ans_truck_own.get(), cell_format_align_r12)
 
     # Question 13
     ws.write(74, 0, 'Question 13', cell_format_questions)
-    ws.write(75, 0, 'Building', cell_format_expl_quest)
+    ws.write(75, 0, 'Growing system', cell_format_expl_quest)
     ws.write(75, 1, 'Amount [kg]', cell_format_expl_quest)
     ws.write(76, 0, 'Steel', cell_format_bold)
     ws.write(76, 1, ans_steel.get(), cell_formats[1])
@@ -970,7 +980,7 @@ def file_open():
             if num < 4:
                 list_ans[num].set(str(line.strip('\n')))
             if num >= 4:
-                list_ans[num].set(int(line.strip('\n')))
+                list_ans[num].set(line.strip('\n'))
     except:
         pass
     return
@@ -1208,18 +1218,20 @@ kgOthers = IntVar()
 kgVeg = [kgLet, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, kgOthers]
 
 # Initialize variables for buying seeds
-seedLet = IntVar()
-seedEnd = IntVar()
-seedSpi = IntVar()
-seedBea = IntVar()
-seedPar = IntVar()
-seedKal = IntVar()
-seedBas = IntVar()
-seedRuc = IntVar()
-seedMic = IntVar()
-seedMin = IntVar()
-seedOthers = IntVar()
+seedLet = DoubleVar()
+seedEnd = DoubleVar()
+seedSpi = DoubleVar()
+seedBea = DoubleVar()
+seedPar = DoubleVar()
+seedKal = DoubleVar()
+seedBas = DoubleVar()
+seedRuc = DoubleVar()
+seedMic = DoubleVar()
+seedMin = DoubleVar()
+seedOthers = DoubleVar()
 seedVeg = [seedLet, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin, seedOthers]
+for elements in seedVeg:
+    elements.set(0)
 
 Label(frame_crop_species, text='Crop [-]').grid(row=0, column=0, padx=10, sticky=W)
 Label(frame_crop_species, text='Area [m\u00b2]').grid(row=0, column=1, padx=5, sticky=W)
@@ -1341,22 +1353,22 @@ ans_NPK_151515_use = IntVar()
 ans_phosphoric_acid_use = IntVar()
 ans_mono_ammonium_phosphate_use = IntVar()
 ans_check_fertilizer_use = IntVar()
-am_label = Label(frame_fertilizer_use, text='Ammoniumnitrate').grid(row=1, column=0, padx=10, sticky=W)
+am_label = Label(frame_fertilizer_use, text='Ammonium nitrate').grid(row=1, column=0, padx=10, sticky=W)
 am_entry = Entry(frame_fertilizer_use, width=10, textvariable=ans_ammonium_nitrate_use)
 am_entry.grid(row=1, column=1)
 am_entry.bind("<FocusIn>", lambda event, z=ans_ammonium_nitrate_use: rid_of_zeros(event, z))
 am_entry.bind("<FocusOut>", lambda event, z=ans_ammonium_nitrate_use: rid_of_zeros(event, z))
-ca_label = Label(frame_fertilizer_use, text='Calciumammoniumnitrate').grid(row=2, column=0, padx=10, sticky=W)
+ca_label = Label(frame_fertilizer_use, text='Calcium ammonium nitrate').grid(row=2, column=0, padx=10, sticky=W)
 ca_entry = Entry(frame_fertilizer_use, width=10, textvariable=ans_calcium_ammonium_nitrate_use)
 ca_entry.grid(row=2, column=1)
 ca_entry.bind("<FocusIn>", lambda event, z=ans_calcium_ammonium_nitrate_use: rid_of_zeros(event, z))
 ca_entry.bind("<FocusOut>", lambda event, z=ans_calcium_ammonium_nitrate_use: rid_of_zeros(event, z))
-am_su_label = Label(frame_fertilizer_use, text='Ammoniumsulphate').grid(row=3, column=0, padx=10, sticky=W)
+am_su_label = Label(frame_fertilizer_use, text='Ammonium sulphate').grid(row=3, column=0, padx=10, sticky=W)
 am_su_entry = Entry(frame_fertilizer_use, width=10, textvariable=ans_ammonium_sulphate_use)
 am_su_entry.grid(row=3, column=1)
 am_su_entry.bind("<FocusIn>", lambda event, z=ans_ammonium_sulphate_use: rid_of_zeros(event, z))
 am_su_entry.bind("<FocusOut>", lambda event, z=ans_ammonium_sulphate_use: rid_of_zeros(event, z))
-tri_label = Label(frame_fertilizer_use, text='Triplesuperphosphate').grid(row=4, column=0, padx=10, sticky=W)
+tri_label = Label(frame_fertilizer_use, text='Triple super phosphate').grid(row=4, column=0, padx=10, sticky=W)
 tri_entry = Entry(frame_fertilizer_use, width=10, textvariable=ans_triple_super_phosphate_use)
 tri_entry.grid(row=4, column=1)
 tri_entry.bind("<FocusIn>", lambda event, z=ans_triple_super_phosphate_use: rid_of_zeros(event, z))
