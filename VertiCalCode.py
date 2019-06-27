@@ -22,7 +22,7 @@ frame_create_renewable = Frame(height=120, width=400)
 frame_sell_renewable = Frame(height=90, width=400)
 frame_fuel_use = Frame(height=70, width=400)
 frame_fertilizer_use = Frame(height=290, width=400)
-frame_substrate_use = Frame(height=90, width=400)
+frame_substrate_use = Frame(height=120, width=400)
 frame_water_use = Frame(height=50, width=400)
 frame_pesticide_use = Frame(height=140, width=400)
 frame_packaging_use = Frame(height=70, width=400)
@@ -86,7 +86,7 @@ def worksheet_output(dictionary_name):
     if ans_check_buy_energy.get() == 1:
         ans_buy_renew.set(0)
         ans_buy_non_renew.set(0)
-        non_count = (non_count + 'bought electricity, ')
+        non_count = 'bought electricity, '
         nr_do_not_know += 1
     if ans_check_create_renewable.get() == 1:
         ans_prod_biomass.set(0)
@@ -150,7 +150,7 @@ def worksheet_output(dictionary_name):
         ans_bsteel.set(0)
         ans_aluminium.set(0)
         ans_plastic.set(0)
-        non_count = (non_count + 'building')
+        non_count = (non_count + 'the growing system')
         nr_do_not_know += 1
 
     # Create the output: an Excel file
@@ -224,15 +224,15 @@ def worksheet_output(dictionary_name):
         eco2 = fraction_sur * (
                 (dic_p['C1'] * ans_buy_renew.get()) + (dic_p['C3'] * ans_buy_non_renew.get()) +
                 (dic_p['C5'] * ans_prod_solar.get()) + (dic_p['C7'] * ans_prod_wind.get()) +
-                (dic_p['C9'] * ans_prod_biomass.get()) - (ans_sel_renew.get() * dic_p['C1']) -
-                (ans_sel_non_renew.get() * dic_p['C3']))
+                (dic_p['C9'] * ans_prod_biomass.get()) + (dic_p['C11'] * ans_prod_geo.get()) -
+                (ans_sel_renew.get() * dic_p['C1']) - (ans_sel_non_renew.get() * dic_p['C3']))
 
         # Calculation for total energy of electricity usage
         e_energy = fraction_sur * (
                 (dic_p['C2'] * ans_buy_renew.get()) + (dic_p['C4'] * ans_buy_non_renew.get()) +
                 (dic_p['C6'] * ans_prod_solar.get()) + (dic_p['C8'] * ans_prod_wind.get()) +
-                (dic_p['C10'] * ans_prod_biomass.get()) - (ans_sel_renew.get() * dic_p['C2']) -
-                (ans_sel_non_renew.get() * dic_p['C4']))
+                (dic_p['C10'] * ans_prod_biomass.get()) + (dic_p['C12'] * ans_prod_geo.get()) -
+                (ans_sel_renew.get() * dic_p['C2']) - (ans_sel_non_renew.get() * dic_p['C4']))
 
         # Calculation for total Co2 of fossil fuels use
         f_co2 = fraction_sur * (
@@ -280,13 +280,15 @@ def worksheet_output(dictionary_name):
         s_co2 = fraction_substrate * (
                 (dic_p['S1'] * ans_rockwool_use.get()) + (dic_p['S3'] * ans_perlite_use.get()) +
                 (dic_p['S5'] * ans_cocofiber_use.get()) + (dic_p['S7'] * ans_hempfiber_use.get()) +
-                (dic_p['S9'] * ans_peat_use.get()) + (dic_p['S11'] * ans_peatmoss_use.get()))
+                (dic_p['S9'] * ans_peat_use.get()) + (dic_p['S11'] * ans_peatmoss_use.get()) +
+                (dic_p['S13'] * ans_jutefiber_use.get()))
 
         # Calculation for total energy of substrates
         s_energy = fraction_substrate * (
                 (dic_p['S2'] * ans_rockwool_use.get()) + (dic_p['S4'] * ans_perlite_use.get()) +
                 (dic_p['S6'] * ans_cocofiber_use.get()) + (dic_p['S8'] * ans_hempfiber_use.get()) +
-                (dic_p['S10'] * ans_peat_use.get()) + (dic_p['S12'] * ans_peatmoss_use.get()))
+                (dic_p['S10'] * ans_peat_use.get()) + (dic_p['S12'] * ans_peatmoss_use.get()) +
+                (dic_p['S14'] * ans_jutefiber_use.get()))
 
         # Calculation for total Co2 of water
         w_co2 = fraction_sur * (
@@ -1140,7 +1142,7 @@ question_location = '1. In which country is your farm located? '
 question_crop_types = '2. Which crops do you produce? \nWhat area is each crop grown on? \nHow many kg of seeds ' \
                       'do you buy per year?\nHow many kilograms of each crop do you sell per year?'
 question_buy_renewable = '3. How much renewable and non-renewable electricity (kWh) \ndo you buy per year?'
-question_produce_renewable = '4. Do you produce your own renewable energy, \n and how much (kWh) do you produce ' \
+question_produce_renewable = '4. Do you produce your own sustainable energy, \n and how much (kWh) do you produce ' \
                              'per year?'
 question_sell_electricity = '5. How much electricity (kWh) do you sell per year?'
 question_fossil_fuel_use = "6. How much fossil fuel (excluding transportation) do you use per year?"
@@ -1289,8 +1291,9 @@ Checkbutton(frame_buy_energy, text="I don't know", variable=ans_check_buy_energy
 ans_prod_solar = IntVar()
 ans_prod_biomass = IntVar()
 ans_prod_wind = IntVar()
+ans_prod_geo = IntVar()
 ans_check_create_renewable = IntVar()
-solar_label = Label(frame_create_renewable, text='Solar energy').grid(row=1, column=0, padx=10, sticky=W)
+solar_label = Label(frame_create_renewable, text='Solar').grid(row=1, column=0, padx=10, sticky=W)
 solar_entry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_solar)
 solar_entry.grid(row=1, column=1)
 solar_entry.bind("<FocusIn>", lambda event, z=ans_prod_solar: rid_of_zeros(event, z))
@@ -1305,7 +1308,12 @@ wind_entry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_wind)
 wind_entry.grid(row=3, column=1)
 wind_entry.bind("<FocusIn>", lambda event, z=ans_prod_wind: rid_of_zeros(event, z))
 wind_entry.bind("<FocusOut>", lambda event, z=ans_prod_wind: rid_of_zeros(event, z))
-Checkbutton(frame_create_renewable, text="I don't know", variable=ans_check_create_renewable).grid(row=4, column=0,
+geo_label = Label(frame_create_renewable, text='Geothermal').grid(row=4, column=0, padx=10, sticky=W)
+geo_entry = Entry(frame_create_renewable, width=10, textvariable=ans_prod_geo)
+geo_entry.grid(row=4, column=1)
+geo_entry.bind("<FocusIn>", lambda event, z=ans_prod_geo: rid_of_zeros(event, z))
+geo_entry.bind("<FocusOut>", lambda event, z=ans_prod_geo: rid_of_zeros(event, z))
+Checkbutton(frame_create_renewable, text="I don't know", variable=ans_check_create_renewable).grid(row=5, column=0,
                                                                                                    sticky=W, padx=10)
 
 # Here the fields for Q5 (how electricity is used) are created
@@ -1426,6 +1434,7 @@ ans_cocofiber_use = IntVar()
 ans_hempfiber_use = IntVar()
 ans_peat_use = IntVar()
 ans_peatmoss_use = IntVar()
+ans_jutefiber_use = IntVar()
 ans_check_substrate_use = IntVar()
 roc_label = Label(frame_substrate_use, text='Rockwool').grid(row=1, column=0, padx=10, sticky=W)
 roc_entry = Entry(frame_substrate_use, width=10, textvariable=ans_rockwool_use)
@@ -1437,7 +1446,7 @@ per_entry = Entry(frame_substrate_use, width=10, textvariable=ans_perlite_use)
 per_entry.grid(row=2, column=1)
 per_entry.bind("<FocusIn>", lambda event, z=ans_perlite_use: rid_of_zeros(event, z))
 per_entry.bind("<FocusOut>", lambda event, z=ans_perlite_use: rid_of_zeros(event, z))
-coc_label = Label(frame_substrate_use, text='Cocofiber').grid(row=1, column=2, padx=10, sticky=W)
+coc_label = Label(frame_substrate_use, text='Coco fiber').grid(row=1, column=2, padx=10, sticky=W)
 coc_entry = Entry(frame_substrate_use, width=10, textvariable=ans_cocofiber_use)
 coc_entry.grid(row=1, column=3)
 coc_entry.bind("<FocusIn>", lambda event, z=ans_cocofiber_use: rid_of_zeros(event, z))
@@ -1452,12 +1461,19 @@ pea_entry = Entry(frame_substrate_use, width=10, textvariable=ans_peat_use)
 pea_entry.grid(row=3, column=1)
 pea_entry.bind("<FocusIn>", lambda event, z=ans_peat_use: rid_of_zeros(event, z))
 pea_entry.bind("<FocusOut>", lambda event, z=ans_peat_use: rid_of_zeros(event, z))
-peaM_label = Label(frame_substrate_use, text='Peat Moss').grid(row=3, column=2, padx=10, sticky=W)
+peaM_label = Label(frame_substrate_use, text='Peat moss').grid(row=3, column=2, padx=10, sticky=W)
 peaM_entry = Entry(frame_substrate_use, width=10, textvariable=ans_peatmoss_use)
 peaM_entry.grid(row=3, column=3)
 peaM_entry.bind("<FocusIn>", lambda event, z=ans_peatmoss_use: rid_of_zeros(event, z))
 peaM_entry.bind("<FocusOut>", lambda event, z=ans_peatmoss_use: rid_of_zeros(event, z))
-Checkbutton(frame_substrate_use, text="I don't know", variable=ans_check_substrate_use).grid(padx=10, row=4, column=0)
+
+jute_label = Label(frame_substrate_use, text='Jute fiber').grid(row=4, column=0, padx=10, sticky=W)
+jute_entry = Entry(frame_substrate_use, width=10, textvariable=ans_jutefiber_use)
+jute_entry.grid(row=4, column=1)
+jute_entry.bind("<FocusIn>", lambda event, z=ans_jutefiber_use: rid_of_zeros(event, z))
+jute_entry.bind("<FocusOut>", lambda event, z=ans_jutefiber_use: rid_of_zeros(event, z))
+
+Checkbutton(frame_substrate_use, text="I don't know", variable=ans_check_substrate_use).grid(padx=10, row=5, column=0)
 
 # Here the fields for water use (Q9) are created
 ans_tap_water_use = IntVar()
@@ -1587,13 +1603,14 @@ list_ans = [farm_name, ans_country, ans_van_own, ans_truck_own, ansLet, ansSpi, 
             ansRuc, ansMic, ansMin, ansOthers, surLet, surSpi, surBea, surPar, surKal, surBas, surRuc, surMic, surMin,
             surOthers, seedLet, seedSpi, seedBea, seedPar, seedKal, seedBas, seedRuc, seedMic, seedMin,
             seedOthers, kgLet, kgSpi, kgBea, kgPar, kgKal, kgBas, kgRuc, kgMic, kgMin, kgOthers, ans_buy_renew,
-            ans_buy_non_renew, ans_check_buy_energy, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_check_create_renewable,
+            ans_buy_non_renew, ans_check_buy_energy, ans_prod_solar, ans_prod_biomass, ans_prod_wind, ans_prod_geo,
+            ans_check_create_renewable,
             ans_sel_renew, ans_sel_non_renew, ans_check_sell_energy, ans_petrol_use, ans_diesel_use,
             ans_natural_gas_use, ans_oil_use, ans_check_fossil_fuel_use, ans_ammonium_nitrate_use,
             ans_calcium_ammonium_nitrate_use, ans_ammonium_sulphate_use, ans_triple_super_phosphate_use,
             ans_single_super_phosphate_use, ans_ammonia_use, ans_limestone_use, ans_NPK_151515_use,
             ans_phosphoric_acid_use, ans_mono_ammonium_phosphate_use, ans_check_fertilizer_use, ans_rockwool_use,
-            ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use,
+            ans_perlite_use, ans_cocofiber_use, ans_hempfiber_use, ans_peat_use, ans_peatmoss_use, ans_jutefiber_use,
             ans_check_substrate_use, ans_tap_water_use, ans_check_tap_water_use, ans_atrazine_use, ans_glyphosphate_use,
             ans_metolachlor_use, ans_herbicide_use, ans_insecticide_use, ans_check_pesticide_use, ans_packaging,
             ans_van_use, ans_truck_use, ans_percentage_van_use, ans_percentage_truck_use, ans_check_transport,
