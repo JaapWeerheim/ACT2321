@@ -631,9 +631,9 @@ def worksheet_output(dictionary_name):
     ws.write(16, 0, "Question 3-5", cell_format_questions)
     ws.write(17, 0, "Electricity type", cell_format_expl_quest)
     ws.write(17, 1, "Amount [kWh per year]", cell_format_expl_quest)
-    list_electricity = [ans_buy_renew.get(), ans_buy_non_renew.get(), ans_prod_solar.get(), ans_prod_biomass.get(),
-                        ans_prod_wind.get(), ans_sel_renew.get(), ans_sel_non_renew.get()]
-    list_electricity_names = ["Bought renewable", "Bought non-renewable", "Produced solar",
+    list_electricity = [ans_buy_renew.get(), ans_buy_non_renew.get(), ans_prod_geo.get(), ans_prod_solar.get(),
+                        ans_prod_biomass.get(), ans_prod_wind.get(), ans_sel_renew.get(), ans_sel_non_renew.get()]
+    list_electricity_names = ["Bought renewable", "Bought non-renewable","Produced geothermal", "Produced solar",
                               "Produced biomass", "Produced wind", "Sold renewable",
                               "Sold non-renewable"]
     for i in range(0, len(list_electricity)):
@@ -645,9 +645,9 @@ def worksheet_output(dictionary_name):
         ws.write(18 + i, 1, list_electricity[i], cell_formats[x])
 
     # Question 6
-    ws.write(26, 0, "Question 6", cell_format_questions)
-    ws.write(27, 0, "Fossil fuel type", cell_format_expl_quest)
-    ws.write(27, 1, "Consumption [per year]", cell_format_expl_quest)
+    ws.write(27, 0, "Question 6", cell_format_questions)
+    ws.write(28, 0, "Fossil fuel type", cell_format_expl_quest)
+    ws.write(28, 1, "Consumption [per year]", cell_format_expl_quest)
     list_fuel = [ans_petrol_use.get(), ans_diesel_use.get(), ans_natural_gas_use.get(), ans_oil_use.get()]
     list_fuel_names = ["Petrol [L]", "Diesel [L]", "Oil [L]", "Natural gas [m\u00b3]"]
     for i in range(0, len(list_fuel)):
@@ -655,13 +655,13 @@ def worksheet_output(dictionary_name):
             x = 1
         else:
             x = 0
-        ws.write(28 + i, 0, list_fuel_names[i], cell_format_bold)
-        ws.write(28 + i, 1, list_fuel[i], cell_formats[x])
+        ws.write(29 + i, 0, list_fuel_names[i], cell_format_bold)
+        ws.write(29 + i, 1, list_fuel[i], cell_formats[x])
 
     # Question 7
-    ws.write(33, 0, "Question 7", cell_format_questions)
-    ws.write(34, 0, "Fertilizer type", cell_format_expl_quest)
-    ws.write(34, 1, "Consumption [kg per year]", cell_format_expl_quest)
+    ws.write(34, 0, "Question 7", cell_format_questions)
+    ws.write(35, 0, "Fertilizer type", cell_format_expl_quest)
+    ws.write(35, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_fertilizers = [ans_ammonium_nitrate_use.get(), ans_calcium_ammonium_nitrate_use.get(),
                         ans_ammonium_sulphate_use.get(),
                         ans_triple_super_phosphate_use.get(), ans_single_super_phosphate_use.get(),
@@ -678,117 +678,118 @@ def worksheet_output(dictionary_name):
             x = 1
         else:
             x = 0
-        ws.write(35 + i, 0, list_fertilizer_names[i], cell_format_bold)
-        ws.write(35 + i, 1, list_fertilizers[i], cell_formats[x])
+        ws.write(36 + i, 0, list_fertilizer_names[i], cell_format_bold)
+        ws.write(36 + i, 1, list_fertilizers[i], cell_formats[x])
 
     # Question 8
-    ws.write(46, 0, "Question 8", cell_format_questions)
-    ws.write(47, 0, "Substrate type", cell_format_expl_quest)
-    ws.write(47, 1, "Consumption [kg per year]", cell_format_expl_quest)
+    ws.write(47, 0, "Question 8", cell_format_questions)
+    ws.write(48, 0, "Substrate type", cell_format_expl_quest)
+    ws.write(48, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_substrates = [ans_rockwool_use.get(), ans_perlite_use.get(), ans_cocofiber_use.get(),
                        ans_hempfiber_use.get(),
-                       ans_peat_use.get(), ans_peatmoss_use.get()]
-    list_substrates_names = ["Rockwool", "Perlite", "Cocofiber", "Hempfiber", 'Peat', "Peatmoss"]
+                       ans_peat_use.get(), ans_peatmoss_use.get(), ans_jutefiber_use.get()]
+    list_substrates_names = ["Rockwool", "Perlite", "Coco fiber", "Hemp fiber", 'Peat', "Peatmoss", 'Jute fiber']
     for i in range(0, len(list_substrates)):
         if i % 2 == 0:
             x = 1
         else:
             x = 0
-        ws.write(48 + i, 0, list_substrates_names[i], cell_format_bold)
-        ws.write(48 + i, 1, list_substrates[i], cell_formats[x])
+        ws.write(49 + i, 0, list_substrates_names[i], cell_format_bold)
+        ws.write(49 + i, 1, list_substrates[i], cell_formats[x])
 
     # Question 9
-    ws.write(55, 0, "Question 9", cell_format_questions)
-    ws.write(56, 0, "Water consumption:", cell_format_expl_quest)
-    ws.write(56, 1, ans_tap_water_use.get(), cell_format_align_r0)
-    ws.write(56, 2, "[L per year]", cell_format_align_r0)
+    ws.write(57, 0, "Question 9", cell_format_questions)
+    ws.write(58, 0, "Water consumption:", cell_format_expl_quest)
+    ws.write(58, 1, ans_tap_water_use.get(), cell_format_align_r0)
+    ws.write(58, 2, "[L per year]", cell_format_align_r0)
 
     # Question 10
-    ws.write(58, 0, "Question 10", cell_format_questions)
-    ws.write(59, 0, "Pesticide type", cell_format_expl_quest)
-    ws.write(59, 1, "Consumption [kg per year]", cell_format_expl_quest)
+    ws.write(60, 0, "Question 10", cell_format_questions)
+    ws.write(61, 0, "Pesticide type", cell_format_expl_quest)
+    ws.write(61, 1, "Consumption [kg per year]", cell_format_expl_quest)
     list_pesticides = [ans_atrazine_use.get(), ans_glyphosphate_use.get(),
                        ans_metolachlor_use.get(), ans_herbicide_use.get(), ans_insecticide_use.get()]
-    list_pesticides_names = ["Atrazine", "Glyphosphate", "Metolachlore", "Herbicide", "Insecticide"]
+    list_pesticides_names = ["Atrazine", "Glyphosphate", "Metolachlore", "Other herbicides", "Other insecticides"]
     for i in range(0, len(list_pesticides)):
         if i % 2 == 0:
             x = 1
         else:
             x = 0
-        ws.write(60 + i, 0, list_pesticides_names[i], cell_format_bold)
-        ws.write(60 + i, 1, list_pesticides[i], cell_formats[x])
+        ws.write(62 + i, 0, list_pesticides_names[i], cell_format_bold)
+        ws.write(62 + i, 1, list_pesticides[i], cell_formats[x])
 
     # Question 11
-    ws.write(66, 0, "Question 11", cell_format_questions)
-    ws.write(67, 0, "Packaged [Yes/No]", cell_format_expl_quest)
+    ws.write(68, 0, "Question 11", cell_format_questions)
+    ws.write(69, 0, "Packaged [Yes/No]", cell_format_expl_quest)
     if ans_packaging.get == 0:
-        ws.write(67, 1, "No", cell_format_align_r0)
+        ws.write(69, 1, "No", cell_format_align_r0)
     else:
-        ws.write(67, 1, "Yes", cell_format_align_r0)
+        ws.write(69, 1, "Yes", cell_format_align_r0)
 
     # Question 12
-    ws.write(69, 0, "Question 12", cell_format_questions)
-    ws.write(70, 0, "Transportation means", cell_format_expl_quest)
-    ws.write(70, 1, "Average distance [km]", cell_format_expl_quest)
-    ws.write(71, 0, "Van", cell_format_bold)
-    ws.write(71, 1, ans_van_use.get(), cell_formats[1])
-    ws.write(72, 0, "Truck", cell_format_bold)
-    ws.write(72, 1, ans_truck_use.get(), cell_formats[0])
-    ws.write(70, 2, "Percentage of products [%]", cell_format_expl_quest)
-    ws.write(71, 2, ans_percentage_van_use.get(), cell_formats[1])
-    ws.write(72, 2, ans_percentage_truck_use.get(), cell_formats[0])
-    ws.write(70, 3, "Owner", cell_format_expl_quest)
-    ws.write(71, 3, ans_van_own.get(), cell_format_align_r1)
-    ws.write(72, 3, ans_truck_own.get(), cell_format_align_r12)
+    ws.write(71, 0, "Question 12", cell_format_questions)
+    ws.write(72, 0, "Transportation means", cell_format_expl_quest)
+    ws.write(72, 1, "Average distance [km]", cell_format_expl_quest)
+    ws.write(73, 0, "Van", cell_format_bold)
+    ws.write(73, 1, ans_van_use.get(), cell_formats[1])
+    ws.write(74, 0, "Truck", cell_format_bold)
+    ws.write(74, 1, ans_truck_use.get(), cell_formats[0])
+    ws.write(72, 2, "Percentage of products [%]", cell_format_expl_quest)
+    ws.write(73, 2, ans_percentage_van_use.get(), cell_formats[1])
+    ws.write(74, 2, ans_percentage_truck_use.get(), cell_formats[0])
+    ws.write(72, 3, "Owner", cell_format_expl_quest)
+    ws.write(73, 3, ans_van_own.get(), cell_format_align_r1)
+    ws.write(74, 3, ans_truck_own.get(), cell_format_align_r12)
 
     # Question 13
-    ws.write(74, 0, 'Question 13', cell_format_questions)
-    ws.write(75, 0, 'Growing system', cell_format_expl_quest)
-    ws.write(75, 1, 'Amount [kg]', cell_format_expl_quest)
-    ws.write(76, 0, 'Stainless Steel', cell_format_bold)
-    ws.write(76, 1, ans_ssteel.get(), cell_formats[1])
-    ws.write(77, 0, 'Black Steel', cell_format_bold)
-    ws.write(77, 1, ans_bsteel.get(), cell_formats[0])
-    ws.write(78, 0, 'Aluminium', cell_format_bold)
-    ws.write(78, 1, ans_aluminium.get(), cell_formats[1])
-    ws.write(79, 0, 'Plastic', cell_format_bold)
-    ws.write(79, 1, ans_plastic.get(), cell_formats[0])
+    ws.write(76, 0, 'Question 13', cell_format_questions)
+    ws.write(77, 0, 'Growing system', cell_format_expl_quest)
+    ws.write(77, 1, 'Amount [kg]', cell_format_expl_quest)
+    ws.write(78, 0, 'Stainless Steel', cell_format_bold)
+    ws.write(78, 1, ans_ssteel.get(), cell_formats[1])
+    ws.write(79, 0, 'Black Steel', cell_format_bold)
+    ws.write(79, 1, ans_bsteel.get(), cell_formats[0])
+    ws.write(80, 0, 'Aluminium', cell_format_bold)
+    ws.write(80, 1, ans_aluminium.get(), cell_formats[1])
+    ws.write(81, 0, 'Plastic', cell_format_bold)
+    ws.write(81, 1, ans_plastic.get(), cell_formats[0])
 
     # Adding border lines
     for i in range(0, 11):
         ws.write(4 + i, 4, '', cell_format_ll)
-        ws.write(34 + i, 2, '', cell_format_ll)
+        ws.write(35 + i, 2, '', cell_format_ll)
         if i < 2:
             ws.write(2, i, '', cell_format_tl)
-            ws.write(25, i, '', cell_format_tl)
-            ws.write(32, i, '', cell_format_tl)
-            ws.write(45, i, '', cell_format_tl)
-            ws.write(54, i, '', cell_format_tl)
-            ws.write(65, i, '', cell_format_tl)
-            ws.write(68, i, '', cell_format_tl)
-            ws.write(57, i, '', cell_format_ll)
-            ws.write(80, i, '', cell_format_tl)
+            ws.write(26, i, '', cell_format_tl)
+            ws.write(33, i, '', cell_format_tl)
+            ws.write(46, i, '', cell_format_tl)
+            ws.write(56, i, '', cell_format_tl)
+            ws.write(67, i, '', cell_format_tl)
+            ws.write(70, i, '', cell_format_tl)
+            ws.write(59, i, '', cell_format_ll)
+            ws.write(82, i, '', cell_format_tl)
+            ws.write(57, 1+i, '', cell_format_bl)
         if i < 3:
-            ws.write(70 + i, 4, '', cell_format_ll)
-            ws.write(57, i, '', cell_format_tl)
-            ws.write(55, i, '', cell_format_bl)
+            ws.write(72 + i, 4, '', cell_format_ll)
+            ws.write(59, i, '', cell_format_tl)
+
         if i < 4:
             ws.write(15, i, '', cell_format_tl)
-            ws.write(73, i, '', cell_format_tl)
+            ws.write(75, i, '', cell_format_tl)
         if i < 5:
-            ws.write(27 + i, 2, '', cell_format_ll)
-            ws.write(75 + i, 2, '', cell_format_ll)
+            ws.write(28 + i, 2, '', cell_format_ll)
+            ws.write(77 + i, 2, '', cell_format_ll)
         if i < 6:
-            ws.write(59 + i, 2, '', cell_format_ll)
-        if i < 7:
-            ws.write(47 + i, 2, '', cell_format_ll)
+            ws.write(61 + i, 2, '', cell_format_ll)
         if i < 8:
+            ws.write(48 + i, 2, '', cell_format_ll)
+        if i < 9:
             ws.write(17 + i, 2, '', cell_format_ll)
     ws.write(0, 1, '', cell_format_bl)
     ws.write(1, 2, '', cell_format_ll)
-    ws.write(66, 1, '', cell_format_bl)
-    ws.write(67, 2, '', cell_format_ll)
-    ws.write(56, 3, '', cell_format_ll)
+    ws.write(68, 1, '', cell_format_bl)
+    ws.write(69, 2, '', cell_format_ll)
+    ws.write(58, 3, '', cell_format_ll)
 
     # Close the workbook again
     wb.close()
